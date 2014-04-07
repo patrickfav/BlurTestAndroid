@@ -1,6 +1,7 @@
 package at.favre.app.blurtest;
 
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -26,19 +27,18 @@ public class BlurUtil {
 			case RENDERSCRIPT:
 				return blurRenderScript(context,sentBitmap,radius);
 			case STACKBLUR:
-				return blurStackBlur(context,sentBitmap,radius);
+				return blurStackBlur(sentBitmap,radius);
 			default:
 				return sentBitmap;
 		}
 	}
 
-	private static Bitmap blurRenderScript(Context context, Bitmap sentBitmap, int radius) {
+	private static Bitmap blurRenderScript(Context context, Bitmap bitmap, int radius) {
 		if (Build.VERSION.SDK_INT > 17) {
 			Log.d(TAG,"Using renderscript");
-			Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
 			final RenderScript rs = RenderScript.create(context);
-			final Allocation input = Allocation.createFromBitmap(rs, sentBitmap, Allocation.MipmapControl.MIPMAP_NONE,
+			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,
 					Allocation.USAGE_SCRIPT);
 			final Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
@@ -49,7 +49,7 @@ public class BlurUtil {
 			return bitmap;
 		} else {
 			Toast.makeText(context, "Renderscript needs sdk >= 17", Toast.LENGTH_LONG).show();
-			return sentBitmap;
+			return bitmap;
 		}
 	}
 
@@ -81,7 +81,7 @@ public class BlurUtil {
 
 	Stack BlurUtil Algorithm by Mario Klingemann <mario@quasimondo.com> */
 
-	private static Bitmap blurStackBlur(Context context, Bitmap sentBitmap, int radius) {
+	private static Bitmap blurStackBlur(Bitmap sentBitmap, int radius) {
 		Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
 		if (radius < 1) {
@@ -283,4 +283,12 @@ public class BlurUtil {
 		return (bitmap);
 	}
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
+	public static int sizeOf(Bitmap data) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+			return data.getRowBytes() * data.getHeight();
+		} else {
+			return data.getByteCount();
+		}
+	}
 }

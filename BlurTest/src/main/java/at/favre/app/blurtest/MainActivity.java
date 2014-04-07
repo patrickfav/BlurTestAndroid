@@ -3,6 +3,7 @@ package at.favre.app.blurtest;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -48,8 +49,8 @@ public class MainActivity extends Activity {
 		seekInSampleSize = (SeekBar) findViewById(R.id.seek_insample);
 		seekRadius = (SeekBar) findViewById(R.id.seek_radius);
 
-		inSampleSize = seekInSampleSize.getProgress();
-		radius= seekRadius.getProgress();
+		inSampleSize = seekInSampleSize.getProgress()+1;
+		radius= seekRadius.getProgress()+1;
 
 		tvInSample = (TextView) findViewById(R.id.tv_insample_value);
 		tvRadius = (TextView) findViewById(R.id.tv_radius_value);
@@ -60,7 +61,7 @@ public class MainActivity extends Activity {
 		seekRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-				radius=i;
+				radius=i+1;
 				tvRadius.setText(radius+"px");
 			}
 
@@ -78,7 +79,7 @@ public class MainActivity extends Activity {
 		seekInSampleSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-				inSampleSize = i;
+				inSampleSize = i+1;
 				tvInSample.setText(inSampleSize+"");
 			}
 
@@ -127,6 +128,9 @@ public class MainActivity extends Activity {
 
 			}
 		});
+		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
+		((TextView) findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BlurUtil.sizeOf(normalBitmap)/1024)+"kB");
+
 		new BlurTask().execute();
     }
 
@@ -150,7 +154,7 @@ public class MainActivity extends Activity {
 			imageViewBlur.setImageBitmap(bitmap);
 			long duration = (SystemClock.elapsedRealtime()-start);
 			Log.d("BlurUtil", "Bluring duration "+(SystemClock.elapsedRealtime()-start)+"ms");
-			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms",Toast.LENGTH_LONG).show();
+			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms"+" / "+ (BlurUtil.sizeOf(bitmap)/1024)+"kB",Toast.LENGTH_LONG).show() ;
 
 			final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadeout);
 			anim.setFillAfter(true);
@@ -158,6 +162,10 @@ public class MainActivity extends Activity {
 			final Animation anim2 = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadein);
 			anim2.setFillAfter(true);
 			imageViewBlur.startAnimation(anim2);
+
+			Bitmap blurBitmap = ((BitmapDrawable)imageViewBlur.getDrawable()).getBitmap();
+			((TextView) findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth()+"x"+blurBitmap.getHeight()+" / "+(BlurUtil.sizeOf(blurBitmap)/1024)+"kB / " +duration +"ms");
+
 		}
 	}
 }

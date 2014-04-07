@@ -44,8 +44,8 @@
                 android:id="@+id/seek_insample"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="32"
-                android:progress="8"
+                android:max="31"
+                android:progress="7"
                 android:layout_weight="9"
                 />
             <TextView
@@ -55,7 +55,7 @@
                 android:text="8x"
                 android:gravity="center"
                 android:textColor="#ccc"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 />
@@ -72,8 +72,8 @@
                 android:id="@+id/seek_radius"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="25"
-                android:progress="16"
+                android:max="24"
+                android:progress="15"
                 android:layout_weight="9"
                 />
             <TextView
@@ -83,7 +83,7 @@
                 android:text="16px"
                 android:gravity="center"
                 android:textColor="#ccc"
-                android:textSize="18dp"
+                android:textSize="18sp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 />
@@ -93,7 +93,6 @@
             android:id="@+id/spinner_algorithm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:layout_marginBottom="16dp"/>
 
         <Button
@@ -118,4 +117,25 @@
             android:src="@drawable/ic_action_list"
             android:layout_gravity="right|center_horizontal"/>
     </FrameLayout>
+    <TextView
+        android:id="@+id/tv_resolution_blur"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/quartertransparent"
+        android:textColor="#ccc"
+        android:padding="4dp"
+        android:textSize="10sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+    <TextView
+        android:id="@+id/tv_resolution_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100x200"
+        android:background="@color/quartertransparent"
+        android:textColor="#ccc"
+        android:padding="2dp"
+        android:textSize="10sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"/>
 </RelativeLayout>
