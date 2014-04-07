@@ -1,0 +1,5 @@
+/build
+src/main/assets/buildInfo.properties
+src/main/assets/application.properties
+src/main/assets/backends
+src/main/assets/backends/*.properties
