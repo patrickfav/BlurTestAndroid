@@ -131,6 +131,12 @@ public class MainActivity extends Activity {
 			}
 		});
 
+		findViewById(R.id.options).setVisibility(View.VISIBLE);
+		final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.slide_in_top);
+		anim.setFillAfter(true);
+		anim.setDuration(0);
+		findViewById(R.id.options).startAnimation(anim);
+
 		startBlur();
     }
 
@@ -154,8 +160,14 @@ public class MainActivity extends Activity {
 			case R.id.action_settings:
 				if(findViewById(R.id.options).getVisibility() == View.VISIBLE) {
 					findViewById(R.id.options).setVisibility(View.INVISIBLE);
+					final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.slide_out_top);
+					anim.setFillAfter(true);
+					findViewById(R.id.options).startAnimation(anim);
 				} else {
 					findViewById(R.id.options).setVisibility(View.VISIBLE);
+					final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.slide_in_top);
+					anim.setFillAfter(true);
+					findViewById(R.id.options).startAnimation(anim);
 				}
 				return true;
 			default:
@@ -175,7 +187,7 @@ public class MainActivity extends Activity {
 		protected Bitmap doInBackground(Void... voids) {
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = inSampleSize;
-			return BlurUtil.fastblur(MainActivity.this, BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options), radius, algorithm);
+			return BlurUtil.blur(MainActivity.this, BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options), radius, algorithm);
 		}
 
 		@Override

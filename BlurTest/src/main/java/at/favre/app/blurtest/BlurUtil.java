@@ -4,6 +4,8 @@ package at.favre.app.blurtest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -17,19 +19,23 @@ import android.widget.Toast;
  */
 public class BlurUtil {
 
-	public enum Algorithm {RENDERSCRIPT, STACKBLUR}
+	public enum Algorithm {RENDERSCRIPT, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
 
 	private static final String TAG = "BlurUtil";
 
-	public static Bitmap fastblur(Context context, Bitmap sentBitmap, int radius, Algorithm algorithm) {
+	public static Bitmap blur(Context context, Bitmap bitmap, int radius, Algorithm algorithm) {
 		Log.i(TAG,"Using "+algorithm);
 		switch (algorithm) {
 			case RENDERSCRIPT:
-				return blurRenderScript(context,sentBitmap,radius);
+				return blurRenderScript(context,bitmap,radius);
 			case STACKBLUR:
-				return blurStackBlur(sentBitmap,radius);
+				return blurStackBlur(bitmap,radius);
+			case GAUSSIAN_BLUR_FAST:
+				return gaussianBlurFast(bitmap,radius);
+			case BOX_BLUR:
+				return boxBlur(bitmap,radius);
 			default:
-				return sentBitmap;
+				return bitmap;
 		}
 	}
 
@@ -51,6 +57,163 @@ public class BlurUtil {
 			Toast.makeText(context, "Renderscript needs sdk >= 17", Toast.LENGTH_LONG).show();
 			return bitmap;
 		}
+	}
+
+	/**
+	 * http://stackoverflow.com/questions/8218438
+	 * @param bmp
+	 * @param range
+	 * @return
+	 */
+	public static Bitmap boxBlur(Bitmap bmp, int range) {
+		assert (range & 1) == 0 : "Range must be odd.";
+
+		Bitmap blurred = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(),
+				Bitmap.Config.ARGB_8888);
+		Canvas c = new Canvas(blurred);
+
+		int w = bmp.getWidth();
+		int h = bmp.getHeight();
+
+		int[] pixels = new int[bmp.getWidth() * bmp.getHeight()];
+		bmp.getPixels(pixels, 0, w, 0, 0, w, h);
+
+		boxBlurHorizontal(pixels, w, h, range / 2);
+		boxBlurVertical(pixels, w, h, range / 2);
+
+		c.drawBitmap(pixels, 0, w, 0.0F, 0.0F, w, h, true, null);
+
+		return blurred;
+	}
+
+	private static void boxBlurHorizontal(int[] pixels, int w, int h,
+										  int halfRange) {
+		int index = 0;
+		int[] newColors = new int[w];
+
+		for (int y = 0; y < h; y++) {
+			int hits = 0;
+			long r = 0;
+			long g = 0;
+			long b = 0;
+			for (int x = -halfRange; x < w; x++) {
+				int oldPixel = x - halfRange - 1;
+				if (oldPixel >= 0) {
+					int color = pixels[index + oldPixel];
+					if (color != 0) {
+						r -= Color.red(color);
+						g -= Color.green(color);
+						b -= Color.blue(color);
+					}
+					hits--;
+				}
+
+				int newPixel = x + halfRange;
+				if (newPixel < w) {
+					int color = pixels[index + newPixel];
+					if (color != 0) {
+						r += Color.red(color);
+						g += Color.green(color);
+						b += Color.blue(color);
+					}
+					hits++;
+				}
+
+				if (x >= 0) {
+					newColors[x] = Color.argb(0xFF, (int) (r / hits), (int) (g / hits), (int) (b / hits));
+				}
+			}
+
+			for (int x = 0; x < w; x++) {
+				pixels[index + x] = newColors[x];
+			}
+
+			index += w;
+		}
+	}
+
+	private static void boxBlurVertical(int[] pixels, int w, int h,
+										int halfRange) {
+
+		int[] newColors = new int[h];
+		int oldPixelOffset = -(halfRange + 1) * w;
+		int newPixelOffset = (halfRange) * w;
+
+		for (int x = 0; x < w; x++) {
+			int hits = 0;
+			long r = 0;
+			long g = 0;
+			long b = 0;
+			int index = -halfRange * w + x;
+			for (int y = -halfRange; y < h; y++) {
+				int oldPixel = y - halfRange - 1;
+				if (oldPixel >= 0) {
+					int color = pixels[index + oldPixelOffset];
+					if (color != 0) {
+						r -= Color.red(color);
+						g -= Color.green(color);
+						b -= Color.blue(color);
+					}
+					hits--;
+				}
+
+				int newPixel = y + halfRange;
+				if (newPixel < h) {
+					int color = pixels[index + newPixelOffset];
+					if (color != 0) {
+						r += Color.red(color);
+						g += Color.green(color);
+						b += Color.blue(color);
+					}
+					hits++;
+				}
+
+				if (y >= 0) {
+					newColors[y] = Color.argb(0xFF, (int) (r / hits), (int) (g / hits), (int) (b / hits));
+				}
+
+				index += w;
+			}
+
+			for (int y = 0; y < h; y++) {
+				pixels[y * w + x] = newColors[y];
+			}
+		}
+	}
+
+	/**
+	 * http://stackoverflow.com/a/13436737/774398
+	 * @param bmp
+	 * @param radius
+	 */
+	static Bitmap gaussianBlurFast (Bitmap bmp, int radius) {
+		Bitmap copy = bmp.copy(bmp.getConfig(), true);
+		int w = bmp.getWidth();
+		int h = bmp.getHeight();
+		int[] pix = new int[w * h];
+		bmp.getPixels(pix, 0, w, 0, 0, w, h);
+
+		for(int r = radius; r >= 1; r /= 2) {
+			for(int i = r; i < h - r; i++) {
+				for(int j = r; j < w - r; j++) {
+					int tl = pix[(i - r) * w + j - r];
+					int tr = pix[(i - r) * w + j + r];
+					int tc = pix[(i - r) * w + j];
+					int bl = pix[(i + r) * w + j - r];
+					int br = pix[(i + r) * w + j + r];
+					int bc = pix[(i + r) * w + j];
+					int cl = pix[i * w + j - r];
+					int cr = pix[i * w + j + r];
+
+					pix[(i * w) + j] = 0xFF000000 |
+							(((tl & 0xFF) + (tr & 0xFF) + (tc & 0xFF) + (bl & 0xFF) + (br & 0xFF) + (bc & 0xFF) + (cl & 0xFF) + (cr & 0xFF)) >> 3) & 0xFF |
+							(((tl & 0xFF00) + (tr & 0xFF00) + (tc & 0xFF00) + (bl & 0xFF00) + (br & 0xFF00) + (bc & 0xFF00) + (cl & 0xFF00) + (cr & 0xFF00)) >> 3) & 0xFF00 |
+							(((tl & 0xFF0000) + (tr & 0xFF0000) + (tc & 0xFF0000) + (bl & 0xFF0000) + (br & 0xFF0000) + (bc & 0xFF0000) + (cl & 0xFF0000) + (cr & 0xFF0000)) >> 3) & 0xFF0000;
+				}
+			}
+		}
+		copy.setPixels(pix, 0, w, 0, 0, w, h);
+		return copy;
 	}
 
 	/** Stack BlurUtil v1.0 from
