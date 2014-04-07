@@ -5,5 +5,5 @@
     <alpha
         android:fromAlpha="0.3"
         android:toAlpha="1.0"
-        android:duration="800"/>
+        android:duration="1000"/>
 </set>

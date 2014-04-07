@@ -8,11 +8,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
@@ -37,6 +42,7 @@ public class MainActivity extends Activity {
 	private int inSampleSize;
 	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RENDERSCRIPT;
 	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
+	private boolean showCrossfade = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,21 +103,7 @@ public class MainActivity extends Activity {
 		findViewById(R.id.btn_redraw).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				new BlurTask().execute();
-			}
-		});
-
-		findViewById(R.id.options_button).setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				if(findViewById(R.id.options).getVisibility() == View.VISIBLE) {
-					findViewById(R.id.options).setVisibility(View.INVISIBLE);
-					findViewById(R.id.options_button_wrapper).setBackgroundColor(getResources().getColor(R.color.transparent));
-				} else {
-					findViewById(R.id.options).setVisibility(View.VISIBLE);
-					findViewById(R.id.options_button_wrapper).setBackgroundColor(getResources().getColor(R.color.halftransparent));
-				}
-
+				startBlur();
 			}
 		});
 
@@ -131,15 +123,52 @@ public class MainActivity extends Activity {
 		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
 		((TextView) findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BlurUtil.sizeOf(normalBitmap)/1024)+"kB");
 
-		new BlurTask().execute();
+		((CheckBox) findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
+		((CheckBox) findViewById(R.id.cb_crossfade)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				showCrossfade = b;
+			}
+		});
+
+		startBlur();
     }
+
+	private void startBlur() {
+
+		new BlurTask().execute();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case R.id.action_settings:
+				if(findViewById(R.id.options).getVisibility() == View.VISIBLE) {
+					findViewById(R.id.options).setVisibility(View.INVISIBLE);
+				} else {
+					findViewById(R.id.options).setVisibility(View.VISIBLE);
+				}
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
 
 	public class BlurTask extends AsyncTask<Void, Void, Bitmap> {
 		@Override
 		protected void onPreExecute() {
 			start = SystemClock.elapsedRealtime();
-			imageViewNormal.setVisibility(View.VISIBLE);
-			imageViewBlur.setVisibility(View.INVISIBLE);
+			imageViewNormal.setAlpha(1f);
+			imageViewBlur.setAlpha(1f);
 		}
 
 		@Override
@@ -154,14 +183,19 @@ public class MainActivity extends Activity {
 			imageViewBlur.setImageBitmap(bitmap);
 			long duration = (SystemClock.elapsedRealtime()-start);
 			Log.d("BlurUtil", "Bluring duration "+(SystemClock.elapsedRealtime()-start)+"ms");
-			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms"+" / "+ (BlurUtil.sizeOf(bitmap)/1024)+"kB",Toast.LENGTH_LONG).show() ;
+			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms"+" / "+ (BlurUtil.sizeOf(bitmap)/1024)+"kB",Toast.LENGTH_SHORT).show() ;
 
-			final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadeout);
-			anim.setFillAfter(true);
-			imageViewNormal.startAnimation(anim);
-			final Animation anim2 = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadein);
-			anim2.setFillAfter(true);
-			imageViewBlur.startAnimation(anim2);
+			if(showCrossfade) {
+				final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadeout);
+				anim.setFillAfter(true);
+				imageViewNormal.startAnimation(anim);
+				final Animation anim2 = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadein);
+				anim2.setFillAfter(true);
+				imageViewBlur.startAnimation(anim2);
+			} else {
+				imageViewBlur.setAlpha(1.0f);
+				imageViewNormal.setAlpha(0.0f);
+			}
 
 			Bitmap blurBitmap = ((BitmapDrawable)imageViewBlur.getDrawable()).getBitmap();
 			((TextView) findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth()+"x"+blurBitmap.getHeight()+" / "+(BlurUtil.sizeOf(blurBitmap)/1024)+"kB / " +duration +"ms");

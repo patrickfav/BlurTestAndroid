@@ -9,13 +9,13 @@
         android:layout_height="match_parent"
         android:background="#000000">
         <ImageView
-            android:id="@+id/normal_image"
+            android:id="@+id/blur_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/photo1"/>
         <ImageView
-            android:id="@+id/blur_image"
+            android:id="@+id/normal_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -25,19 +25,18 @@
 
 
     <LinearLayout
-        android:layout_below="@+id/options_button_wrapper"
         android:id="@+id/options"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@color/halftransparent"
         android:padding="8dp"
-        android:visibility="invisible">
+        android:visibility="visible">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:orientation="horizontal"
             android:weightSum="10">
             <SeekBar
@@ -64,8 +63,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:orientation="horizontal"
             android:weightSum="10">
             <SeekBar
@@ -93,30 +91,27 @@
             android:id="@+id/spinner_algorithm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="12dp"/>
 
-        <Button
+        <CheckBox
+            android:id="@+id/cb_crossfade"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Alpha Crossfade"
+            android:textColor="#ccc"
+            android:padding="8dp"
+            android:layout_marginBottom="12dp"/>
+
+        <ImageButton
             android:id="@+id/btn_redraw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Redraw"
+            android:src="@drawable/ic_action_picture"
             android:layout_gravity="center"
-            android:layout_marginBottom="8dp"/>
+            />
     </LinearLayout>
-    <FrameLayout
-        android:id="@+id/options_button_wrapper"
-        android:background="@color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true">
-        <ImageButton
-            android:id="@+id/options_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_list"
-            android:layout_gravity="right|center_horizontal"/>
-    </FrameLayout>
+
+
     <TextView
         android:id="@+id/tv_resolution_blur"
         android:layout_width="wrap_content"
