@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -86,30 +87,30 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		});
 
 
-//		mPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//			@Override
-//			public void onGlobalLayout() {
-//				updateBlurView();
-//			}
-//		});
+		mPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+			@Override
+			public void onGlobalLayout() {
+				updateBlurView();
+			}
+		});
 
 	}
 
 	private void updateBlurView() {
 		if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
-			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 8, imageBackgroundDrawable);
-			Bitmap b2 = crop(b, canvasView, 8);
-			canvasView.setBackground(new BitmapDrawable(getResources(), b2));
+			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 4, imageBackgroundDrawable);
+			canvasView.setBackground(new BitmapDrawable(getResources(), b));
 		}
 	}
 
 	private Bitmap crop(Bitmap srcBmp, View canvasView, int downsampling) {
+		float scale = 1f / downsampling;
 		return Bitmap.createBitmap(
 				srcBmp,
-				(int) canvasView.getX()/downsampling,
-				(int) canvasView.getY()/downsampling,
-				canvasView.getWidth()/downsampling,
-				canvasView.getHeight()/downsampling
+				Math.round(canvasView.getX()*scale),
+				Math.round(canvasView.getY()*scale),
+				Math.round(canvasView.getWidth()*scale),
+				Math.round(canvasView.getHeight()*scale)
 		);
 	}
 
@@ -117,8 +118,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		float scale = 1f / downSampling;
 		int viewWidth = view.getWidth();
 		int viewHeight = view.getHeight();
-		int bmpWidth = (int) (viewWidth * scale);
-		int bmpHeight = (int) (viewHeight * scale);
+		int bmpWidth = Math.round(viewWidth * scale);
+		int bmpHeight = Math.round(viewHeight * scale);
 
 		//Log.d(TAG, "viewheight:"+viewHeight+" viewWidth:"+viewWidth+" bmpHeight:"+bmpHeight+" bmpWidth:"+bmpWidth);
 		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
@@ -132,7 +133,7 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		}
 		view.draw(c);
 		//view.layout(0, 0, viewWidth, viewHeight);
-		return BlurUtil.blur(rs,dest,8,BlurUtil.Algorithm.STACKBLUR);
+		return BlurUtil.blur(rs,crop(dest,canvasView,downSampling),8,BlurUtil.Algorithm.STACKBLUR);
 	}
 
 	@Override
