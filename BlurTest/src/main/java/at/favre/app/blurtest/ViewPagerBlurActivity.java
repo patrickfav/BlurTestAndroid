@@ -11,11 +11,9 @@ import android.renderscript.RenderScript;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -42,10 +40,10 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 	 */
 	private PagerAdapter mPagerAdapter;
 	private ColorDrawable imageBackgroundDrawable;
-
+	private ImageView canvasView;
 
 	private RenderScript rs;
-
+	private Bitmap dest;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,43 +54,63 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter();
 		mPager.setAdapter(mPagerAdapter);
-		final Bitmap dest = null;
+
+		canvasView = (ImageView) findViewById(R.id.stripe);
+
+		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.halftransparent));
+		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+			@Override
+			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+				updateBlurView();
+				//Log.d(TAG,"scroll "+positionOffsetPixels );
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+
+			}
+
+			@Override
+			public void onPageScrollStateChanged(int state) {
+
+			}
+		});
 
 		mPager.setOnTouchListener(new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View view, MotionEvent motionEvent) {
-				Log.d(TAG, "Touch event");
-				Bitmap b = drawViewToBitmap(dest,findViewById(R.id.root),8,imageBackgroundDrawable);
-				Bitmap b2 = crop(b,findViewById(R.id.stripe),8);
-				findViewById(R.id.stripe).setBackground(new BitmapDrawable(getResources(), b2));
+				//Log.d(TAG, "Touch event");
+				//updateBlurView();
 				return false;
 			}
 		});
-		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.halftransparent));
 
 
-		findViewById(R.id.root).getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				Bitmap b = drawViewToBitmap(dest,findViewById(R.id.root),8,imageBackgroundDrawable);
-				Bitmap b2 = crop(b,findViewById(R.id.stripe),8);
-				findViewById(R.id.stripe).setBackground(new BitmapDrawable(getResources(), b2));
-			}
-		});
-
+//		mPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//			@Override
+//			public void onGlobalLayout() {
+//				updateBlurView();
+//			}
+//		});
 
 	}
 
+	private void updateBlurView() {
+		if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
+			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 8, imageBackgroundDrawable);
+			Bitmap b2 = crop(b, canvasView, 8);
+			canvasView.setBackground(new BitmapDrawable(getResources(), b2));
+		}
+	}
+
 	private Bitmap crop(Bitmap srcBmp, View canvasView, int downsampling) {
-		Bitmap dstBmp;
-		dstBmp = Bitmap.createBitmap(
+		return Bitmap.createBitmap(
 				srcBmp,
 				(int) canvasView.getX()/downsampling,
 				(int) canvasView.getY()/downsampling,
 				canvasView.getWidth()/downsampling,
 				canvasView.getHeight()/downsampling
 		);
-		return dstBmp;
 	}
 
 	private Bitmap drawViewToBitmap(Bitmap dest, View view, int downSampling, Drawable background) {
@@ -101,6 +119,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		int viewHeight = view.getHeight();
 		int bmpWidth = (int) (viewWidth * scale);
 		int bmpHeight = (int) (viewHeight * scale);
+
+		//Log.d(TAG, "viewheight:"+viewHeight+" viewWidth:"+viewWidth+" bmpHeight:"+bmpHeight+" bmpWidth:"+bmpWidth);
 		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
 			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
 		}
@@ -111,9 +131,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 			c.scale(scale, scale);
 		}
 		view.draw(c);
-		view.layout(0, 0, viewWidth, viewHeight);
-		//return BlurUtil.blur(rs,dest,4,BlurUtil.Algorithm.RENDERSCRIPT);
-		return dest;
+		//view.layout(0, 0, viewWidth, viewHeight);
+		return BlurUtil.blur(rs,dest,8,BlurUtil.Algorithm.STACKBLUR);
 	}
 
 	@Override
@@ -135,13 +154,13 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		public View getView(int position, ViewPager pager) {
 			switch (position) {
 				case 0:
-					return createImageView(R.drawable.photo3);
+					return createImageView(R.drawable.photo3_med);
 				case 1:
-					return createImageView(R.drawable.photo2);
+					return createImageView(R.drawable.photo2_med);
 				case 2:
-					return createImageView(R.drawable.photo1);
+					return createImageView(R.drawable.photo1_med);
 				default:
-					return createImageView(R.drawable.photo1);
+					return createImageView(R.drawable.photo1_med);
 			}
 		}
 
@@ -176,4 +195,6 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 			return frameLayout;
 		}
 	}
+
+
 }

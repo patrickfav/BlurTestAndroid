@@ -248,7 +248,7 @@ public class BlurUtil {
 		int h = bitmap.getHeight();
 
 		int[] pix = new int[w * h];
-		Log.e("pix", w + " " + h + " " + pix.length);
+		Log.v("pix", w + " " + h + " " + pix.length);
 		bitmap.getPixels(pix, 0, w, 0, 0, w, h);
 
 		int wm = w - 1;
