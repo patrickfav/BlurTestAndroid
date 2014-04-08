@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.renderscript.RenderScript;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,13 +39,15 @@ public class MainActivity extends Activity {
 	private TextView tvRadius;
 	private TextView tvInSample;
 	private Spinner algorithmSpinner;
-	private long start;
 
 	private int radius;
 	private int inSampleSize;
 	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RENDERSCRIPT;
 	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
 	private boolean showCrossfade = true;
+
+	private RenderScript rs;
+	private Bitmap blurTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +66,7 @@ public class MainActivity extends Activity {
 		tvInSample = (TextView) findViewById(R.id.tv_insample_value);
 		tvRadius = (TextView) findViewById(R.id.tv_radius_value);
 
-		tvInSample.setText(inSampleSize+"");
+		tvInSample.setText("1/"+inSampleSize*inSampleSize);
 		tvRadius.setText(radius+"px");
 
 		seekRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -71,6 +74,7 @@ public class MainActivity extends Activity {
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
 				radius=i+1;
 				tvRadius.setText(radius+"px");
+				reBlur();
 			}
 
 			@Override
@@ -87,8 +91,9 @@ public class MainActivity extends Activity {
 		seekInSampleSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				blurTemplate = null;
 				inSampleSize = i+1;
-				tvInSample.setText(inSampleSize+"");
+				tvInSample.setText("1/"+inSampleSize*inSampleSize);
 			}
 
 			@Override
@@ -98,7 +103,7 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
-
+				reBlur();
 			}
 		});
 
@@ -108,13 +113,15 @@ public class MainActivity extends Activity {
 				startBlur();
 			}
 		});
-
+		ArrayAdapter<BlurUtil.Algorithm> alogrithmArrayAdapter = new ArrayAdapter<BlurUtil.Algorithm>(this,R.layout.inc_spinner_textview, algorithmList);
+		alogrithmArrayAdapter.setDropDownViewResource(R.layout.inc_spinner_item);
 		algorithmSpinner = (Spinner) findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(new ArrayAdapter<BlurUtil.Algorithm>(this, R.layout.inc_spinner_item, algorithmList));
+		algorithmSpinner.setAdapter(alogrithmArrayAdapter);
 		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 				algorithm = algorithmList.get(i);
+				reBlur();
 			}
 
 			@Override
@@ -143,8 +150,11 @@ public class MainActivity extends Activity {
     }
 
 	private void startBlur() {
+		new BlurTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+	}
 
-		new BlurTask().execute();
+	private void reBlur() {
+		new BlurTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
 	@Override
@@ -178,48 +188,89 @@ public class MainActivity extends Activity {
 	}
 
 	public class BlurTask extends AsyncTask<Void, Void, Bitmap> {
+		private long startWholeProcess;
+		private long readBitmapDuration;
+		private long blurDuration;
+
+		private boolean onlyReBlur;
+
+		public BlurTask() {
+			this(false);
+		}
+
+		public BlurTask(boolean onlyReBlur) {
+			this.onlyReBlur= onlyReBlur;
+		}
+
 		@Override
 		protected void onPreExecute() {
-			start = SystemClock.elapsedRealtime();
-			imageViewNormal.setAlpha(1f);
-			imageViewBlur.setAlpha(1f);
+			startWholeProcess = SystemClock.elapsedRealtime();
+			if(!onlyReBlur) {
+				imageViewNormal.setAlpha(1f);
+				imageViewBlur.setAlpha(1f);
+			}
 		}
 
 		@Override
 		protected Bitmap doInBackground(Void... voids) {
-			Log.d(TAG,"Load Bitmap");
-			final BitmapFactory.Options options = new BitmapFactory.Options();
-			options.inSampleSize = inSampleSize;
-			Bitmap loadedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options);
+			if(blurTemplate == null) {
+				Log.d(TAG, "Load Bitmap");
+				long startReadBitmap = SystemClock.elapsedRealtime();
+				final BitmapFactory.Options options = new BitmapFactory.Options();
+				options.inSampleSize = inSampleSize;
+				blurTemplate = BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options);
+				readBitmapDuration = SystemClock.elapsedRealtime() - startReadBitmap;
+			}
+
 			Log.d(TAG,"Start blur algorithm");
-			Bitmap blurredBitmap = BlurUtil.blur(MainActivity.this,loadedBitmap, radius, algorithm);
+			long startBlur = SystemClock.elapsedRealtime();
+			Bitmap blurredBitmap=null;
+
+			try {
+				blurredBitmap = BlurUtil.blur(getRs(),blurTemplate, radius, algorithm);
+			} catch (Exception e) {
+				Toast.makeText(MainActivity.this, e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+			}
+
+			blurDuration = SystemClock.elapsedRealtime()- startBlur;
 			Log.d(TAG,"Done blur algorithm");
 			return  blurredBitmap;
 		}
 
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
-			Log.d(TAG,"Set image to imageView");
-			imageViewBlur.setImageBitmap(bitmap);
-			long duration = (SystemClock.elapsedRealtime()-start);
-			Log.d(TAG, "Bluring duration "+(SystemClock.elapsedRealtime()-start)+"ms");
-			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms"+" / "+ (BlurUtil.sizeOf(bitmap)/1024)+"kB",Toast.LENGTH_SHORT).show() ;
+			if(bitmap != null) {
+				Log.d(TAG, "Set image to imageView");
+				imageViewBlur.setImageBitmap(bitmap);
+				long duration = (SystemClock.elapsedRealtime() - startWholeProcess);
+				Log.d(TAG, "Bluring duration " + duration + "ms");
 
-			if(showCrossfade) {
-				final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadeout);
-				anim.setFillAfter(true);
-				imageViewNormal.startAnimation(anim);
-				final Animation anim2 = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadein);
-				anim2.setFillAfter(true);
-				imageViewBlur.startAnimation(anim2);
-			} else {
-				imageViewBlur.setAlpha(1.0f);
-				imageViewNormal.setAlpha(0.0f);
+				if(!onlyReBlur) {
+					Toast.makeText(MainActivity.this, algorithm + " /  insample " + inSampleSize + " / radius " + radius + "px / " + duration + "ms" + " / " + (BlurUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
+				}
+
+				if (showCrossfade && !onlyReBlur) {
+					final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadeout);
+					anim.setFillAfter(true);
+					imageViewNormal.startAnimation(anim);
+					final Animation anim2 = AnimationUtils.loadAnimation(MainActivity.this, R.animator.alpha_fadein);
+					anim2.setFillAfter(true);
+					imageViewBlur.startAnimation(anim2);
+				} else {
+					imageViewBlur.setAlpha(1.0f);
+					imageViewNormal.setAlpha(0.0f);
+				}
+
+				Bitmap blurBitmap = ((BitmapDrawable) imageViewBlur.getDrawable()).getBitmap();
+				((TextView) findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / "+ (BlurUtil.sizeOf(blurBitmap) / 1024) +"kB / "+algorithm+" / r:"+radius +"px / blur: " + blurDuration + "ms / "+duration+"ms");
 			}
-
-			Bitmap blurBitmap = ((BitmapDrawable)imageViewBlur.getDrawable()).getBitmap();
-			((TextView) findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth()+"x"+blurBitmap.getHeight()+" / "+(BlurUtil.sizeOf(blurBitmap)/1024)+"kB / " +duration +"ms");
-
 		}
+	}
+
+	public RenderScript getRs() {
+		if (rs == null) {
+			rs = RenderScript.create(this);
+		}
+		return rs;
 	}
 }

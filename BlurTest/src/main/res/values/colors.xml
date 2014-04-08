@@ -3,4 +3,5 @@
     <color name="halftransparent">#99000000</color>
     <color name="quartertransparent">#44000000</color>
     <color name="transparent">#00000000</color>
+    <color name="optionsTextColor">#ccc</color>
 </resources>

@@ -22,6 +22,18 @@
             android:src="@drawable/photo1"/>
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/tv_resolution_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100x200"
+        android:background="@color/quartertransparent"
+        android:textColor="@color/optionsTextColor"
+        android:padding="2dp"
+        android:textSize="9sp"
+        android:shadowColor="#000"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"/>
 
 
     <LinearLayout
@@ -32,6 +44,13 @@
         android:background="@color/halftransparent"
         android:padding="8dp"
         android:visibility="visible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="18sp"
+            android:text="Downsample"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -45,24 +64,32 @@
                 android:layout_height="wrap_content"
                 android:max="31"
                 android:progress="7"
-                android:layout_weight="9"
+                android:layout_weight="8"
                 />
             <TextView
                 android:id="@+id/tv_insample_value"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
-                android:text="8x"
+                android:text="1/8"
                 android:gravity="center"
-                android:textColor="#ccc"
-                android:textSize="18sp"
+                android:textColor="@color/optionsTextColor"
+                android:textSize="16sp"
                 android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 />
         </LinearLayout>
 
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="18sp"
+            android:text="Blur Radius"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:layout_marginBottom="12dp"
             android:orientation="horizontal"
             android:weightSum="10">
@@ -76,11 +103,11 @@
                 />
             <TextView
                 android:id="@+id/tv_radius_value"
-                android:layout_width="50dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:text="16px"
                 android:gravity="center"
-                android:textColor="#ccc"
+                android:textColor="@color/optionsTextColor"
                 android:textSize="18sp"
                 android:layout_gravity="center"
                 android:layout_weight="1"
@@ -98,16 +125,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Show Alpha Crossfade"
-            android:textColor="#ccc"
+            android:textColor="@color/optionsTextColor"
             android:padding="8dp"
             android:layout_marginBottom="12dp"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/btn_redraw"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_picture"
             android:layout_gravity="center"
+            android:text="Full Redraw"
+            android:textColor="@color/optionsTextColor"
             />
     </LinearLayout>
 
@@ -117,20 +145,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/quartertransparent"
-        android:textColor="#ccc"
+        android:textColor="@color/optionsTextColor"
         android:padding="4dp"
-        android:textSize="10sp"
+        android:textSize="9sp"
+        android:shadowColor="#000"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"/>
-    <TextView
-        android:id="@+id/tv_resolution_normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="100x200"
-        android:background="@color/quartertransparent"
-        android:textColor="#ccc"
-        android:padding="2dp"
-        android:textSize="10sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"/>
+
 </RelativeLayout>

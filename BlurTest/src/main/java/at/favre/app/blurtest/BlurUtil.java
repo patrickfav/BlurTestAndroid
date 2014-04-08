@@ -2,7 +2,6 @@ package at.favre.app.blurtest;
 
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
  * Created by PatrickF on 07.04.2014.
@@ -22,11 +20,11 @@ public class BlurUtil {
 
 	public enum Algorithm {RENDERSCRIPT, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
 
-	public static Bitmap blur(Context context, Bitmap bitmap, int radius, Algorithm algorithm) {
+	public static Bitmap blur(RenderScript rs, Bitmap bitmap, int radius, Algorithm algorithm) {
 		Log.i(TAG,"Using "+algorithm);
 		switch (algorithm) {
 			case RENDERSCRIPT:
-				return blurRenderScript(context,bitmap,radius);
+				return blurRenderScript(rs,bitmap,radius);
 			case STACKBLUR:
 				return blurStackBlur(bitmap,radius);
 			case GAUSSIAN_BLUR_FAST:
@@ -37,12 +35,9 @@ public class BlurUtil {
 				return bitmap;
 		}
 	}
-
-	private static Bitmap blurRenderScript(Context context, Bitmap bitmap, int radius) {
+	private static Bitmap blurRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT > 17) {
-			Log.d(TAG,"Using renderscript");
-
-			final RenderScript rs = RenderScript.create(context);
 			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,
 					Allocation.USAGE_SCRIPT);
 			final Allocation output = Allocation.createTyped(rs, input.getType());
@@ -53,8 +48,7 @@ public class BlurUtil {
 			output.copyTo(bitmap);
 			return bitmap;
 		} else {
-			Toast.makeText(context, "Renderscript needs sdk >= 17", Toast.LENGTH_LONG).show();
-			return bitmap;
+			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}
 	}
 

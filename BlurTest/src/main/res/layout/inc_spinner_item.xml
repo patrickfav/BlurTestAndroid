@@ -6,5 +6,5 @@
                  android:layout_height="48dp"
                  android:ellipsize="marquee"
                  android:textColor="#ccc"
-                 android:background="@color/transparent"
+                 android:background="@color/halftransparent"
                  android:textAlignment="inherit"/>
