@@ -29,6 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends Activity {
+	private static final String TAG = MainActivity.class.getSimpleName();
+
 	private ImageView imageViewBlur;
 	private ImageView imageViewNormal;
 	private SeekBar seekRadius;
@@ -185,16 +187,22 @@ public class MainActivity extends Activity {
 
 		@Override
 		protected Bitmap doInBackground(Void... voids) {
+			Log.d(TAG,"Load Bitmap");
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inSampleSize = inSampleSize;
-			return BlurUtil.blur(MainActivity.this, BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options), radius, algorithm);
+			Bitmap loadedBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options);
+			Log.d(TAG,"Start blur algorithm");
+			Bitmap blurredBitmap = BlurUtil.blur(MainActivity.this,loadedBitmap, radius, algorithm);
+			Log.d(TAG,"Done blur algorithm");
+			return  blurredBitmap;
 		}
 
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
+			Log.d(TAG,"Set image to imageView");
 			imageViewBlur.setImageBitmap(bitmap);
 			long duration = (SystemClock.elapsedRealtime()-start);
-			Log.d("BlurUtil", "Bluring duration "+(SystemClock.elapsedRealtime()-start)+"ms");
+			Log.d(TAG, "Bluring duration "+(SystemClock.elapsedRealtime()-start)+"ms");
 			Toast.makeText(MainActivity.this,algorithm+ "/  sample "+inSampleSize+" / radius "+radius+"px / "+duration+"ms"+" / "+ (BlurUtil.sizeOf(bitmap)/1024)+"kB",Toast.LENGTH_SHORT).show() ;
 
 			if(showCrossfade) {

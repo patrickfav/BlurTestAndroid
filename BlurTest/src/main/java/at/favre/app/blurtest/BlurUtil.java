@@ -18,10 +18,9 @@ import android.widget.Toast;
  * Created by PatrickF on 07.04.2014.
  */
 public class BlurUtil {
+	private static final String TAG = BlurUtil.class.getSimpleName();
 
 	public enum Algorithm {RENDERSCRIPT, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
-
-	private static final String TAG = "BlurUtil";
 
 	public static Bitmap blur(Context context, Bitmap bitmap, int radius, Algorithm algorithm) {
 		Log.i(TAG,"Using "+algorithm);
