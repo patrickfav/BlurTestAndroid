@@ -17,13 +17,19 @@
             android:layout_height="match_parent"/>
     </FrameLayout>
 
-    <ImageView
+    <View
         android:id="@+id/stripe"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:layout_gravity="top"
         />
 
+    <View
+        android:id="@+id/stripe2"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom"
+        />
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

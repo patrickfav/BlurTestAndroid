@@ -42,7 +42,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 	 */
 	private PagerAdapter mPagerAdapter;
 	private ColorDrawable imageBackgroundDrawable;
-	private ImageView canvasView;
+	private View canvasView;
+	private View canvasView2;
 
 	private RenderScript rs;
 	private Bitmap dest;
@@ -57,7 +58,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		mPagerAdapter = new ScreenSlidePagerAdapter();
 		mPager.setAdapter(mPagerAdapter);
 
-		canvasView = (ImageView) findViewById(R.id.stripe);
+		canvasView =  findViewById(R.id.stripe);
+		canvasView2 = findViewById(R.id.stripe2);
 
 		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.halftransparent));
 		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -112,7 +114,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 //			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
 			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 4, imageBackgroundDrawable);
-			canvasView.setBackground(new BitmapDrawable(getResources(), b));
+			canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView,4),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+			canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView2,4),12,BlurUtil.Algorithm.RENDERSCRIPT)));
 		}
 	}
 
@@ -154,8 +157,9 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		view.draw(c);
 
 		//view.layout(0, 0, viewWidth, viewHeight);
-		return BlurUtil.blur(rs,crop(dest,canvasView,downSampling),12,BlurUtil.Algorithm.RENDERSCRIPT);
+		//return BlurUtil.blur(rs,dest,12,BlurUtil.Algorithm.RENDERSCRIPT);
 		//return crop(dest,canvasView,downSampling);
+		return dest;
 	}
 
 	@Override
