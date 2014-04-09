@@ -3,7 +3,7 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <translate
         android:duration="200"
-        android:fromYDelta="-100%"
+        android:fromYDelta="-120%"
         android:toYDelta="0%" />
     <alpha
         android:duration="200"

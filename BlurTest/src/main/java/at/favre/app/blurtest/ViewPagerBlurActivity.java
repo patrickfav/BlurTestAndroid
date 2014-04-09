@@ -2,6 +2,7 @@ package at.favre.app.blurtest;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -98,6 +99,18 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 
 	private void updateBlurView() {
 		if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
+			//			new AsyncTask<Void,Void,Bitmap>() {
+//				@Override
+//				protected Bitmap doInBackground(Void... voids) {
+//					return drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
+//				}
+//
+//				@Override
+//				protected void onPostExecute(Bitmap b) {
+//					canvasView.setBackground(new BitmapDrawable(getResources(), b));
+//				}
+//			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 4, imageBackgroundDrawable);
 			canvasView.setBackground(new BitmapDrawable(getResources(), b));
 		}
@@ -126,14 +139,23 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
 		}
 		Canvas c = new Canvas(dest);
+
+		Paint paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setFilterBitmap(true);
+		paint.setDither(true);
+
+
 		background.setBounds(new Rect(0, 0, viewWidth, viewHeight));
 		background.draw(c);
 		if (downSampling > 1) {
 			c.scale(scale, scale);
 		}
 		view.draw(c);
+
 		//view.layout(0, 0, viewWidth, viewHeight);
-		return BlurUtil.blur(rs,crop(dest,canvasView,downSampling),8,BlurUtil.Algorithm.STACKBLUR);
+		return BlurUtil.blur(rs,crop(dest,canvasView,downSampling),12,BlurUtil.Algorithm.RENDERSCRIPT);
+		//return crop(dest,canvasView,downSampling);
 	}
 
 	@Override
@@ -159,6 +181,8 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 				case 1:
 					return createImageView(R.drawable.photo2_med);
 				case 2:
+					return createImageView(R.drawable.photo4_med);
+				case 3:
 					return createImageView(R.drawable.photo1_med);
 				default:
 					return createImageView(R.drawable.photo1_med);
@@ -173,7 +197,7 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 4;
 		}
 
 		@Override

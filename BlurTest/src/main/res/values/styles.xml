@@ -1,7 +1,16 @@
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:actionBarStyle">@style/action_bar_theme</item>
+        <item name="android:actionMenuTextColor">@color/optionsTextColor</item>
     </style>
 
+    <style name="action_bar_theme" parent="@android:style/Widget.Holo.ActionBar">
+        <item name="android:background">@color/halftransparent</item>
+        <item name="android:titleTextStyle">@style/action_bar_text</item>
+    </style>
+    <style name="action_bar_text">
+        <item name="android:textColor">@color/optionsTextColor</item>
+        <item name="android:textSize">18dp</item>
+    </style>
 </resources>

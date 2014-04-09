@@ -1,24 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:id="@+id/root"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
     <FrameLayout
         android:id="@+id/wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v4.view.ViewPager
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/pager"
+            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
     </FrameLayout>
+
     <ImageView
         android:id="@+id/stripe"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_gravity="center"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="top"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:padding="12dp"
+        android:text="A Title for the Blur"
+        android:textColor="@color/optionsTextColor"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        android:textSize="22sp"
+        android:visibility="gone"/>
 </FrameLayout>

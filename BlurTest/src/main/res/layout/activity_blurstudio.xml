@@ -30,6 +30,7 @@
         android:background="@color/quartertransparent"
         android:textColor="@color/optionsTextColor"
         android:padding="2dp"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:textSize="9sp"
         android:shadowColor="#000"
         android:layout_alignParentTop="true"
@@ -43,6 +44,7 @@
         android:orientation="vertical"
         android:background="@color/halftransparent"
         android:padding="8dp"
+        android:layout_marginTop="?android:attr/actionBarSize"
         android:visibility="visible">
 
         <TextView

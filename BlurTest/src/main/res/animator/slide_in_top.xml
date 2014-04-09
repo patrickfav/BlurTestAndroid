@@ -19,7 +19,7 @@
     <translate
         android:duration="300"
         android:fromYDelta="0%"
-        android:toYDelta="-100%" />
+        android:toYDelta="-120%" />
     <alpha
         android:duration="300"
         android:fromAlpha="1.0"
