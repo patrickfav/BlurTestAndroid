@@ -175,7 +175,7 @@ public class BlurStudioActivity extends FragmentActivity {
 					final Animation anim = AnimationUtils.loadAnimation(BlurStudioActivity.this, R.animator.slide_out_top);
 					anim.setFillAfter(true);
 					findViewById(R.id.options).startAnimation(anim);
-					findViewById(R.id.options).setVisibility(View.INVISIBLE);
+					findViewById(R.id.options).setVisibility(View.GONE);
 				} else {
 					findViewById(R.id.options).setVisibility(View.VISIBLE);
 					final Animation anim = AnimationUtils.loadAnimation(BlurStudioActivity.this, R.animator.slide_in_top);

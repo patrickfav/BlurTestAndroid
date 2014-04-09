@@ -2,23 +2,32 @@ package at.favre.app.blurtest;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.renderscript.RenderScript;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -27,137 +36,229 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ViewPagerBlurActivity extends FragmentActivity {
 	private static final String TAG = ViewPagerBlurActivity.class.getSimpleName();
 
+	private final static int IN_SAMPLE_SIZE = 6;
+	private final static int BLUR_RADIUS = 10;
 
-	/**
-	 * The number of pages (wizard steps) to show in this demo.
-	 */
-
-
-	/**
-	 * The pager widget, which handles animation and allows swiping horizontally to access previous
-	 * and next wizard steps.
-	 */
 	private ViewPager mPager;
 
-	/**
-	 * The pager adapter, which provides the pages to the view pager widget.
-	 */
 	private PagerAdapter mPagerAdapter;
-	private ColorDrawable imageBackgroundDrawable;
-	private View canvasView;
-	private View canvasView2;
+	private View topBlurView;
+	private View bottomBlurView;
 
 	private RenderScript rs;
 	private Bitmap dest;
 
 	private AtomicBoolean isWorking = new AtomicBoolean(false);
 
+	private SeekBar seekRadius;
+	private SeekBar seekInSampleSize;
+	private TextView tvRadius;
+	private TextView tvInSample;
+	private Spinner algorithmSpinner;
+
+	private TextView tvPerformance;
+
+	private int radius;
+	private int inSampleSize;
+	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RENDERSCRIPT;
+	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
+
+	private LruCache<String, FrameLayout> mMemoryCache;
+
+	private long max=0;
+	private long min=9999;
+	private double avgSum =0;
+	private long avgCount =0;
+	private long last=0;
+
+	private boolean optionsShown =false;
+	private ViewTreeObserver.OnGlobalLayoutListener ogl;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-//		pool = new ThreadPoolExecutor(6,12,100L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-
 		rs = RenderScript.create(this);
 		setContentView(R.layout.activity_viewpagerblur);
 
-		// Instantiate a ViewPager and a PagerAdapter.
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter();
 		mPager.setAdapter(mPagerAdapter);
 
-		canvasView =  findViewById(R.id.stripe);
-		canvasView2 = findViewById(R.id.stripe2);
+		topBlurView = findViewById(R.id.topCanvas);
+		bottomBlurView = findViewById(R.id.bottomCanvas);
 
-		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.darkgrey));
 		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 				updateBlurView();
-				//Log.d(TAG,"scroll "+positionOffsetPixels );
 			}
 
 			@Override
 			public void onPageSelected(int position) {
-
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int state) {
-
 			}
 		});
-
-		mPager.setOnTouchListener(new View.OnTouchListener() {
-			@Override
-			public boolean onTouch(View view, MotionEvent motionEvent) {
-				//Log.d(TAG, "Touch event");
-				//updateBlurView();
-				return false;
-			}
-		});
-
-
-		mPager.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+		ogl = new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
+				if(updateBlurView()) {
+					disableLayoutListener();
+				}
+			}
+		};
+		mPager.getViewTreeObserver().addOnGlobalLayoutListener(ogl);
+
+		tvPerformance = (TextView) findViewById(R.id.tv_performance);
+		seekInSampleSize = (SeekBar) findViewById(R.id.seek_insample);
+		seekRadius = (SeekBar) findViewById(R.id.seek_radius);
+
+		inSampleSize = seekInSampleSize.getProgress()+1;
+		radius= seekRadius.getProgress()+1;
+
+		tvInSample = (TextView) findViewById(R.id.tv_insample_value);
+		tvRadius = (TextView) findViewById(R.id.tv_radius_value);
+
+		tvInSample.setText("1/"+inSampleSize*inSampleSize);
+		tvRadius.setText(radius+"px");
+
+		seekRadius.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				radius=i+1;
+				tvRadius.setText(radius+"px");
+				updateBlurView();
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+		seekInSampleSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+				inSampleSize = i+1;
+				tvInSample.setText("1/"+inSampleSize*inSampleSize);
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
 				updateBlurView();
 			}
 		});
 
-		//mask =  BitmapFactory.decodeResource(this.getResources(), R.drawable.mask);
+		ArrayAdapter<BlurUtil.Algorithm> alogrithmArrayAdapter = new ArrayAdapter<BlurUtil.Algorithm>(this,R.layout.inc_spinner_textview, algorithmList);
+		alogrithmArrayAdapter.setDropDownViewResource(R.layout.inc_spinner_item);
+		algorithmSpinner = (Spinner) findViewById(R.id.spinner_algorithm);
+		algorithmSpinner.setAdapter(alogrithmArrayAdapter);
+		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+				algorithm = algorithmList.get(i);
+				updateBlurView();
+			}
 
+			@Override
+			public void onNothingSelected(AdapterView<?> adapterView) {
+
+			}
+		});
+
+//		findViewById(R.id.options).setVisibility(View.VISIBLE);
+//		final Animation anim = AnimationUtils.loadAnimation(ViewPagerBlurActivity.this, R.animator.slide_in_top);
+//		anim.setFillAfter(true);
+//		anim.setDuration(0);
+//		findViewById(R.id.options).startAnimation(anim);
+
+		changeOptionsView(false);
+
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		final int cacheSize = maxMemory / 2;
+
+		mMemoryCache = new LruCache<String, FrameLayout>(cacheSize) {
+			@Override
+			protected int sizeOf(String key, FrameLayout bitmap) {
+				return ((BitmapDrawable) ((ImageView) bitmap.findViewById(R.id.imageView)).getDrawable()).getBitmap().getByteCount() / 1024;
+			}
+		};
 	}
 
-//	private void asyncUpdateBlurView() {
-//		if(!isWorking.get()) {
-//			pool.execute(new BlurRunnable(this));
-//		}
-//	}
-//
-//	@Override
-//	public void update(final Bitmap top, final Bitmap bottom) {
-//		runOnUiThread(new Runnable() {
-//			@Override
-//			public void run() {
-//				canvasView.setBackground(new BitmapDrawable(getResources(),top));
-//				canvasView2.setBackground(new BitmapDrawable(getResources(),bottom));
-//			}
-//		});
-//
-//	}
-//
-//	public class BlurRunnable implements Runnable{
-//		private IBlurListener listener;
-//
-//		public BlurRunnable(IBlurListener listener) {
-//			this.listener = listener;
-//		}
-//
-//		@Override
-//		public void run() {
-//			if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
-//				isWorking.set(true);
-//				Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
-//				listener.update(BlurUtil.blur(rs,crop(b,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT),BlurUtil.blur(rs,crop(b,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT));
-//				isWorking.set(false);
-//			}
-//		}
-//	}
+	private void disableLayoutListener() {
+		mPager.getViewTreeObserver().removeOnGlobalLayoutListener(ogl);
+	}
 
-	private void updateBlurView() {
-		if(!isWorking.get()) {
-			if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
-				isWorking.compareAndSet(false,true);
-				dest = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
-				canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(dest,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
-				canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(dest,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
-				isWorking.compareAndSet(true,false);
-			}
-		} else {
-			Log.d(TAG,"skip blur frame");
+	public void addBitmapToMemoryCache(String key, FrameLayout bitmap) {
+		if (getBitmapFromMemCache(key) == null) {
+			mMemoryCache.put(key, bitmap);
 		}
+	}
+
+	public FrameLayout getBitmapFromMemCache(String key) {
+		return mMemoryCache.get(key);
+	}
+
+	private boolean updateBlurView() {
+		if (!isWorking.get() && topBlurView.getWidth() != 0 && topBlurView.getHeight() != 0) {
+			isWorking.compareAndSet(false, true);
+			long start = SystemClock.elapsedRealtime();
+			dest = drawViewToBitmap(dest, findViewById(R.id.wrapper), inSampleSize);
+			topBlurView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs, crop(dest, topBlurView, inSampleSize), radius, algorithm)));
+			bottomBlurView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs, crop(dest, bottomBlurView, inSampleSize), radius, algorithm)));
+			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
+			isWorking.compareAndSet(true, false);
+			return true;
+		} else {
+			Log.v(TAG, "skip blur frame");
+			return false;
+		}
+	}
+
+	private void checkAndSetPerformanceTextView(long currentRunMs) {
+		if(max < currentRunMs) {
+			max = currentRunMs;
+		}
+		if(min > currentRunMs) {
+			min = currentRunMs;
+		}
+		avgCount++;
+		avgSum += currentRunMs;
+		last = currentRunMs;
+		tvPerformance.setText("last: "+last+"ms / avg: "+Math.round(avgSum/avgCount)+"ms / min:"+min+"ms / max:"+max+"ms");
+	}
+
+	private Bitmap drawViewToBitmap(Bitmap dest, View view, int downSampling) {
+		float scale = 1f / downSampling;
+		int viewWidth = view.getWidth();
+		int viewHeight = view.getHeight();
+		int bmpWidth = Math.round(viewWidth * scale);
+		int bmpHeight = Math.round(viewHeight * scale);
+
+		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
+			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
+		}
+
+		Canvas c = new Canvas(dest);
+		if (downSampling > 1) {
+			c.scale(scale, scale);
+		}
+
+		view.draw(c);
+		return dest;
 	}
 
 	private Bitmap crop(Bitmap srcBmp, View canvasView, int downsampling) {
@@ -171,43 +272,74 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		);
 	}
 
-	private Bitmap drawViewToBitmap(Bitmap dest, View view, int downSampling, Drawable background) {
-		float scale = 1f / downSampling;
-		int viewWidth = view.getWidth();
-		int viewHeight = view.getHeight();
-		int bmpWidth = Math.round(viewWidth * scale);
-		int bmpHeight = Math.round(viewHeight * scale);
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_pager, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
-		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
-			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
+	private void changeOptionsView(boolean show) {
+		if(show) {
+//			final Animation anim = AnimationUtils.loadAnimation(ViewPagerBlurActivity.this, R.animator.slide_in_top);
+//			anim.setFillAfter(true);
+//			anim.setAnimationListener(new Animation.AnimationListener() {
+//				@Override
+//				public void onAnimationStart(Animation animation) {
+//					findViewById(R.id.options).setAlpha(1.0f);
+//					findViewById(R.id.options).setVisibility(View.VISIBLE);
+//				}
+//
+//				@Override
+//				public void onAnimationEnd(Animation animation) {
+//
+//				}
+//
+//				@Override
+//				public void onAnimationRepeat(Animation animation) {
+//
+//				}
+//			});
+//			findViewById(R.id.options).startAnimation(anim);
+			findViewById(R.id.options).setVisibility(View.VISIBLE);
+		} else {
+//			final Animation anim = AnimationUtils.loadAnimation(ViewPagerBlurActivity.this, R.animator.slide_out_top);
+//			anim.setFillAfter(true);
+//			anim.setAnimationListener(new Animation.AnimationListener() {
+//				@Override
+//				public void onAnimationStart(Animation animation) {
+//
+//				}
+//
+//				@Override
+//				public void onAnimationEnd(Animation animation) {
+//					findViewById(R.id.options).setVisibility(View.GONE);
+//				}
+//
+//				@Override
+//				public void onAnimationRepeat(Animation animation) {
+//
+//				}
+//			});
+//			findViewById(R.id.options).startAnimation(anim);
+			findViewById(R.id.options).setVisibility(View.GONE);
 		}
-		Canvas c = new Canvas(dest);
-
-		background.setBounds(new Rect(0, 0, viewWidth, viewHeight));
-		background.draw(c);
-		if (downSampling > 1) {
-			c.scale(scale, scale);
-		}
-
-		view.draw(c);
-		return dest;
 	}
 
 	@Override
-	public void onBackPressed() {
-		if (mPager.getCurrentItem() == 0) {
-			// If the user is currently looking at the first step, allow the system to handle the
-			// Back button. This calls finish() on this activity and pops the back stack.
-			super.onBackPressed();
-		} else {
-			// Otherwise, select the previous step.
-			mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle presses on the action bar items
+		switch (item.getItemId()) {
+			case R.id.action_settings:
+				optionsShown = !optionsShown;
+				changeOptionsView(optionsShown);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
-
-	private class ScreenSlidePagerAdapter extends PagerAdapter
-	{
+	private class ScreenSlidePagerAdapter extends PagerAdapter {
 
 		public View getView(int position, ViewPager pager) {
 			switch (position) {
@@ -244,14 +376,22 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 
 			return view;
 		}
+
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object view) {
 			((ViewPager) container).removeView((View) view);
 		}
 
 		public View createImageView(int drawableResId) {
-			FrameLayout frameLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.inc_image_page, mPager,false);
-			((ImageView) frameLayout.findViewById(R.id.imageView)).setImageDrawable(getResources().getDrawable(drawableResId));
+			FrameLayout frameLayout = getBitmapFromMemCache(String.valueOf(drawableResId));
+			if(frameLayout == null) {
+				Log.d(TAG, "Not found in cache - createing view for viewpager");
+				frameLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.inc_image_page, mPager, false);
+				((ImageView) frameLayout.findViewById(R.id.imageView)).setImageDrawable(getResources().getDrawable(drawableResId));
+				addBitmapToMemoryCache(String.valueOf(drawableResId),frameLayout);
+			} else {
+
+			}
 			return frameLayout;
 		}
 	}
