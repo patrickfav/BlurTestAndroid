@@ -11,12 +11,15 @@ import android.renderscript.RenderScript;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by PatrickF on 08.04.2014.
@@ -46,9 +49,16 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 
 	private RenderScript rs;
 	private Bitmap dest;
+
+	private AtomicBoolean isWorking = new AtomicBoolean(false);
+
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+//		pool = new ThreadPoolExecutor(6,12,100L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+
 		rs = RenderScript.create(this);
 		setContentView(R.layout.activity_viewpagerblur);
 
@@ -96,25 +106,57 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 			}
 		});
 
+		//mask =  BitmapFactory.decodeResource(this.getResources(), R.drawable.mask);
+
 	}
 
-	private void updateBlurView() {
-		if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
-			//			new AsyncTask<Void,Void,Bitmap>() {
-//				@Override
-//				protected Bitmap doInBackground(Void... voids) {
-//					return drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
-//				}
+//	private void asyncUpdateBlurView() {
+//		if(!isWorking.get()) {
+//			pool.execute(new BlurRunnable(this));
+//		}
+//	}
 //
-//				@Override
-//				protected void onPostExecute(Bitmap b) {
-//					canvasView.setBackground(new BitmapDrawable(getResources(), b));
-//				}
-//			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//	@Override
+//	public void update(final Bitmap top, final Bitmap bottom) {
+//		runOnUiThread(new Runnable() {
+//			@Override
+//			public void run() {
+//				canvasView.setBackground(new BitmapDrawable(getResources(),top));
+//				canvasView2.setBackground(new BitmapDrawable(getResources(),bottom));
+//			}
+//		});
+//
+//	}
+//
+//	public class BlurRunnable implements Runnable{
+//		private IBlurListener listener;
+//
+//		public BlurRunnable(IBlurListener listener) {
+//			this.listener = listener;
+//		}
+//
+//		@Override
+//		public void run() {
+//			if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
+//				isWorking.set(true);
+//				Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
+//				listener.update(BlurUtil.blur(rs,crop(b,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT),BlurUtil.blur(rs,crop(b,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT));
+//				isWorking.set(false);
+//			}
+//		}
+//	}
 
-			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
-			canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
-			canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+	private void updateBlurView() {
+		if(!isWorking.get()) {
+			if(canvasView.getWidth() != 0 && canvasView.getHeight() != 0) {
+				isWorking.compareAndSet(false,true);
+				dest = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
+				canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(dest,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+				canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(dest,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+				isWorking.compareAndSet(true,false);
+			}
+		} else {
+			Log.d(TAG,"skip blur frame");
 		}
 	}
 
@@ -136,7 +178,6 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		int bmpWidth = Math.round(viewWidth * scale);
 		int bmpHeight = Math.round(viewHeight * scale);
 
-		//Log.d(TAG, "viewheight:"+viewHeight+" viewWidth:"+viewWidth+" bmpHeight:"+bmpHeight+" bmpWidth:"+bmpWidth);
 		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
 			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
 		}
@@ -149,10 +190,6 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		}
 
 		view.draw(c);
-
-		//view.layout(0, 0, viewWidth, viewHeight);
-		//return BlurUtil.blur(rs,dest,12,BlurUtil.Algorithm.RENDERSCRIPT);
-		//return crop(dest,canvasView,downSampling);
 		return dest;
 	}
 

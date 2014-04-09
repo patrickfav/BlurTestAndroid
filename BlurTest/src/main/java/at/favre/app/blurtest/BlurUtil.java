@@ -21,7 +21,6 @@ public class BlurUtil {
 	public enum Algorithm {RENDERSCRIPT, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
 
 	public static Bitmap blur(RenderScript rs, Bitmap bitmap, int radius, Algorithm algorithm) {
-		Log.i(TAG,"Using "+algorithm);
 		switch (algorithm) {
 			case RENDERSCRIPT:
 				return blurRenderScript(rs,bitmap,radius);
