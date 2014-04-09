@@ -2,7 +2,6 @@ package at.favre.app.blurtest;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -61,7 +60,7 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		canvasView =  findViewById(R.id.stripe);
 		canvasView2 = findViewById(R.id.stripe2);
 
-		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.halftransparent));
+		imageBackgroundDrawable = new ColorDrawable(getResources().getColor(R.color.darkgrey));
 		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -113,9 +112,9 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 //				}
 //			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 4, imageBackgroundDrawable);
-			canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView,4),12,BlurUtil.Algorithm.RENDERSCRIPT)));
-			canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView2,4),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+			Bitmap b = drawViewToBitmap(dest, findViewById(R.id.wrapper), 6, imageBackgroundDrawable);
+			canvasView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
+			canvasView2.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(rs,crop(b,canvasView2,6),12,BlurUtil.Algorithm.RENDERSCRIPT)));
 		}
 	}
 
@@ -143,17 +142,12 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		}
 		Canvas c = new Canvas(dest);
 
-		Paint paint = new Paint();
-		paint.setAntiAlias(true);
-		paint.setFilterBitmap(true);
-		paint.setDither(true);
-
-
 		background.setBounds(new Rect(0, 0, viewWidth, viewHeight));
 		background.draw(c);
 		if (downSampling > 1) {
 			c.scale(scale, scale);
 		}
+
 		view.draw(c);
 
 		//view.layout(0, 0, viewWidth, viewHeight);
