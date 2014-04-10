@@ -1,5 +1,6 @@
 package at.favre.app.blurtest;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class BlurStudioActivity extends FragmentActivity {
+public class BlurStudioActivity extends FragmentActivity implements  ActionBar.OnNavigationListener {
 	private static final String TAG = BlurStudioActivity.class.getSimpleName();
 
 	private ImageView imageViewBlur;
@@ -53,7 +54,13 @@ public class BlurStudioActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_blurstudio);
+
+		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static Blur","Live Blur"});
+		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
+		getActionBar().setListNavigationCallbacks(adapter,this);
 
 		imageViewNormal= (ImageView) findViewById(R.id.normal_image);
 		imageViewBlur = (ImageView) findViewById(R.id.blur_image);
@@ -183,14 +190,19 @@ public class BlurStudioActivity extends FragmentActivity {
 					findViewById(R.id.options).startAnimation(anim);
 				}
 				return true;
-			case R.id.action_viewpager:
-				Intent i = new Intent(this,ViewPagerBlurActivity.class);
-				startActivity(i);
-
-				return true;
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public boolean onNavigationItemSelected(int i, long l) {
+		if(i == 1) {
+			Intent intent = new Intent(this,ViewPagerBlurActivity.class);
+			startActivity(intent);
+			getActionBar().setSelectedNavigationItem(0);
+		}
+		return false;
 	}
 
 	public class BlurTask extends AsyncTask<Void, Void, Bitmap> {

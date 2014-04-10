@@ -1,5 +1,7 @@
 package at.favre.app.blurtest;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -33,7 +35,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by PatrickF on 08.04.2014.
  */
-public class ViewPagerBlurActivity extends FragmentActivity {
+public class ViewPagerBlurActivity extends FragmentActivity implements  ActionBar.OnNavigationListener {
 	private static final String TAG = ViewPagerBlurActivity.class.getSimpleName();
 
 	private final static int IN_SAMPLE_SIZE = 6;
@@ -77,6 +79,11 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+//		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Live Blur","Static Blur"});
+//		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
+//		getActionBar().setListNavigationCallbacks(adapter,this);
 
 		rs = RenderScript.create(this);
 		setContentView(R.layout.activity_viewpagerblur);
@@ -396,5 +403,12 @@ public class ViewPagerBlurActivity extends FragmentActivity {
 		}
 	}
 
-
+	@Override
+	public boolean onNavigationItemSelected(int i, long l) {
+		if(i == 0) {
+			Intent intent = new Intent(this,BlurStudioActivity.class);
+			startActivity(intent);
+		}
+		return false;
+	}
 }

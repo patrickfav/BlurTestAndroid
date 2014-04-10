@@ -5,8 +5,4 @@
           android:icon="@drawable/ic_action_settings"
           android:showAsAction="ifRoom"
           android:title="Settings"/>
-    <item android:id="@+id/action_viewpager"
-          android:icon="@drawable/ic_action_picture"
-          android:showAsAction="ifRoom"
-          android:title="Viewpager Demo"/>
 </menu>

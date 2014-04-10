@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".BlurStudioActivity"
-            android:label="@string/app_name">
+            android:label="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -19,7 +19,7 @@
         </activity>
         <activity
             android:name=".ViewPagerBlurActivity"
-            android:label="@string/app_name">
+            android:label="">
         </activity>
     </application>
 
