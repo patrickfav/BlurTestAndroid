@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:blurapp="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/action_settings"
           android:icon="@drawable/ic_action_settings"
-          android:showAsAction="ifRoom"
+          blurapp:showAsAction="ifRoom"
           android:title="Settings"/>
 </menu>

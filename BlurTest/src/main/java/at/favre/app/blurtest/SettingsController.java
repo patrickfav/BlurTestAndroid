@@ -1,6 +1,9 @@
 package at.favre.app.blurtest;
 
+import android.os.Build;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -28,18 +31,14 @@ public class SettingsController {
 
 	private int radius;
 	private int inSampleSize;
-	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RENDERSCRIPT;
+	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
 	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
 	private boolean showCrossfade = true;
-
-	private SeekBar.OnSeekBarChangeListener radiusChangeListener;
-	private SeekBar.OnSeekBarChangeListener sampleSizeChangeListener;
-	private AdapterView.OnItemSelectedListener algorithmSelectListener;
 
 	public SettingsController(View v,final SeekBar.OnSeekBarChangeListener radiusChangeListener,final SeekBar.OnSeekBarChangeListener sampleSizeChangeListener,
 							  final AdapterView.OnItemSelectedListener algorithmSelectListener, final View.OnClickListener fullRedrawOnClickListener, boolean hideButtonAndCheckbox) {
 		settingsWrapper = v.findViewById(R.id.settings);
-		settingsWrapper.setVisibility(View.GONE);
+
 
 		seekInSampleSize = (SeekBar)  v.findViewById(R.id.seek_insample);
 		seekRadius = (SeekBar)  v.findViewById(R.id.seek_radius);
@@ -98,6 +97,13 @@ public class SettingsController {
 			}
 		});
 
+		if(Build.VERSION.SDK_INT >= 17) {
+			algorithmSpinner.setSelection(algorithmList.indexOf(BlurUtil.Algorithm.RS_GAUSSIAN));
+		} else {
+			algorithmSpinner.setSelection(algorithmList.indexOf(BlurUtil.Algorithm.STACKBLUR));
+		}
+
+
 		if(!hideButtonAndCheckbox) {
 			((CheckBox) v.findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
 			((CheckBox) v.findViewById(R.id.cb_crossfade)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -112,25 +118,55 @@ public class SettingsController {
 			v.findViewById(R.id.cb_crossfade).setVisibility(View.GONE);
 			v.findViewById(R.id.btn_redraw).setVisibility(View.GONE);
 		}
+		initializeSettingsPosition();
+	}
+
+	private void initializeSettingsPosition() {
+		settingsWrapper.setVisibility(View.INVISIBLE);
 	}
 
 	public void switchShow(){
 		if(settingsWrapper.getVisibility() == View.VISIBLE) {
-			settingsWrapper.setVisibility(View.GONE);
+			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.animator.slide_out_from_top);
+			anim.setAnimationListener(new Animation.AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation) {
+					settingsWrapper.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+
+				}
+			});
+			settingsWrapper.startAnimation(anim);
+
 		} else {
 			settingsWrapper.setVisibility(View.VISIBLE);
+
+			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.animator.slide_in_from_top);
+			anim.setAnimationListener(new Animation.AnimationListener() {
+				@Override
+				public void onAnimationStart(Animation animation) {
+
+				}
+
+				@Override
+				public void onAnimationEnd(Animation animation) {
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation animation) {
+
+				}
+			});
+			settingsWrapper.startAnimation(anim);
 		}
-//		if(findViewById(R.id.settings).getVisibility() == View.VISIBLE) {
-//			final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.slide_out_top);
-//			anim.setFillAfter(true);
-//			findViewById(R.id.settings).startAnimation(anim);
-//			findViewById(R.id.settings).setVisibility(View.GONE);
-//		} else {
-//			findViewById(R.id.settings).setVisibility(View.VISIBLE);
-//			final Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.animator.slide_in_top);
-//			anim.setFillAfter(true);
-//			findViewById(R.id.settings).startAnimation(anim);
-//		}
 	}
 
 	public static String getInsampleText(int inSampleSize) {

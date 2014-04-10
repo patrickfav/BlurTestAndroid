@@ -2,6 +2,6 @@
           android:id="@android:id/text1"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:textSize="18sp"
+          android:textSize="20sp"
           android:textColor="@color/optionsTextColor"
-          android:padding="14dp"/>
+          android:padding="16dp"/>

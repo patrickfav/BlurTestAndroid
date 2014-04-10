@@ -1,12 +1,12 @@
 package at.favre.app.blurtest.activities;
 
-import android.app.ActionBar;
 import android.os.Build;
 import android.os.Bundle;
 import android.renderscript.RenderScript;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +20,7 @@ import at.favre.app.blurtest.fragments.StaticBlurFragment;
 /**
  * Created by PatrickF on 10.04.2014.
  */
-public class MainActivity extends FragmentActivity implements  ActionBar.OnNavigationListener {
+public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavigationListener {
 
 	private RenderScript rs;
 
@@ -28,10 +28,10 @@ public class MainActivity extends FragmentActivity implements  ActionBar.OnNavig
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static Blur","Live Blur"});
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live"});
 		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
-		getActionBar().setListNavigationCallbacks(adapter,this);
+		getSupportActionBar().setListNavigationCallbacks(adapter,this);
 
 		setContentView(R.layout.activity_main);
 
@@ -40,6 +40,13 @@ public class MainActivity extends FragmentActivity implements  ActionBar.OnNavig
 			t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
 			t.commit();
 		}
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		rs.destroy();
+		rs = null;
 	}
 
 	@Override

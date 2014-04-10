@@ -30,7 +30,7 @@
         android:background="@color/quartertransparent"
         android:textColor="@color/optionsTextColor"
         android:padding="2dp"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:layout_marginTop="?attr/actionBarSize"
         android:textSize="9sp"
         android:shadowColor="#000"
         android:layout_alignParentTop="true"

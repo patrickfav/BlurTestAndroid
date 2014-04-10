@@ -11,15 +11,22 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import at.favre.app.blurtest.R;
@@ -61,10 +68,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		mPager = (ViewPager) v.findViewById(R.id.pager);
 		mPagerAdapter = new ScreenSlidePagerAdapter();
 		mPager.setAdapter(mPagerAdapter);
-
 		topBlurView = v.findViewById(R.id.topCanvas);
 		bottomBlurView = v.findViewById(R.id.bottomCanvas);
-
 
 		tvPerformance = (TextView) v.findViewById(R.id.tv_performance);
 
@@ -137,7 +142,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	}
 
 	private void disableLayoutListener() {
-		mPager.getViewTreeObserver().removeOnGlobalLayoutListener(ogl);
+		mPager.getViewTreeObserver().removeGlobalOnLayoutListener(ogl);
 	}
 
 	public void addBitmapToMemoryCache(String key, FrameLayout bitmap) {
@@ -155,8 +160,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			isWorking.compareAndSet(false, true);
 			long start = SystemClock.elapsedRealtime();
 			dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
-			topBlurView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
-			bottomBlurView.setBackground(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
 			isWorking.compareAndSet(true, false);
 			return true;
@@ -219,6 +224,9 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 	private class ScreenSlidePagerAdapter extends PagerAdapter {
 
+		private FrameLayout scrollViewLayout;
+		private FrameLayout listViewLayout;
+
 		public View getView(int position, ViewPager pager) {
 			switch (position) {
 				case 0:
@@ -228,7 +236,10 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 				case 2:
 					return createImageView(R.drawable.photo4_med);
 				case 3:
-					return createImageView(R.drawable.photo1_med);
+					return createScrollView();
+				case 4:
+					return createListView();
+
 				default:
 					return createImageView(R.drawable.photo1_med);
 			}
@@ -242,7 +253,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 		@Override
 		public int getCount() {
-			return 4;
+			return 5;
 		}
 
 		@Override
@@ -271,6 +282,41 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 			}
 			return frameLayout;
+		}
+
+		public View createScrollView() {
+			if(scrollViewLayout == null) {
+				scrollViewLayout = (FrameLayout) getActivity().getLayoutInflater().inflate(R.layout.inc_scrollview, mPager, false);
+				((ScrollView) scrollViewLayout.findViewById(R.id.scrollview)).setOnTouchListener(new View.OnTouchListener() {
+					@Override
+					public boolean onTouch(View view, MotionEvent motionEvent) {
+						updateBlurView();
+						return false;
+					}
+				});
+			}
+			return scrollViewLayout;
+		}
+		public View createListView() {
+			if(listViewLayout == null) {
+				List<String> list = new ArrayList<String>();
+				for (int i = 0; i < 20; i++) {
+					list.add("This is a long line of text and so on "+i);
+				}
+				listViewLayout = (FrameLayout) getActivity().getLayoutInflater().inflate(R.layout.inc_listview, mPager, false);
+				((ListView) listViewLayout.findViewById(R.id.listview)).setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, list));
+				((ListView) listViewLayout.findViewById(R.id.listview)).setOnScrollListener(new AbsListView.OnScrollListener() {
+					@Override
+					public void onScrollStateChanged(AbsListView absListView, int i) {
+					}
+
+					@Override
+					public void onScroll(AbsListView absListView, int i, int i2, int i3) {
+						updateBlurView();
+					}
+				});
+			}
+			return listViewLayout;
 		}
 	}
 }
