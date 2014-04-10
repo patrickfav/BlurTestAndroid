@@ -11,6 +11,7 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.renderscript.ScriptIntrinsicConvolve3x3;
+import android.renderscript.ScriptIntrinsicConvolve5x5;
 import android.util.Log;
 
 /**
@@ -19,14 +20,16 @@ import android.util.Log;
 public class BlurUtil {
 	private static final String TAG = BlurUtil.class.getSimpleName();
 
-	public enum Algorithm {RS_GAUSSIAN, RS_SIMPLEBLUR, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
+	public enum Algorithm {RS_GAUSSIAN, RS_SIMPLEBLUR_3x3,RS_SIMPLEBLUR_5x5, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
 
 	public static Bitmap blur(RenderScript rs, Bitmap bitmap, int radius, Algorithm algorithm) {
 		switch (algorithm) {
 			case RS_GAUSSIAN:
 				return blurRenderScript(rs,bitmap,radius);
-			case RS_SIMPLEBLUR:
-				return convolveRenderScript(rs,bitmap,radius);
+			case RS_SIMPLEBLUR_3x3:
+				return simpleBlur3x3RenderScript(rs, bitmap, radius);
+			case RS_SIMPLEBLUR_5x5:
+				return simpleBlur5x5RenderScript(rs, bitmap, radius);
 			case STACKBLUR:
 				return blurStackBlur(bitmap,radius);
 			case GAUSSIAN_BLUR_FAST:
@@ -55,13 +58,31 @@ public class BlurUtil {
 		}
 	}
 
-	private static Bitmap convolveRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+	private static Bitmap simpleBlur3x3RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
 		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
 			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
 			script.setCoefficients(new float[] {0.111111111111111111111111112f,0.111111111111111111111111112f,0.111111111111111111111111112f, 0.111111111111111111111111112f,0.13f,0.111111111111111111111111112f, 0.111111111111111111111111112f,0.111111111111111111111111112f,0.111111111111111111111111112f});
+			for (int i = 0; i < radius; i++) {
+				script.setInput(input);
+				script.forEach(output);
+				input = output;
+			}
+			output.copyTo(bitmap);
+			return bitmap;
+		} else {
+			throw new IllegalStateException("Renderscript needs sdk >= 17");
+		}
+	}
+	private static Bitmap simpleBlur5x5RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
+		if (Build.VERSION.SDK_INT >= 17) {
+			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
+			Allocation output = Allocation.createTyped(rs, input.getType());
+			final ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
+			script.setCoefficients(new float[] {0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.0425f,0.05f,0.0425f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,});
 			for (int i = 0; i < radius; i++) {
 				script.setInput(input);
 				script.forEach(output);
