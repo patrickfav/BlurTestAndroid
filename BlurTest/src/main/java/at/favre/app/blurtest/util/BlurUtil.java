@@ -1,4 +1,4 @@
-package at.favre.app.blurtest;
+package at.favre.app.blurtest.util;
 
 
 import android.annotation.TargetApi;
@@ -36,12 +36,11 @@ public class BlurUtil {
 	}
 	private static Bitmap blurRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
 		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
-		if (Build.VERSION.SDK_INT > 17) {
-			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,
-					Allocation.USAGE_SCRIPT);
+		if (Build.VERSION.SDK_INT > 16) {
+			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			final Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
-			script.setRadius(radius /* e.g. 3.f */);
+			script.setRadius(radius);
 			script.setInput(input);
 			script.forEach(output);
 			output.copyTo(bitmap);

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/halftransparent"
+    android:padding="8dp"
+    android:layout_marginTop="?android:attr/actionBarSize"
+    android:visibility="visible">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/optionsTextColor"
+        android:textSize="18sp"
+        android:text="Downsample"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+        <SeekBar
+            android:id="@+id/seek_insample"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="31"
+            android:progress="7"
+            android:layout_weight="8"
+            />
+        <TextView
+            android:id="@+id/tv_insample_value"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="1/8"
+            android:gravity="center"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="16sp"
+            android:layout_gravity="center"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/optionsTextColor"
+        android:textSize="18sp"
+        android:text="Blur Radius"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal"
+        android:weightSum="10">
+        <SeekBar
+            android:id="@+id/seek_radius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="24"
+            android:progress="15"
+            android:layout_weight="9"
+            />
+        <TextView
+            android:id="@+id/tv_radius_value"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="16px"
+            android:gravity="center"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="18sp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spinner_algorithm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"/>
+
+    <CheckBox
+        android:id="@+id/cb_crossfade"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Show Alpha Crossfade"
+        android:textColor="@color/optionsTextColor"
+        android:padding="8dp"
+        android:layout_marginBottom="12dp"/>
+
+    <Button
+        android:id="@+id/btn_redraw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Full Redraw"
+        android:textColor="@color/optionsTextColor"
+        />
+</LinearLayout>

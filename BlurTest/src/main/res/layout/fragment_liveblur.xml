@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <include layout="@layout/inc_settings"/>
+
+    <View
+        android:id="@+id/topCanvas"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_gravity="top"
+        />
+
+    <View
+        android:id="@+id/bottomCanvas"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="26dp"
+        />
+
+    <TextView
+        android:id="@+id/tv_performance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/quartertransparent"
+        android:textColor="@color/optionsTextColor"
+        android:padding="4dp"
+        android:textSize="9sp"
+        android:shadowColor="#000"
+        android:layout_gravity="bottom|right"/>
+</FrameLayout>
