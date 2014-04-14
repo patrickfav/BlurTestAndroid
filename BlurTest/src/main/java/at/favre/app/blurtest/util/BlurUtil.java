@@ -9,6 +9,7 @@ import android.os.Build;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
 import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlend;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.renderscript.ScriptIntrinsicConvolve3x3;
 import android.renderscript.ScriptIntrinsicConvolve5x5;
@@ -41,8 +42,22 @@ public class BlurUtil {
 		}
 	}
 
+	public static Bitmap blendRenderScript(RenderScript rs, Bitmap bitmap1, Bitmap bitmap2) {
+		if (Build.VERSION.SDK_INT >= 17) {
+			final Allocation input1 = Allocation.createFromBitmap(rs, bitmap1, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
+			final Allocation input2 = Allocation.createFromBitmap(rs, bitmap2, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 
-	private static Bitmap blurRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+			final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs,Element.U8_4(rs));
+			blendScript.forEachAdd(input1,input2);
+			input2.copyTo(bitmap1);
+
+			return bitmap1;
+		} else {
+			throw new IllegalStateException("Renderscript needs sdk >= 17");
+		}
+	}
+
+	public static Bitmap blurRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
 		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
 			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
@@ -58,7 +73,7 @@ public class BlurUtil {
 		}
 	}
 
-	private static Bitmap simpleBlur3x3RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+	public static Bitmap simpleBlur3x3RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
 		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
 			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
@@ -76,7 +91,7 @@ public class BlurUtil {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}
 	}
-	private static Bitmap simpleBlur5x5RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
+	public static Bitmap simpleBlur5x5RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
 		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
 			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
@@ -222,7 +237,7 @@ public class BlurUtil {
 	 * @param bmp
 	 * @param radius
 	 */
-	static Bitmap gaussianBlurFast (Bitmap bmp, int radius) {
+	public static Bitmap gaussianBlurFast (Bitmap bmp, int radius) {
 		Bitmap copy = bmp.copy(bmp.getConfig(), true);
 		int w = bmp.getWidth();
 		int h = bmp.getHeight();
@@ -280,7 +295,7 @@ public class BlurUtil {
 
 	Stack BlurUtil Algorithm by Mario Klingemann <mario@quasimondo.com> */
 
-	private static Bitmap blurStackBlur(Bitmap sentBitmap, int radius) {
+	public static Bitmap blurStackBlur(Bitmap sentBitmap, int radius) {
 		Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
 		if (radius < 1) {

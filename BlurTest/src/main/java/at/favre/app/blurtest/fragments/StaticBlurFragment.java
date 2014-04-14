@@ -75,7 +75,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				blurTemplate = null;
 				startBlur();
 			}
-		},false);
+		});
 
 		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
 		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BlurUtil.sizeOf(normalBitmap)/1024)+"kB");

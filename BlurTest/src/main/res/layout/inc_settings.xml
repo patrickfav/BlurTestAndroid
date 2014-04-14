@@ -11,6 +11,7 @@
     android:visibility="visible">
 
     <TextView
+        android:id="@+id/tv_insample_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/optionsTextColor"
@@ -46,6 +47,7 @@
 
 
     <TextView
+        android:id="@+id/tv_radius_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/optionsTextColor"

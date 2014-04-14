@@ -6,6 +6,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -36,9 +37,8 @@ public class SettingsController {
 	private boolean showCrossfade = true;
 
 	public SettingsController(View v,final SeekBar.OnSeekBarChangeListener radiusChangeListener,final SeekBar.OnSeekBarChangeListener sampleSizeChangeListener,
-							  final AdapterView.OnItemSelectedListener algorithmSelectListener, final View.OnClickListener fullRedrawOnClickListener, boolean hideButtonAndCheckbox) {
+							  final AdapterView.OnItemSelectedListener algorithmSelectListener, final View.OnClickListener btnOnClickListener) {
 		settingsWrapper = v.findViewById(R.id.settings);
-
 
 		seekInSampleSize = (SeekBar)  v.findViewById(R.id.seek_insample);
 		seekRadius = (SeekBar)  v.findViewById(R.id.seek_radius);
@@ -89,11 +89,15 @@ public class SettingsController {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 				algorithm = algorithmList.get(i);
-				algorithmSelectListener.onItemSelected(adapterView,view,i,l);
+				if(algorithmSelectListener != null) {
+					algorithmSelectListener.onItemSelected(adapterView, view, i, l);
+				}
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {
-				algorithmSelectListener.onNothingSelected(adapterView);
+				if(algorithmSelectListener != null) {
+					algorithmSelectListener.onNothingSelected(adapterView);
+				}
 			}
 		});
 
@@ -104,20 +108,16 @@ public class SettingsController {
 		}
 
 
-		if(!hideButtonAndCheckbox) {
-			((CheckBox) v.findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
-			((CheckBox) v.findViewById(R.id.cb_crossfade)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-					showCrossfade = b;
-				}
-			});
+		((CheckBox) v.findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
+		((CheckBox) v.findViewById(R.id.cb_crossfade)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			@Override
+			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+				showCrossfade = b;
+			}
+		});
 
-			v.findViewById(R.id.btn_redraw).setOnClickListener(fullRedrawOnClickListener);
-		} else {
-			v.findViewById(R.id.cb_crossfade).setVisibility(View.GONE);
-			v.findViewById(R.id.btn_redraw).setVisibility(View.GONE);
-		}
+		v.findViewById(R.id.btn_redraw).setOnClickListener(btnOnClickListener);
+
 		initializeSettingsPosition();
 	}
 
@@ -167,6 +167,29 @@ public class SettingsController {
 			});
 			settingsWrapper.startAnimation(anim);
 		}
+	}
+
+	public void setVisibility(boolean inSampleVisible,boolean radiusVisibile, boolean checkBoxVisible,boolean btnVisible ) {
+		if(!inSampleVisible) {
+			seekInSampleSize.setVisibility(View.GONE);
+			tvInSample.setVisibility(View.GONE);
+			settingsWrapper.findViewById(R.id.tv_insample_label).setVisibility(View.GONE);
+		}
+		if(!radiusVisibile) {
+			seekRadius.setVisibility(View.GONE);
+			tvRadius.setVisibility(View.GONE);
+			settingsWrapper.findViewById(R.id.tv_radius_label).setVisibility(View.GONE);
+		}
+		if(!checkBoxVisible) {
+			settingsWrapper.findViewById(R.id.cb_crossfade).setVisibility(View.GONE);
+		}
+		if(!btnVisible) {
+			settingsWrapper.findViewById(R.id.btn_redraw).setVisibility(View.GONE);
+		}
+	}
+
+	public void setBtnText(String text) {
+		((Button) settingsWrapper.findViewById(R.id.btn_redraw)).setText(text);
 	}
 
 	public static String getInsampleText(int inSampleSize) {

@@ -60,6 +60,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	private ViewTreeObserver.OnGlobalLayoutListener ogl;
 	private SettingsController settingsController;
 
+	private Bitmap prevFrame;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_liveblur,container,false);
@@ -112,6 +114,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			public void onStartTrackingTouch(SeekBar seekBar) {}
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
+				prevFrame=null;
 				updateBlurView();
 			}
 		},new AdapterView.OnItemSelectedListener() {
@@ -122,7 +125,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {}
-		},null,true);
+		},null);
+		settingsController.setVisibility(true,true,false,false);
 
 		createLRUCache();
 
@@ -160,6 +164,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			isWorking.compareAndSet(false, true);
 			long start = SystemClock.elapsedRealtime();
 			dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
+//
+
 			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);

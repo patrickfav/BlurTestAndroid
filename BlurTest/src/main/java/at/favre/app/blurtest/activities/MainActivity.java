@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.fragments.BlurBenchmarkFragment;
 import at.favre.app.blurtest.fragments.IFragmentWithBlurSettings;
 import at.favre.app.blurtest.fragments.LiveBlurFragment;
 import at.favre.app.blurtest.fragments.StaticBlurFragment;
@@ -29,7 +30,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 		super.onCreate(savedInstanceState);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live"});
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live","Benchmark"});
 		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
 		getSupportActionBar().setListNavigationCallbacks(adapter,this);
 
@@ -45,8 +46,10 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 	@Override
 	protected void onPause() {
 		super.onPause();
-		rs.destroy();
-		rs = null;
+		if(rs != null) {
+			rs.destroy();
+			rs = null;
+		}
 	}
 
 	@Override
@@ -99,6 +102,17 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.attach(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()));
+					t.commit();
+				}
+				return true;
+			case 2:
+				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.add(android.R.id.content,new BlurBenchmarkFragment(),BlurBenchmarkFragment.class.getSimpleName());
+					t.commit();
+				} else {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()));
 					t.commit();
 				}
 				return true;
