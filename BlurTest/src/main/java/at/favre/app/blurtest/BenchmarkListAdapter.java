@@ -11,7 +11,9 @@ import android.widget.TextView;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -21,7 +23,8 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 	private DecimalFormat format;
 	public BenchmarkListAdapter(Context context, int resource, List<BlurBenchmarkTask.BenchmarkWrapper> objects) {
 		super(context, resource, objects);
-		format = new DecimalFormat("#.#");
+		format = new DecimalFormat("#.0");
+		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		format.setRoundingMode(RoundingMode.HALF_UP);
 	}
 
@@ -37,6 +40,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 			viewHolder.tvWidthHeight = (TextView) convertView.findViewById(R.id.tv_width_height);
 			viewHolder.tvImageInfo = (TextView) convertView.findViewById(R.id.tv_imageInfo);
 			viewHolder.imageView = (ImageView) convertView.findViewById(R.id.thumbnail);
+			viewHolder.tvDeviation = (TextView) convertView.findViewById(R.id.tv_deviation);
 			convertView.setTag(viewHolder);
 		} else {
 			viewHolder = (ViewHolder) convertView.getTag();
@@ -48,6 +52,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius()+"px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight()+" x "+getItem(position).getStatInfo().getBitmapHeight() +" / "+getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
+			viewHolder.tvDeviation.setText("+/-"+format.format(getItem(position).getStatInfo().getAvgBlur().get95PercentConfidenceIntervall().getDeviationsInPercent())+"ms");
 		} else {
 			viewHolder.tvAvg.setText(getItem(position).getStatInfo().getErrorDescription());
 			viewHolder.imageView.setImageDrawable(new BitmapDrawable(getContext().getResources()));
@@ -60,6 +65,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 
 	static class ViewHolder {
 		TextView tvAvg;
+		TextView tvDeviation;
 		TextView tvWidthHeight;
 		TextView tvImageInfo;
 		TextView tvBlurRadius;

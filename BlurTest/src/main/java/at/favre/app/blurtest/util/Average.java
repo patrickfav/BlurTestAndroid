@@ -114,7 +114,7 @@ public class Average<T extends Number> {
 		private final double low;
 		private final double avg;
 
-		public ConfidenceIntervall(double high, double low, double avg) {
+		public ConfidenceIntervall(double low, double high, double avg) {
 			this.high = high;
 			this.low = low;
 			this.avg = avg;
@@ -130,6 +130,10 @@ public class Average<T extends Number> {
 
 		public double getAvg() {
 			return avg;
+		}
+
+		public double getDeviationsInPercent() {
+			return (high-avg + avg-low)/2d;
 		}
 	}
 }

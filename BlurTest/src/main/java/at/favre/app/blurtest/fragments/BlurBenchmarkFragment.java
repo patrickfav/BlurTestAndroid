@@ -28,7 +28,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	private static final int MAX_RADIUS = 16;
 	private static final int START_RADIUS = 2;
 	private static final int BENCHMARK_ROUNDS = 100;
-	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100,R.drawable.test_200x200,R.drawable.test_400x400};
+	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100,R.drawable.test_200x200,R.drawable.test_400x400_2};
 	private SettingsController settingsController;
 
 	private List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers;

@@ -58,6 +58,17 @@
         android:textColor="#222"/>
 
     <TextView
+        android:id="@+id/tv_deviation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:text="+/-3ms"
+        android:layout_toLeftOf="@+id/tv_avg"
+        android:layout_alignBottom="@+id/tv_avg"
+        android:textColor="@color/optionsTextColor"
+        />
+
+    <TextView
         android:id="@+id/tv_avg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
