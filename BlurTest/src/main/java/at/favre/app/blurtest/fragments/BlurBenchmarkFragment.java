@@ -14,8 +14,10 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,7 @@ import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
+import at.favre.app.blurtest.util.BitmapUtil;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -32,13 +35,16 @@ import at.favre.app.blurtest.activities.MainActivity;
 public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlurSettings{
 	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
 
+	private static final String BENCHMARK_LIST_KEY = "benchmark_list";
+
 	private static final int MAX_RADIUS = 16;
 	private static final int START_RADIUS = 2;
 	private static final int BENCHMARK_ROUNDS = 100;
-	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2};
+	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2/*,R.drawable.test_300x300_2,R.drawable.test_400x400_2*/};
 	private SettingsController settingsController;
 
-	private List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers = new ArrayList<BlurBenchmarkTask.BenchmarkWrapper>();
+	private ObjectMapper objectMapper = new ObjectMapper();
+	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
 	private ListAdapter adapter;
 
@@ -46,6 +52,20 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	private ListView listView;
 	private View btn;
 	private View headerView;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+
+		if(savedInstanceState != null) {
+			try {
+				benchmarkResultList = objectMapper.readValue(savedInstanceState.getString(BENCHMARK_LIST_KEY), BenchmarkResultList.class);
+			} catch (IOException e) {
+				Log.w(TAG,"Could not read list",e);
+			}
+		}
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_benchmark,container,false);
@@ -75,12 +95,29 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		return v;
 	}
 
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		setBackground();
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		try {
+			outState.putString(BENCHMARK_LIST_KEY,objectMapper.writeValueAsString(benchmarkResultList));
+		} catch (Exception e) {
+			Log.w(TAG,"Could not save list",e);
+		}
+	}
+
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
+		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
 		progressBar.setProgress(0);
-//		((ActionBarActivity) getActivity()).setSupportProgress(0);
 		progressBar.setVisibility(View.VISIBLE);
-		benchmarkWrappers = new ArrayList<BlurBenchmarkTask.BenchmarkWrapper>();
+		benchmarkResultList = new BenchmarkResultList();
 		nextTest(0,START_RADIUS);
 	}
 
@@ -95,7 +132,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 					@Override
 					protected void onPostExecute(BenchmarkWrapper wrapper) {
 						progressBar.setProgress(progressBar.getProgress()+1);
-						benchmarkWrappers.add(wrapper);
+						benchmarkResultList.getBenchmarkWrappers().add(wrapper);
 						Log.d(TAG, "next test");
 						nextTest(photoIndex, radius * 2);
 					}
@@ -114,31 +151,37 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 			btn.setEnabled(true);
 		}
 
-		getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
-
-        new AsyncTask<Void,Void,Bitmap>() {
-            @Override
-            protected Bitmap doInBackground(Void... voids) {
-                try {
-                    return Picasso.with(getActivity()).load(benchmarkWrappers.get(benchmarkWrappers.size() - 1).getResultBitmap()).get();
-                } catch (IOException e) {
-                    Log.w(TAG, "Could not set background", e);
-                    return null;
-                }
-            }
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
-            }
-        }.execute();
+		setBackground();
     }
 
+	private void setBackground() {
+		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
+			getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
+
+			new AsyncTask<Void,Void,Bitmap>() {
+				@Override
+				protected Bitmap doInBackground(Void... voids) {
+					try {
+						return Picasso.with(getActivity()).load(benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getBitmapAsFile()).get();
+					} catch (IOException e) {
+						Log.w(TAG, "Could not set background", e);
+						return null;
+					}
+				}
+				@Override
+				protected void onPostExecute(Bitmap bitmap) {
+					getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+				}
+			}.execute();
+		}
+	}
+
 	private void setUpListView() {
-		if(!benchmarkWrappers.isEmpty()) {
+		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
 			((TextView) headerView.findViewById(R.id.tv_header)).setText(settingsController.getAlgorithm().toString());
             listView.removeHeaderView(headerView);
 			listView.addHeaderView(headerView);
-			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkWrappers);
+			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkResultList.getBenchmarkWrappers());
 			listView.setAdapter(adapter);
 		}
 	}
@@ -146,5 +189,20 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	@Override
 	public void switchShowSettings() {
 		settingsController.switchShow();
+	}
+
+	public static class BenchmarkResultList {
+		private List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers = new ArrayList<BlurBenchmarkTask.BenchmarkWrapper>();
+
+		public BenchmarkResultList() {
+		}
+
+		public List<BlurBenchmarkTask.BenchmarkWrapper> getBenchmarkWrappers() {
+			return benchmarkWrappers;
+		}
+
+		public void setBenchmarkWrappers(List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers) {
+			this.benchmarkWrappers = benchmarkWrappers;
+		}
 	}
 }

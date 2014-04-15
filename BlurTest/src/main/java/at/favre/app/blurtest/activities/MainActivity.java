@@ -77,11 +77,13 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 
 	@Override
 	public boolean onNavigationItemSelected(int i, long l) {
+
 		FragmentTransaction t1 = getSupportFragmentManager().beginTransaction();
 		for (Fragment fragment : getSupportFragmentManager().getFragments()) {
 			t1.detach(fragment);
 		}
-		t1.commit();
+		t1.commitAllowingStateLoss();
+
 
 		switch (i) {
 			case 0:

@@ -21,7 +21,7 @@
             style="@android:style/Widget.Holo.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"/>
+            android:layout_gravity="center"/>
 
         <include layout="@layout/inc_settings"/>
     </FrameLayout>

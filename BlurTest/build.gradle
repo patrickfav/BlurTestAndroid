@@ -35,6 +35,10 @@ android {
             }
         }
     }
+    packagingOptions {
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
 }
 
 dependencies {
@@ -42,5 +46,9 @@ dependencies {
     compile 'com.android.support:support-v4:19.1.0'
     compile 'com.android.support:appcompat-v7:19.1.0'
     compile 'com.squareup.picasso:picasso:2.2.+'
+
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.3.+'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.3.+'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

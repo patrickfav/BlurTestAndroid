@@ -18,6 +18,7 @@ public class Average<T extends Number> {
 	private TreeSet<T> data;
 
 	public Average(Collection<T> data) {
+		this();
 		this.data = new TreeSet<T>(data);
 	}
 

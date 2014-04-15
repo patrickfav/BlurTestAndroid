@@ -4,16 +4,19 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.os.SystemClock;
 import android.renderscript.RenderScript;
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import at.favre.app.blurtest.util.Average;
+import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.BlurUtil;
 
 /**
@@ -71,8 +74,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			}
 
 			statInfo.setBenchmarkDuration(SystemClock.elapsedRealtime() - startWholeProcess);
-
-			return new BenchmarkWrapper(saveAndRecycleBitmap(blurredBitmap, UUID.randomUUID().toString().substring(0,6)+""+radius+"px_"+algorithm+".png", getCacheDir()), statInfo);
+			return new BenchmarkWrapper(BitmapUtil.saveAndRecycleBitmap(blurredBitmap, UUID.randomUUID().toString().substring(0, 6) + "" + radius + "px_" + algorithm + ".png", BitmapUtil.getCacheDir(ctx)), statInfo);
 		} catch (Exception e) {
 			return new BenchmarkWrapper(null, new StatInfo(e.getMessage()));
 		}
@@ -85,53 +87,46 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 		Log.d(TAG,"test done");
 	}
 
-    private File saveAndRecycleBitmap(Bitmap bitmap, String filename, String path) {
-        FileOutputStream out=null;
-        try {
-            File f = new File(path,filename);
-            if(!f.exists()) {
-                f.createNewFile();
-            }
-            out = new FileOutputStream(f);
-            if(bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)) {
-                return f;
-            }
-        } catch (Exception e) {
-            Log.e(TAG,"Could not save bitmap",e);
-        } finally {
-            try{
-                out.close();
-            } catch(Throwable ignore) {}
-            bitmap.recycle();
-        }
-        return null;
-    }
 
-    private String getCacheDir() {
-        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||!Environment.isExternalStorageRemovable() ?
-                ctx.getExternalCacheDir().getPath() : ctx.getCacheDir().getPath();
-    }
 
 	public static class BenchmarkWrapper {
-		private final File resultBitmap;
-		private final StatInfo statInfo;
+		private String bitmapPath;
+		private StatInfo statInfo;
+
+		public BenchmarkWrapper() {
+		}
 
 		public BenchmarkWrapper(File bitmapFile, StatInfo statInfo) {
-			this.resultBitmap = bitmapFile;
+			this.bitmapPath = bitmapFile.getAbsolutePath();
 			this.statInfo = statInfo;
+			if(bitmapPath == null) {
+				statInfo.setError(true);
+			}
+
 		}
 
 		public StatInfo getStatInfo() {
 			return statInfo;
 		}
 
-		public File getResultBitmap() {
-			return resultBitmap;
+		public String getBitmapPath() {
+			return bitmapPath;
 		}
+
+		public void setBitmapPath(String bitmapPath) {
+			this.bitmapPath = bitmapPath;
+		}
+
+		public void setStatInfo(StatInfo statInfo) {
+			this.statInfo = statInfo;
+		}
+
+		@JsonIgnore
+		public File getBitmapAsFile() {return new File(bitmapPath);}
 	}
 
 	public static class StatInfo {
-		private Average<Long> avgBlur;
+		private List<Long> avgBlur;
 		private long benchmarkDuration;
 		private long loadBitmap;
 		private int bitmapHeight;
@@ -141,12 +136,17 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 		private boolean error=false;
 		private String errorDescription;
 
+		private Average<Long> avg;
+
+		public StatInfo() {
+		}
+
 		public StatInfo(int bitmapHeight, int bitmapWidth,int blurRadius, BlurUtil.Algorithm algorithm) {
 			this.bitmapHeight = bitmapHeight;
 			this.bitmapWidth = bitmapWidth;
 			this.blurRadius = blurRadius;
 			this.algorithm = algorithm;
-			avgBlur = new Average<Long>();
+			avgBlur = new ArrayList<Long>();
 		}
 
 		public StatInfo(String errorDescription) {
@@ -162,8 +162,14 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			this.loadBitmap = loadBitmap;
 		}
 
-		public Average<Long> getAvgBlur() {
+		public List<Long> getAvgBlur() {
+			avg = null;
 			return avgBlur;
+		}
+
+		public void setAvgBlur(List<Long> avgBlur) {
+			avg = null;
+			this.avgBlur = avgBlur;
 		}
 
 		public int getBitmapHeight() {
@@ -214,12 +220,29 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			this.algorithm = algorithm;
 		}
 
+		public void setBitmapHeight(int bitmapHeight) {
+			this.bitmapHeight = bitmapHeight;
+		}
+
+		public void setBitmapWidth(int bitmapWidth) {
+			this.bitmapWidth = bitmapWidth;
+		}
+
+		@JsonIgnore
 		public String getBitmapKBSize() {
 			return String.valueOf((double)Math.round((double) (bitmapHeight * bitmapWidth) / 1024d * 100d) / 100d)+"kB";
 		}
 
+		@JsonIgnore
 		public String getMegaPixels() {
 			return String.valueOf((double)Math.round((double) (bitmapHeight * bitmapWidth) / 1000000d * 100d) / 100d)+"MP";
+		}
+		@JsonIgnore
+		public Average<Long> getAsAvg() {
+			if (avg == null) {
+				avg = new Average<Long>(avgBlur);
+			}
+			return avg;
 		}
 	}
 }

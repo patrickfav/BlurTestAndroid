@@ -49,12 +49,12 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 		}
 
 		if(!getItem(position).getStatInfo().isError()) {
-			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAvgBlur().getNormalizedAvg())+"ms");
-            Picasso.with(getContext()).load(getItem(position).getResultBitmap()).into(viewHolder.imageView);
+			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAsAvg().getNormalizedAvg())+"ms");
+            Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).into(viewHolder.imageView);
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius()+"px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight()+" x "+getItem(position).getStatInfo().getBitmapHeight() +" / "+getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
-			viewHolder.tvDeviation.setText("+/-"+format.format(getItem(position).getStatInfo().getAvgBlur().get90PercentConfidenceIntervall().getDeviationsInPercent())+"ms");
+			viewHolder.tvDeviation.setText("+/-"+format.format(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getDeviationsInPercent())+"ms");
 		} else {
 			viewHolder.tvAvg.setText(getItem(position).getStatInfo().getErrorDescription());
 			viewHolder.imageView.setImageDrawable(new BitmapDrawable(getContext().getResources()));

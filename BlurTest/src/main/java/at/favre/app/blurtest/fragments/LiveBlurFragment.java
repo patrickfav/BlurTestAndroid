@@ -6,12 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -21,9 +19,10 @@ import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,7 @@ import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.view.ObservableScrollView;
 
 /**
  * Created by PatrickF on 08.04.2014.
@@ -48,7 +48,6 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 	private AtomicBoolean isWorking = new AtomicBoolean(false);
 
-	private LruCache<String, FrameLayout> mMemoryCache;
 	private Bitmap dest;
 
 	private long max=0;
@@ -128,35 +127,12 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		},null);
 		settingsController.setVisibility(true,true,false,false);
 
-		createLRUCache();
-
 		return v;
 	}
 
-	private void createLRUCache() {
-		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
-		final int cacheSize = maxMemory / 2;
-
-		mMemoryCache = new LruCache<String, FrameLayout>(cacheSize) {
-			@Override
-			protected int sizeOf(String key, FrameLayout bitmap) {
-				return ((BitmapDrawable) ((ImageView) bitmap.findViewById(R.id.imageView)).getDrawable()).getBitmap().getByteCount() / 1024;
-			}
-		};
-	}
 
 	private void disableLayoutListener() {
 		mPager.getViewTreeObserver().removeGlobalOnLayoutListener(ogl);
-	}
-
-	public void addBitmapToMemoryCache(String key, FrameLayout bitmap) {
-		if (getBitmapFromMemCache(key) == null) {
-			mMemoryCache.put(key, bitmap);
-		}
-	}
-
-	public FrameLayout getBitmapFromMemCache(String key) {
-		return mMemoryCache.get(key);
 	}
 
 	private boolean updateBlurView() {
@@ -278,28 +254,24 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		}
 
 		public View createImageView(int drawableResId) {
-			FrameLayout frameLayout = getBitmapFromMemCache(String.valueOf(drawableResId));
-			if(frameLayout == null) {
-				Log.d(TAG, "Not found in cache - createing view for viewpager");
-				frameLayout = (FrameLayout) getActivity().getLayoutInflater().inflate(R.layout.inc_image_page, mPager, false);
-				((ImageView) frameLayout.findViewById(R.id.imageView)).setImageDrawable(getResources().getDrawable(drawableResId));
-				addBitmapToMemoryCache(String.valueOf(drawableResId),frameLayout);
-			} else {
-
-			}
-			return frameLayout;
+			ImageView imageView = new ImageView(getActivity());
+			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+			imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewPager.LayoutParams.MATCH_PARENT,ViewPager.LayoutParams.MATCH_PARENT));
+			Picasso.with(getActivity()).load(drawableResId).into(imageView);
+			return imageView;
 		}
 
 		public View createScrollView() {
 			if(scrollViewLayout == null) {
 				scrollViewLayout = (FrameLayout) getActivity().getLayoutInflater().inflate(R.layout.inc_scrollview, mPager, false);
-				((ScrollView) scrollViewLayout.findViewById(R.id.scrollview)).setOnTouchListener(new View.OnTouchListener() {
+				((ObservableScrollView) scrollViewLayout.findViewById(R.id.scrollview)).setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
 					@Override
-					public boolean onTouch(View view, MotionEvent motionEvent) {
+					public void onScrollChanged(ObservableScrollView scrollView, int x, int y, int oldx, int oldy) {
 						updateBlurView();
-						return false;
 					}
 				});
+				Picasso.with(getActivity()).load(R.drawable.photo1_med).into((ImageView) scrollViewLayout.findViewById(R.id.photo1));
+				Picasso.with(getActivity()).load(R.drawable.photo2_med).into((ImageView) scrollViewLayout.findViewById(R.id.photo2));
 			}
 			return scrollViewLayout;
 		}
