@@ -1,7 +1,9 @@
 package at.favre.app.blurtest.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -69,14 +71,14 @@ public class Average<T extends Number> {
 
 	public double getMedian() {
 		if (mean == null) {
-			T[] array = (T[]) data.toArray();
-			int middle = array.length / 2;
-			if (array.length % 2 == 0) {
-				T left = array[middle - 1];
-				T right = array[middle];
+			List<T> array = new ArrayList<T>(data);
+			int middle = array.size()  / 2;
+			if (array.size() % 2 == 0) {
+				T left = array.get(middle - 1);
+				T right = array.get(middle);
 				mean = (left.doubleValue() + right.doubleValue()) / 2d;
 			} else {
-				mean = array[middle].doubleValue();
+				mean = array.get(middle).doubleValue();
 			}
 		}
 		return mean;

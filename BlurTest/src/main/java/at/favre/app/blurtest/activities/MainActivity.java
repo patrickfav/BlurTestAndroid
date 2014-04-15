@@ -90,33 +90,33 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				if(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
-					t.commit();
+					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.attach(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()));
-					t.commit();
+					t.commitAllowingStateLoss();
 				}
 				return true;
 			case 1:
 				if(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(android.R.id.content,new LiveBlurFragment(),LiveBlurFragment.class.getSimpleName());
-					t.commit();
+					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.attach(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()));
-					t.commit();
+					t.commitAllowingStateLoss();
 				}
 				return true;
 			case 2:
 				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(android.R.id.content,new BlurBenchmarkFragment(),BlurBenchmarkFragment.class.getSimpleName());
-					t.commit();
+					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()));
-					t.commit();
+					t.commitAllowingStateLoss();
 				}
 				return true;
 			default:

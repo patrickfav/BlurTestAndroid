@@ -6,58 +6,83 @@
               android:layout_height="136dp"
               android:padding="8dp">
 
-    <ImageView
-        android:id="@+id/thumbnail"
+    <FrameLayout
+        android:id="@+id/thumbnail_front"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/test_100x100"
-        android:layout_alignParentLeft="true"/>
-    <TextView
-        android:id="@+id/tv_width_height"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/thumbnail"
-        android:layout_alignRight="@+id/thumbnail"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:text="100x100"
-        android:textSize="11sp"
-        android:gravity="center"
-        android:padding="3dp"
-        android:textColor="@color/optionsTextColor"
-        android:background="@color/halftransparent"/>
+        android:layout_alignParentLeft="true">
+        <ImageView
+            android:id="@+id/thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
 
-    <TextView
-        android:id="@+id/tv_imageInfo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/thumbnail"
-        android:layout_alignRight="@+id/thumbnail"
-        android:layout_alignTop="@+id/thumbnail"
-        android:text="123kb 0.6MP"
-        android:textSize="11sp"
-        android:gravity="center"
-        android:padding="4dp"
-        android:textColor="@color/optionsTextColor"
-        android:background="@color/halftransparent"/>
+        <TextView
+            android:id="@+id/tv_width_height"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:text="100x100"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:padding="3dp"
+            android:textColor="@color/optionsTextColor"
+            android:background="@color/halftransparent"/>
 
-    <TextView
-        android:id="@+id/tv_radius"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/thumbnail"
-        android:layout_alignRight="@+id/thumbnail"
-        android:layout_alignTop="@+id/thumbnail"
-        android:layout_alignBottom="@+id/thumbnail"
-        android:text="16px"
-        android:textSize="30sp"
-        android:gravity="center"
-        android:padding="3dp"
-        android:shadowColor="#fff"
-        android:shadowRadius="2"
-        android:textColor="#222"/>
+        <TextView
+            android:id="@+id/tv_imageInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:text="123kb 0.6MP"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="@color/optionsTextColor"
+            android:background="@color/halftransparent"/>
 
+        <TextView
+            android:id="@+id/tv_radius"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="16px"
+            android:textSize="30sp"
+            android:layout_gravity="center"
+            android:padding="3dp"
+            android:shadowColor="#fff"
+            android:shadowRadius="2"
+            android:textColor="#222"/>
 
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/thumbnail_back"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_alignParentLeft="true"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/thumbnail2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/halftransparent"/>
+
+        <TextView
+            android:id="@+id/tv_imageInfo2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:text="loading: 450ms"
+            android:textSize="11sp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:textColor="@color/optionsTextColor"/>
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tv_avg"

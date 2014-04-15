@@ -92,6 +92,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 	public static class BenchmarkWrapper {
 		private String bitmapPath;
 		private StatInfo statInfo;
+		private boolean additionalInfoVisibility = false;
 
 		public BenchmarkWrapper() {
 		}
@@ -119,6 +120,14 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 
 		public void setStatInfo(StatInfo statInfo) {
 			this.statInfo = statInfo;
+		}
+
+		public boolean isAdditionalInfoVisibility() {
+			return additionalInfoVisibility;
+		}
+
+		public void setAdditionalInfoVisibility(boolean additionalInfoVisibility) {
+			this.additionalInfoVisibility = additionalInfoVisibility;
 		}
 
 		@JsonIgnore
@@ -240,7 +249,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 		@JsonIgnore
 		public Average<Long> getAsAvg() {
 			if (avg == null) {
-				avg = new Average<Long>(avgBlur);
+				avg = new Average<Long>((List<Long>) avgBlur);
 			}
 			return avg;
 		}

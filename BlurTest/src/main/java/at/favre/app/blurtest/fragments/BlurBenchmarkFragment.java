@@ -1,5 +1,8 @@
 package at.favre.app.blurtest.fragments;
 
+import android.app.ProgressDialog;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -11,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,18 +42,20 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	private static final int MAX_RADIUS = 16;
 	private static final int START_RADIUS = 2;
 	private static final int BENCHMARK_ROUNDS = 100;
-	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2/*,R.drawable.test_300x300_2,R.drawable.test_400x400_2*/};
+	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2};
 	private SettingsController settingsController;
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
+//	private
 
 	private ListAdapter adapter;
 
-	private ProgressBar progressBar;
 	private ListView listView;
 	private View btn;
 	private View headerView;
+
+	private ProgressDialog progressDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +65,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 			try {
 				benchmarkResultList = objectMapper.readValue(savedInstanceState.getString(BENCHMARK_LIST_KEY), BenchmarkResultList.class);
 			} catch (IOException e) {
-				Log.w(TAG,"Could not read list",e);
+				Log.w(TAG, "Could not read list", e);
 			}
 		}
 	}
@@ -80,17 +84,19 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 				settingsController.switchShow();
 			}
 		});
-		settingsController.setVisibility(false,false,false,true);
+		settingsController.setVisibility(false, false, false, true);
 		settingsController.setBtnText("Start Benchmark");
-		progressBar = (ProgressBar) v.findViewById(R.id.progress);
-		progressBar.setIndeterminate(false);
-		progressBar.setMax(TEST_SUBJECT_RESID_LIST.length * 4);
 
 		listView = (ListView) v.findViewById(R.id.listview);
 		setUpListView();
 
 		settingsController.switchShow();
 
+		progressDialog = new ProgressDialog(getActivity());
+		progressDialog.setIndeterminate(false);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		progressDialog.setMax(TEST_SUBJECT_RESID_LIST.length * 4);
+		progressDialog.setMessage("Benchmark");
 
 		return v;
 	}
@@ -114,11 +120,22 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
+		lockOrientation();
 		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
-		progressBar.setProgress(0);
-		progressBar.setVisibility(View.VISIBLE);
+		progressDialog.setProgress(0);
+		progressDialog.show();
 		benchmarkResultList = new BenchmarkResultList();
 		nextTest(0,START_RADIUS);
+
+	}
+
+	private void lockOrientation() {
+		int currentOrientation = getResources().getConfiguration().orientation;
+		if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+		} else {
+			getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+		}
 	}
 
 	private void nextTest(final int photoIndex, final int radius) {
@@ -131,7 +148,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 				new BlurBenchmarkTask(TEST_SUBJECT_RESID_LIST[photoIndex], BENCHMARK_ROUNDS, radius, settingsController.getAlgorithm(), ((MainActivity) getActivity()).getRs(), getActivity()) {
 					@Override
 					protected void onPostExecute(BenchmarkWrapper wrapper) {
-						progressBar.setProgress(progressBar.getProgress()+1);
+						progressDialog.setProgress(progressDialog.getProgress()+1);
 						benchmarkResultList.getBenchmarkWrappers().add(wrapper);
 						Log.d(TAG, "next test");
 						nextTest(photoIndex, radius * 2);
@@ -143,8 +160,8 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 
 	private void testDone() {
 		Log.d(TAG,"done benchmark");
-		progressBar.setProgress(progressBar.getMax());
-		progressBar.setVisibility(View.GONE);
+		progressDialog.setProgress(progressDialog.getMax());
+		progressDialog.hide();
 		setUpListView();
 
 		if(btn != null) {
@@ -152,6 +169,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		}
 
 		setBackground();
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
 	private void setBackground() {
@@ -170,7 +188,9 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 				}
 				@Override
 				protected void onPostExecute(Bitmap bitmap) {
-					getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+					if(getView() != null) {
+						getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+					}
 				}
 			}.execute();
 		}
