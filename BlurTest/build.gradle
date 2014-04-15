@@ -41,5 +41,6 @@ dependencies {
     //compile 'com.github.chrisbanes.bitmapcache'
     compile 'com.android.support:support-v4:19.1.0'
     compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.squareup.picasso:picasso:2.2.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

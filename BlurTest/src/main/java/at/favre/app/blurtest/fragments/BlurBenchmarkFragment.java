@@ -1,6 +1,8 @@
 package at.favre.app.blurtest.fragments;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -12,6 +14,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,7 +96,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 					protected void onPostExecute(BenchmarkWrapper wrapper) {
 						progressBar.setProgress(progressBar.getProgress()+1);
 						benchmarkWrappers.add(wrapper);
-						Log.d(TAG,"next test");
+						Log.d(TAG, "next test");
 						nextTest(photoIndex, radius * 2);
 					}
 				}.execute();
@@ -110,12 +115,28 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		}
 
 		getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
-		getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getResources(),benchmarkWrappers.get(benchmarkWrappers.size()-1).getResultBitmap()));
-	}
+
+        new AsyncTask<Void,Void,Bitmap>() {
+            @Override
+            protected Bitmap doInBackground(Void... voids) {
+                try {
+                    return Picasso.with(getActivity()).load(benchmarkWrappers.get(benchmarkWrappers.size() - 1).getResultBitmap()).get();
+                } catch (IOException e) {
+                    Log.w(TAG, "Could not set background", e);
+                    return null;
+                }
+            }
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+            }
+        }.execute();
+    }
 
 	private void setUpListView() {
 		if(!benchmarkWrappers.isEmpty()) {
 			((TextView) headerView.findViewById(R.id.tv_header)).setText(settingsController.getAlgorithm().toString());
+            listView.removeHeaderView(headerView);
 			listView.addHeaderView(headerView);
 			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkWrappers);
 			listView.setAdapter(adapter);

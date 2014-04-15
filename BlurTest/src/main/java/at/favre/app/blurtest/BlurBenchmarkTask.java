@@ -4,9 +4,14 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.renderscript.RenderScript;
 import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.UUID;
 
 import at.favre.app.blurtest.util.Average;
 import at.favre.app.blurtest.util.BlurUtil;
@@ -66,7 +71,8 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			}
 
 			statInfo.setBenchmarkDuration(SystemClock.elapsedRealtime() - startWholeProcess);
-			return new BenchmarkWrapper(blurredBitmap, statInfo);
+
+			return new BenchmarkWrapper(saveAndRecycleBitmap(blurredBitmap, UUID.randomUUID().toString().substring(0,6)+""+radius+"px_"+algorithm+".png", getCacheDir()), statInfo);
 		} catch (Exception e) {
 			return new BenchmarkWrapper(null, new StatInfo(e.getMessage()));
 		}
@@ -79,12 +85,39 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 		Log.d(TAG,"test done");
 	}
 
+    private File saveAndRecycleBitmap(Bitmap bitmap, String filename, String path) {
+        FileOutputStream out=null;
+        try {
+            File f = new File(path,filename);
+            if(!f.exists()) {
+                f.createNewFile();
+            }
+            out = new FileOutputStream(f);
+            if(bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)) {
+                return f;
+            }
+        } catch (Exception e) {
+            Log.e(TAG,"Could not save bitmap",e);
+        } finally {
+            try{
+                out.close();
+            } catch(Throwable ignore) {}
+            bitmap.recycle();
+        }
+        return null;
+    }
+
+    private String getCacheDir() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||!Environment.isExternalStorageRemovable() ?
+                ctx.getExternalCacheDir().getPath() : ctx.getCacheDir().getPath();
+    }
+
 	public static class BenchmarkWrapper {
-		private final Bitmap resultBitmap;
+		private final File resultBitmap;
 		private final StatInfo statInfo;
 
-		public BenchmarkWrapper(Bitmap resultBitmap, StatInfo statInfo) {
-			this.resultBitmap = resultBitmap;
+		public BenchmarkWrapper(File bitmapFile, StatInfo statInfo) {
+			this.resultBitmap = bitmapFile;
 			this.statInfo = statInfo;
 		}
 
@@ -92,7 +125,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			return statInfo;
 		}
 
-		public Bitmap getResultBitmap() {
+		public File getResultBitmap() {
 			return resultBitmap;
 		}
 	}
