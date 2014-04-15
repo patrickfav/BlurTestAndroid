@@ -14,8 +14,7 @@
         <ListView
             android:id="@+id/listview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="?attr/actionBarSize"></ListView>
+            android:layout_height="match_parent"></ListView>
 
         <ProgressBar
             android:id="@+id/progress"

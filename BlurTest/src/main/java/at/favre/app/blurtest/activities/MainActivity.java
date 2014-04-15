@@ -28,7 +28,8 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+//
+//		requestWindowFeature(Window.FEATURE_PROGRESS);
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live","Benchmark"});
 		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);

@@ -7,8 +7,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,17 +30,21 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	private static final int MAX_RADIUS = 16;
 	private static final int START_RADIUS = 2;
 	private static final int BENCHMARK_ROUNDS = 100;
-	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100,R.drawable.test_200x200,R.drawable.test_400x400_2};
+	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2};
 	private SettingsController settingsController;
 
-	private List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers;
+	private List<BlurBenchmarkTask.BenchmarkWrapper> benchmarkWrappers = new ArrayList<BlurBenchmarkTask.BenchmarkWrapper>();
+
+	private ListAdapter adapter;
 
 	private ProgressBar progressBar;
 	private ListView listView;
 	private View btn;
+	private View headerView;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_benchmark,container,false);
+		headerView = inflater.inflate(R.layout.list_benchmark_header,null);
 
 		settingsController = new SettingsController(v,null,null,null,new View.OnClickListener() {
 			@Override
@@ -56,14 +62,18 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		progressBar.setMax(TEST_SUBJECT_RESID_LIST.length * 4);
 
 		listView = (ListView) v.findViewById(R.id.listview);
+		setUpListView();
 
 		settingsController.switchShow();
+
+
 		return v;
 	}
 
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
 		progressBar.setProgress(0);
+//		((ActionBarActivity) getActivity()).setSupportProgress(0);
 		progressBar.setVisibility(View.VISIBLE);
 		benchmarkWrappers = new ArrayList<BlurBenchmarkTask.BenchmarkWrapper>();
 		nextTest(0,START_RADIUS);
@@ -93,7 +103,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		Log.d(TAG,"done benchmark");
 		progressBar.setProgress(progressBar.getMax());
 		progressBar.setVisibility(View.GONE);
-		listView.setAdapter(new BenchmarkListAdapter(getActivity(),R.id.list_item,benchmarkWrappers));
+		setUpListView();
 
 		if(btn != null) {
 			btn.setEnabled(true);
@@ -101,6 +111,15 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 
 		getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
 		getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getResources(),benchmarkWrappers.get(benchmarkWrappers.size()-1).getResultBitmap()));
+	}
+
+	private void setUpListView() {
+		if(!benchmarkWrappers.isEmpty()) {
+			((TextView) headerView.findViewById(R.id.tv_header)).setText(settingsController.getAlgorithm().toString());
+			listView.addHeaderView(headerView);
+			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkWrappers);
+			listView.setAdapter(adapter);
+		}
 	}
 
 	@Override
