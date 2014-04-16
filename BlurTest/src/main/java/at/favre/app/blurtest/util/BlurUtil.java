@@ -58,25 +58,23 @@ public class BlurUtil {
 	}
 
 	public static Bitmap blurRenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
-		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
-			final Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
+			final Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			final Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicBlur script = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
 			script.setRadius(radius);
 			script.setInput(input);
 			script.forEach(output);
-			output.copyTo(bitmap);
-			return bitmap;
+			output.copyTo(bitmapOriginal);
+			return bitmapOriginal;
 		} else {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}
 	}
 
 	public static Bitmap simpleBlur3x3RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
-		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
-			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
+			Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
 			script.setCoefficients(new float[] {0.111111111111111111111111112f,0.111111111111111111111111112f,0.111111111111111111111111112f, 0.111111111111111111111111112f,0.13f,0.111111111111111111111111112f, 0.111111111111111111111111112f,0.111111111111111111111111112f,0.111111111111111111111111112f});
@@ -85,16 +83,15 @@ public class BlurUtil {
 				script.forEach(output);
 				input = output;
 			}
-			output.copyTo(bitmap);
-			return bitmap;
+			output.copyTo(bitmapOriginal);
+			return bitmapOriginal;
 		} else {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}
 	}
 	public static Bitmap simpleBlur5x5RenderScript(RenderScript rs, Bitmap bitmapOriginal, int radius) {
-		Bitmap bitmap = bitmapOriginal.copy(bitmapOriginal.getConfig(), true);
 		if (Build.VERSION.SDK_INT >= 17) {
-			Allocation input = Allocation.createFromBitmap(rs, bitmap, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
+			Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			Allocation output = Allocation.createTyped(rs, input.getType());
 			final ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
 			script.setCoefficients(new float[] {0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.0425f,0.05f,0.0425f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,});
@@ -103,8 +100,8 @@ public class BlurUtil {
 				script.forEach(output);
 				input = output;
 			}
-			output.copyTo(bitmap);
-			return bitmap;
+			output.copyTo(bitmapOriginal);
+			return bitmapOriginal;
 		} else {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}
@@ -238,7 +235,6 @@ public class BlurUtil {
 	 * @param radius
 	 */
 	public static Bitmap gaussianBlurFast (Bitmap bmp, int radius) {
-		Bitmap copy = bmp.copy(bmp.getConfig(), true);
 		int w = bmp.getWidth();
 		int h = bmp.getHeight();
 		int[] pix = new int[w * h];
@@ -263,8 +259,8 @@ public class BlurUtil {
 				}
 			}
 		}
-		copy.setPixels(pix, 0, w, 0, 0, w, h);
-		return copy;
+		bmp.setPixels(pix, 0, w, 0, 0, w, h);
+		return bmp;
 	}
 
 	/** Stack BlurUtil v1.0 from
@@ -296,18 +292,17 @@ public class BlurUtil {
 	Stack BlurUtil Algorithm by Mario Klingemann <mario@quasimondo.com> */
 
 	public static Bitmap blurStackBlur(Bitmap sentBitmap, int radius) {
-		Bitmap bitmap = sentBitmap.copy(sentBitmap.getConfig(), true);
 
 		if (radius < 1) {
 			return (null);
 		}
 
-		int w = bitmap.getWidth();
-		int h = bitmap.getHeight();
+		int w = sentBitmap.getWidth();
+		int h = sentBitmap.getHeight();
 
 		int[] pix = new int[w * h];
 		Log.v("pix", w + " " + h + " " + pix.length);
-		bitmap.getPixels(pix, 0, w, 0, 0, w, h);
+		sentBitmap.getPixels(pix, 0, w, 0, 0, w, h);
 
 		int wm = w - 1;
 		int hm = h - 1;
@@ -493,8 +488,8 @@ public class BlurUtil {
 		}
 
 		Log.v("pix", w + " " + h + " " + pix.length);
-		bitmap.setPixels(pix, 0, w, 0, 0, w, h);
-		return (bitmap);
+		sentBitmap.setPixels(pix, 0, w, 0, 0, w, h);
+		return (sentBitmap);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)

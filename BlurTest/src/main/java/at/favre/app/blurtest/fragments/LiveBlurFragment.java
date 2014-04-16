@@ -10,6 +10,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -60,6 +62,12 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	private SettingsController settingsController;
 
 	private Bitmap prevFrame;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -130,6 +138,11 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		return v;
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.main_menu, menu);
+	}
 
 	private void disableLayoutListener() {
 		mPager.getViewTreeObserver().removeGlobalOnLayoutListener(ogl);
@@ -140,10 +153,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			isWorking.compareAndSet(false, true);
 			long start = SystemClock.elapsedRealtime();
 			dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
-//
-
-			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
-			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest, bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(),true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(),true), bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
 			isWorking.compareAndSet(true, false);
 			return true;

@@ -56,19 +56,6 @@ public class Average<T extends Number> {
 		return avg;
 	}
 
-	public double getNormalizedAvg() {
-		if (normalizedAvg == null) {
-			double sum=0;
-			for (T t : data) {
-				if(!t.equals(getMax()) && !t.equals(getMin())) {
-					sum += t.doubleValue();
-				}
-			}
-			normalizedAvg = sum / (double) data.size()-2;
-		}
-		return normalizedAvg;
-	}
-
 	public double getMedian() {
 		if (mean == null) {
 			List<T> array = new ArrayList<T>(data);
@@ -100,9 +87,9 @@ public class Average<T extends Number> {
 	private ConfidenceIntervall getConfidenceIntervall(double stdDeviations) {
 		if(!cache.containsKey(stdDeviations)) {
 			double stddev = Math.sqrt(getVariance());
-			double lo = getNormalizedAvg() - stdDeviations * stddev;
-			double hi = getNormalizedAvg() + stdDeviations * stddev;
-			cache.put(stdDeviations, new ConfidenceIntervall(lo, hi, getNormalizedAvg()));
+			double lo = getAvg() - stdDeviations * stddev;
+			double hi = getAvg() + stdDeviations * stddev;
+			cache.put(stdDeviations, new ConfidenceIntervall(lo, hi, getAvg()));
 		}
 		return cache.get(stdDeviations);
 	}

@@ -74,7 +74,7 @@ public class BlurBenchmarkResultFragment extends Fragment {
 	}
 
 	private void setBackground() {
-		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
+		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty() && !benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getStatInfo().isError()) {
 			getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
 
 			new AsyncTask<Void,Void,Bitmap>() {

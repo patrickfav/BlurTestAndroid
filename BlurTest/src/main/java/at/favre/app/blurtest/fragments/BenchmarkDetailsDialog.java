@@ -73,28 +73,16 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 
 		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[wrapper.getStatInfo().getBenchmarkData().size()];
 		for (int j = 0; j < wrapper.getStatInfo().getBenchmarkData().size(); j++) {
-			data[j] = new GraphView.GraphViewData(j+1,wrapper.getStatInfo().getBenchmarkData().get(j));
+			data[j] = new GraphView.GraphViewData(j,wrapper.getStatInfo().getBenchmarkData().get(j));
 		}
 
 		LineGraphView graphView = new LineGraphView(getActivity() , "");
 		GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgGreen),lineThicknessPx);
-//		seriesStyle.setValueDependentColor(new ValueDependentColor() {
-//			@Override
-//			public int get(GraphViewDataInterface data) {
-//
-//				if (data.getY() > 24) {
-//					return getResources().getColor(R.color.graphBgRed);
-//				} else if (data.getY() > 16) {
-//					return getResources().getColor(R.color.graphBgYellow);
-//				} else {
-//					return getResources().getColor(R.color.graphBgGreen);
-//				}
-//			}
-//		});
+
 		if(wrapper.getStatInfo().getAsAvg().getMin() <= 16) {
-			graphView.addSeries(getStraightLine(16, wrapper.getStatInfo().getBenchmarkData().size(), "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
+			graphView.addSeries(getStraightLine(16, wrapper.getStatInfo().getBenchmarkData().size()-1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
 		}
-		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size(), "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
+		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size()-1, "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
 		graphView.addSeries(new GraphViewSeries("Blur", seriesStyle, data));
 		graphView.setScrollable(true);
 		graphView.setScalable(true);

@@ -63,21 +63,23 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
 			Bitmap blurredBitmap = null;
 
+
+
 			for (int i = 0; i < benchmarkRounds; i++) {
 				long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
-				blurredBitmap = BlurUtil.blur(rs, master, radius, algorithm);
+				blurredBitmap = master.copy(master.getConfig(), true);
+				blurredBitmap = BlurUtil.blur(rs, blurredBitmap, radius, algorithm);
 				statInfo.getBenchmarkData().add((BenchmarkUtil.elapsedRealTimeNanos() - startBlur)/1000000d);
 			}
 
 			statInfo.setBenchmarkDuration((BenchmarkUtil.elapsedRealTimeNanos() - startWholeProcess)/1000000l);
 
 			String fileName =UUID.randomUUID().toString().substring(0, 6) + "" + radius + "px_" + algorithm + ".png";
-
-			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap,fileName, BitmapUtil.getCacheDir(ctx),false),
+			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false),
 					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
 					statInfo);
-		} catch (Exception e) {
-			return new BenchmarkWrapper(null,null, new StatInfo(e.getMessage()));
+		} catch (Throwable e) {
+			return new BenchmarkWrapper(null,null, new StatInfo(e.getMessage(),algorithm));
 		}
 	}
 

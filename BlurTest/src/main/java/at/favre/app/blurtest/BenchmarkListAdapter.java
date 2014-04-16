@@ -53,6 +53,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.tvImageInfo = (TextView) convertView.findViewById(R.id.tv_imageInfo);
 			viewHolder.imageView = (ImageView) convertView.findViewById(R.id.thumbnail);
 			viewHolder.tvDeviation = (TextView) convertView.findViewById(R.id.tv_deviation);
+			viewHolder.tvErrMsg = (TextView) convertView.findViewById(R.id.tv_errMsg);
 			viewHolder.frontImageWrapper = (FrameLayout) convertView.findViewById(R.id.thumbnail_front);
 			viewHolder.backImageWrapper = (FrameLayout) convertView.findViewById(R.id.thumbnail_back);
 			convertView.setTag(viewHolder);
@@ -61,9 +62,17 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 		}
 
 		if (!getItem(position).getStatInfo().isError()) {
-			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAsAvg().getNormalizedAvg()) + "ms");
-			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).into(viewHolder.imageView);
-			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
+
+			viewHolder.tvErrMsg.setVisibility(View.GONE);
+			viewHolder.tvAvg.setVisibility(View.VISIBLE);
+			viewHolder.tvDeviation.setVisibility(View.VISIBLE);
+			viewHolder.tvWidthHeight.setVisibility(View.VISIBLE);
+			viewHolder.tvImageInfo.setVisibility(View.VISIBLE);
+			viewHolder.tvBlurRadius.setVisibility(View.VISIBLE);
+
+			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAsAvg().getAvg()) + "ms");
+			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).placeholder(R.drawable.placeholder).into(viewHolder.imageView);
+			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapHeight() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
@@ -71,7 +80,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+format.format(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+
 					"blur min/max: "+format.format(getItem(position).getStatInfo().getAsAvg().getMin())+"ms/"+format.format(getItem(position).getStatInfo().getAsAvg().getMax())+"ms\n"+
 					"blur median: "+format.format(getItem(position).getStatInfo().getAsAvg().getMedian())+"ms\n"+
-					"blur avg/normalized: "+format.format(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+format.format(getItem(position).getStatInfo().getAsAvg().getNormalizedAvg())+"ms\n"+
+					"blur avg/normalized: "+format.format(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+format.format(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms\n"+
 					"benchmark: "+format.format(getItem(position).getStatInfo().getBenchmarkDuration())+"ms\n");
 
 			if (!getItem(position).isAdditionalInfoVisibility()) {
@@ -158,8 +167,16 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 				}
 			});
 		} else {
-			viewHolder.tvAvg.setText(getItem(position).getStatInfo().getErrorDescription());
 			viewHolder.imageView.setImageDrawable(new BitmapDrawable(getContext().getResources()));
+			Picasso.with(getContext()).load(R.drawable.placeholder).into(viewHolder.imageView);
+			viewHolder.tvErrMsg.setVisibility(View.VISIBLE);
+			viewHolder.tvErrMsg.setText(getItem(position).getStatInfo().getErrorDescription());
+
+			viewHolder.tvAvg.setVisibility(View.GONE);
+			viewHolder.tvDeviation.setVisibility(View.GONE);
+			viewHolder.tvWidthHeight.setVisibility(View.GONE);
+			viewHolder.tvImageInfo.setVisibility(View.GONE);
+			viewHolder.tvBlurRadius.setVisibility(View.GONE);
 		}
 
 
@@ -173,6 +190,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 		TextView tvWidthHeight;
 		TextView tvImageInfo;
 		TextView tvBlurRadius;
+		TextView tvErrMsg;
 		ImageView imageView;
 		FrameLayout frontImageWrapper;
 		FrameLayout backImageWrapper;

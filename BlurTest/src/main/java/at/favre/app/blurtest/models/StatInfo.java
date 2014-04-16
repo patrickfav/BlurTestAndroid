@@ -35,9 +35,10 @@ public class StatInfo {
 		benchmarkData = new ArrayList<Double>();
 	}
 
-	public StatInfo(String errorDescription) {
+	public StatInfo(String errorDescription, BlurUtil.Algorithm algorithm) {
 		this.errorDescription = errorDescription;
 		this.error = true;
+		this.algorithm =algorithm;
 	}
 
 	public long getLoadBitmap() {

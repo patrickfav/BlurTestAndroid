@@ -13,5 +13,6 @@
         android:id="@+id/graph"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_gravity="bottom|center"/>
+        android:layout_gravity="bottom|center"
+        android:layout_margin="6dp"/>
 </FrameLayout>

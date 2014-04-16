@@ -9,6 +9,8 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -32,6 +34,12 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 
 	private Bitmap blurTemplate;
 	private SettingsController settingsController;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setHasOptionsMenu(true);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,6 +97,12 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 		startBlur();
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.main_menu, menu);
+	}
+
 	private void startBlur() {
 		new BlurTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -143,7 +157,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 			Bitmap blurredBitmap=null;
 
 			try {
-				blurredBitmap = BlurUtil.blur(((MainActivity)getActivity()).getRs(),blurTemplate, settingsController.getRadius(), settingsController.getAlgorithm());
+				blurredBitmap = BlurUtil.blur(((MainActivity)getActivity()).getRs(),blurTemplate.copy(blurTemplate.getConfig(),true), settingsController.getRadius(), settingsController.getAlgorithm());
 			} catch (Exception e) {
 				Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 			}

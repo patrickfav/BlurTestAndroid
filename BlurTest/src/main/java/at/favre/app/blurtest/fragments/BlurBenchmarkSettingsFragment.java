@@ -38,16 +38,19 @@ import at.favre.app.blurtest.util.JsonUtil;
 public class BlurBenchmarkSettingsFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkSettingsFragment.class.getSimpleName();
 
+	private static List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
+	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
+
+	private static final String ROUNDS_KEY = "ROUNDS_KEY";
+	private static final String ALGO_KEY = "ALGO_KEY";
+
+	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
+	private int rounds=100;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
 	private Button btn;
-
 	private Spinner algorithmSpinner;
 	private Spinner roundsSpinner;
-
-	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
-	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
-	private int rounds=100;
 
 	private CheckBox cBradius4px;
 	private CheckBox cBradius8px;
@@ -63,6 +66,14 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 
 	private ProgressDialog progressDialog;
 
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		if(savedInstanceState !=  null) {
+			rounds = savedInstanceState.getInt(ROUNDS_KEY);
+			algorithm = BlurUtil.Algorithm.valueOf(savedInstanceState.getString(ALGO_KEY));
+		}
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,6 +84,16 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 			@Override
 			public void onClick(View view) {
 				benchmark();
+			}
+		});
+		btn.setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View view) {
+				roundsSpinner.setSelection(0);
+				cbSize100.setChecked(true);cbSize200.setChecked(true);cbSize300.setChecked(true);
+				cbSize400.setChecked(false);cbSize500.setChecked(false);cbSize600.setChecked(false);
+				cBradius4px.setChecked(true);cBradius8px.setChecked(true);cBradius16px.setChecked(true);cBradius24px.setChecked(false);
+				return true;
 			}
 		});
 
@@ -88,10 +109,8 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		cbSize500 = (CheckBox) v.findViewById(R.id.cb_s_500);
 		cbSize600 = (CheckBox) v.findViewById(R.id.cb_s_600);
 
-		ArrayAdapter<BlurUtil.Algorithm> alogrithmArrayAdapter = new ArrayAdapter<BlurUtil.Algorithm>(v.getContext(),R.layout.inc_spinner_textview, algorithmList);
-		alogrithmArrayAdapter.setDropDownViewResource(R.layout.inc_spinner_item);
 		algorithmSpinner = (Spinner)  v.findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(alogrithmArrayAdapter);
+		algorithmSpinner.setAdapter(new ArrayAdapter<BlurUtil.Algorithm>(getActivity(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
 		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -102,23 +121,21 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 
 			}
 		});
+		algorithmSpinner.setSelection(algorithmList.indexOf(algorithm));
 
-		final ArrayAdapter<Integer> roundsArrayAdapter = new ArrayAdapter<Integer>(v.getContext(),R.layout.inc_spinner_textview, new Integer[] {10,20,50,100,250,500,1000});
-		roundsArrayAdapter.setDropDownViewResource(R.layout.inc_spinner_item);
 		roundsSpinner = (Spinner)  v.findViewById(R.id.spinner_rounds);
-		roundsSpinner.setAdapter(roundsArrayAdapter);
+		roundsSpinner.setAdapter(new ArrayAdapter<Rounds>(getActivity(),android.R.layout.simple_spinner_dropdown_item,roundArray));
 		roundsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				rounds = roundsArrayAdapter.getItem(i);
+				rounds = ((Rounds)adapterView.getAdapter().getItem(i)).getRounds();
 			}
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {
 
 			}
 		});
-
-
+		roundsSpinner.setSelection(Arrays.asList(roundArray).indexOf(new Rounds(rounds)));
 
 		return v;
 	}
@@ -132,6 +149,8 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putInt(ROUNDS_KEY,rounds);
+		outState.putString(ALGO_KEY,algorithm.toString());
 	}
 
 	private List<Integer> getImagesFromSettings() {
@@ -140,7 +159,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 			images.add(R.drawable.test_100x100_2);
 		}
 		if(cbSize200.isChecked()) {
-			images.add(R.drawable.test_100x100_2);
+			images.add(R.drawable.test_200x200_2);
 		}
 		if(cbSize300.isChecked()) {
 			images.add(R.drawable.test_300x300_2);
@@ -231,6 +250,14 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 	}
 
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
+
 	private void testDone() {
 		Log.d(TAG, "done benchmark");
 		progressDialog.setProgress(progressDialog.getMax());
@@ -246,5 +273,38 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		startActivity(i);
     }
 
+	public static class Rounds {
+		private int rounds;
+
+		public Rounds(int rounds) {
+			this.rounds = rounds;
+		}
+
+		public int getRounds() {
+			return rounds;
+		}
+
+		@Override
+		public String toString() {
+			return rounds+" Rounds per Benchmark";
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Rounds rounds1 = (Rounds) o;
+
+			if (rounds != rounds1.rounds) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			return rounds;
+		}
+	}
 
 }

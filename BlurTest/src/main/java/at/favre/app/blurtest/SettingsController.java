@@ -81,10 +81,8 @@ public class SettingsController {
 			public void onStopTrackingTouch(SeekBar seekBar) {radiusChangeListener.onStopTrackingTouch(seekBar);}
 		});
 
-		ArrayAdapter<BlurUtil.Algorithm> alogrithmArrayAdapter = new ArrayAdapter<BlurUtil.Algorithm>(v.getContext(),R.layout.inc_spinner_textview, algorithmList);
-		alogrithmArrayAdapter.setDropDownViewResource(R.layout.inc_spinner_item);
 		algorithmSpinner = (Spinner)  v.findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(alogrithmArrayAdapter);
+		algorithmSpinner.setAdapter(new ArrayAdapter<BlurUtil.Algorithm>(v.getContext(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
 		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

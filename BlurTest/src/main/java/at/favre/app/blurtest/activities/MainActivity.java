@@ -7,8 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
@@ -30,16 +28,13 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 		super.onCreate(savedInstanceState);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live","Benchmark"});
-		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Benchmark","Static","Live"});
 		getSupportActionBar().setListNavigationCallbacks(adapter,this);
 
 		setContentView(R.layout.activity_main);
 
 		if(savedInstanceState == null) {
-			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-			t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
-			t.commit();
+			onNavigationItemSelected(0,0);
 		}
 	}
 
@@ -50,13 +45,6 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 			rs.destroy();
 			rs = null;
 		}
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_menu, menu);
-		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -77,37 +65,16 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 	@Override
 	public boolean onNavigationItemSelected(int i, long l) {
 
-		FragmentTransaction t1 = getSupportFragmentManager().beginTransaction();
-		for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-			t1.detach(fragment);
+		if(getSupportFragmentManager().getFragments() != null) {
+			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+			for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+				t.detach(fragment);
+			}
+			t.commitAllowingStateLoss();
 		}
-		t1.commitAllowingStateLoss();
-
 
 		switch (i) {
 			case 0:
-				if(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
-				return true;
-			case 1:
-				if(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new LiveBlurFragment(),LiveBlurFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
-				return true;
-			case 2:
 				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(android.R.id.content,new BlurBenchmarkSettingsFragment(),BlurBenchmarkSettingsFragment.class.getSimpleName());
@@ -118,6 +85,29 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 					t.commitAllowingStateLoss();
 				}
 				return true;
+			case 1:
+				if(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
+					t.commitAllowingStateLoss();
+				} else {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.attach(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()));
+					t.commitAllowingStateLoss();
+				}
+				return true;
+			case 2:
+				if(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.add(android.R.id.content,new LiveBlurFragment(),LiveBlurFragment.class.getSimpleName());
+					t.commitAllowingStateLoss();
+				} else {
+					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+					t.attach(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()));
+					t.commitAllowingStateLoss();
+				}
+				return true;
+
 			default:
 				break;
 		}

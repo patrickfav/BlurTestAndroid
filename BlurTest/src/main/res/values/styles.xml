@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/action_bar_theme</item>
         <item name="android:actionMenuTextColor">@color/optionsTextColor</item>

@@ -142,6 +142,7 @@
         <Button
             android:id="@+id/btn_start"
             style="@style/benchmarkSettingWidget"
+            android:layout_marginTop="22dp"
             android:text="Start Benchmark"/>
     </LinearLayout>
 </ScrollView>
