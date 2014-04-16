@@ -58,7 +58,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			master = BitmapFactory.decodeResource(ctx.getResources(), bitmapDrawableResId, options);
 			long readBitmapDuration = (BenchmarkUtil.elapsedRealTimeNanos() - startReadBitmap)/1000000l;
 
-			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm);
+			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm,benchmarkRounds);
 			statInfo.setLoadBitmap(readBitmapDuration);
 
 			Bitmap blurredBitmap = null;

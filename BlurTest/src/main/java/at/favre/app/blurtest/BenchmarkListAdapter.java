@@ -16,26 +16,19 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.List;
-import java.util.Locale;
 
-import at.favre.app.blurtest.fragments.BenchmarkDetailsDialog;
+import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
+import at.favre.app.blurtest.util.BenchmarkUtil;
 
 /**
  * Created by PatrickF on 14.04.2014.
  */
 public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
-	private DecimalFormat format;
 
 	public BenchmarkListAdapter(Context context, int resource, List<BenchmarkWrapper> objects) {
 		super(context, resource, objects);
-		format = new DecimalFormat("0.0");
-		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-		format.setRoundingMode(RoundingMode.HALF_UP);
 	}
 
 	@Override
@@ -70,18 +63,18 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.tvImageInfo.setVisibility(View.VISIBLE);
 			viewHolder.tvBlurRadius.setVisibility(View.VISIBLE);
 
-			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAsAvg().getAvg()) + "ms");
+			viewHolder.tvAvg.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg()) + "ms");
 			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).placeholder(R.drawable.placeholder).into(viewHolder.imageView);
 			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapHeight() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
-			viewHolder.tvDeviation.setText("+/-" + format.format(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getDeviationsInPercent()) + "ms");
-			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+format.format(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+
-					"blur min/max: "+format.format(getItem(position).getStatInfo().getAsAvg().getMin())+"ms/"+format.format(getItem(position).getStatInfo().getAsAvg().getMax())+"ms\n"+
-					"blur median: "+format.format(getItem(position).getStatInfo().getAsAvg().getMedian())+"ms\n"+
-					"blur avg/normalized: "+format.format(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+format.format(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms\n"+
-					"benchmark: "+format.format(getItem(position).getStatInfo().getBenchmarkDuration())+"ms\n");
+			viewHolder.tvDeviation.setText("+/-" + BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getDeviationsInPercent()) + "ms");
+			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+
+					"blur min/max: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMin())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMax())+"ms\n"+
+					"blur median: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMedian())+"ms\n"+
+					"blur avg/normalized: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms\n"+
+					"benchmark: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getBenchmarkDuration())+"ms\n");
 
 			if (!getItem(position).isAdditionalInfoVisibility()) {
 				viewHolder.frontImageWrapper.setVisibility(View.VISIBLE);
@@ -162,7 +155,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			convertView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(getItem(position));
+					BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(getItem(position));
 					dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(),"details");
 				}
 			});

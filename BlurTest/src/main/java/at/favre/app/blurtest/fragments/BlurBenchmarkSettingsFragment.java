@@ -1,7 +1,9 @@
 package at.favre.app.blurtest.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
 import at.favre.app.blurtest.activities.MainActivity;
+import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BitmapUtil;
@@ -250,18 +253,14 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if(progressDialog != null) {
-			progressDialog.dismiss();
-		}
-	}
+
 
 	private void testDone() {
 		Log.d(TAG, "done benchmark");
 		progressDialog.setProgress(progressDialog.getMax());
 		progressDialog.dismiss();
+
+		saveTest();
 
 		if(btn != null) {
 			btn.setEnabled(true);
@@ -272,6 +271,42 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		i.putExtra(BenchmarkResultActivity.BENCHMARK_LIST_KEY,JsonUtil.toJsonString(benchmarkResultList));
 		startActivity(i);
     }
+
+	private void saveTest() {
+		// Restore preferences
+		SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
+		String resultsString = settings.getString(MainActivity.PREF_RESULTS,null);
+		BenchmarkResultDatabase db;
+
+		if(resultsString == null) {
+			db = new BenchmarkResultDatabase();
+		} else {
+			db = JsonUtil.fromJsonString(resultsString,BenchmarkResultDatabase.class);
+		}
+
+
+		for (BenchmarkWrapper benchmarkWrapper : benchmarkResultList.getBenchmarkWrappers()) {
+			if(!benchmarkWrapper.getStatInfo().isError()) {
+				BenchmarkResultDatabase.BenchmarkEntry template = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper.getStatInfo().getKeyString(), benchmarkWrapper.getStatInfo().getCategoryString(), new ArrayList<BenchmarkWrapper>());
+				if(db.getEntryList().contains(template)) {
+					db.getEntryList().get(db.getEntryList().indexOf(template)).getWrapper().add(benchmarkWrapper);
+				} else {
+					template.getWrapper().add(benchmarkWrapper);
+					db.getEntryList().add(template);
+				}
+			}
+		}
+
+		settings.edit().putString(MainActivity.PREF_RESULTS,JsonUtil.toJsonString(db)).commit();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if(progressDialog != null) {
+			progressDialog.dismiss();
+		}
+	}
 
 	public static class Rounds {
 		private int rounds;

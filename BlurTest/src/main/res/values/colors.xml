@@ -9,4 +9,6 @@
     <color name="graphBgYellow">#99f1c40f</color>
     <color name="graphBgRed">#99e74c3c</color>
     <color name="graphBlue">#993498db</color>
+    <color name="tableHeaderBg">#d35400</color>
+    <color name="tableRowHeaderBg">#c0392b</color>
 </resources>

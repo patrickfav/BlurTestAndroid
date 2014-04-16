@@ -17,11 +17,6 @@ import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 import com.squareup.picasso.Picasso;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
-
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.JsonUtil;
@@ -29,15 +24,14 @@ import at.favre.app.blurtest.util.JsonUtil;
 /**
  * Created by PatrickF on 16.04.2014.
  */
-public class BenchmarkDetailsDialog extends DialogFragment {
+public class BlurBenchmarkDetailsDialog extends DialogFragment {
 	private static final String WRAPPER_KEY = "wrapperKey";
 
 
 	private BenchmarkWrapper wrapper;
-	private DecimalFormat format;
 
-	public static BenchmarkDetailsDialog createInstance(BenchmarkWrapper wrapper) {
-		BenchmarkDetailsDialog dialog = new BenchmarkDetailsDialog();
+	public static BlurBenchmarkDetailsDialog createInstance(BenchmarkWrapper wrapper) {
+		BlurBenchmarkDetailsDialog dialog = new BlurBenchmarkDetailsDialog();
 		dialog.setWrapper(wrapper);
 		return dialog;
 	}
@@ -66,10 +60,6 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 	private GraphView createGraph(BenchmarkWrapper wrapper) {
 		Resources res = getResources();
 		int lineThicknessPx = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, res.getDisplayMetrics()));
-
-		format = new DecimalFormat("#.0");
-		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-		format.setRoundingMode(RoundingMode.HALF_UP);
 
 		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[wrapper.getStatInfo().getBenchmarkData().size()];
 		for (int j = 0; j < wrapper.getStatInfo().getBenchmarkData().size(); j++) {

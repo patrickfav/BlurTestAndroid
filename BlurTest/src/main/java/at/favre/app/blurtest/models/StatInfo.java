@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import at.favre.app.blurtest.util.Average;
+import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.util.BlurUtil;
 
 /**
@@ -18,6 +19,7 @@ public class StatInfo {
 	private int bitmapHeight;
 	private int bitmapWidth;
 	private int blurRadius;
+	private int rounds;
 	private BlurUtil.Algorithm algorithm;
 	private boolean error=false;
 	private String errorDescription;
@@ -27,11 +29,12 @@ public class StatInfo {
 	public StatInfo() {
 	}
 
-	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, BlurUtil.Algorithm algorithm) {
+	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, BlurUtil.Algorithm algorithm, int rounds) {
 		this.bitmapHeight = bitmapHeight;
 		this.bitmapWidth = bitmapWidth;
 		this.blurRadius = blurRadius;
 		this.algorithm = algorithm;
+		this.rounds = rounds;
 		benchmarkData = new ArrayList<Double>();
 	}
 
@@ -113,6 +116,23 @@ public class StatInfo {
 
 	public void setBitmapWidth(int bitmapWidth) {
 		this.bitmapWidth = bitmapWidth;
+	}
+
+	public int getRounds() {
+		return rounds;
+	}
+
+	public void setRounds(int rounds) {
+		this.rounds = rounds;
+	}
+
+	@JsonIgnore
+	public String getKeyString() {
+		return bitmapHeight+"x"+bitmapWidth+"_"+algorithm+"_"+ String.format("%02d", blurRadius)+"px";
+	}
+	@JsonIgnore
+	public String getCategoryString() {
+		return bitmapHeight+"x"+bitmapWidth+" / "+ BenchmarkUtil.formatNum(blurRadius,"00")+"px";
 	}
 
 	@JsonIgnore
