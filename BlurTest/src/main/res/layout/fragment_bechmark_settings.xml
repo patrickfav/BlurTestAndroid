@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/benchmark_bg"
+    android:paddingTop="?attr/actionBarSize">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            style="@style/benchmarkSettingWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Include Picture Sizes"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/cb_s_100"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="100x100"/>
+
+            <CheckBox
+                android:id="@+id/cb_s_200"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="200x200"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/cb_s_300"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="300x300"/>
+
+            <CheckBox
+                android:id="@+id/cb_s_400"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="400x400"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <CheckBox
+                android:id="@+id/cb_s_500"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="500x500"/>
+
+            <CheckBox
+                android:id="@+id/cb_s_600"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="600x600"/>
+        </LinearLayout>
+
+        <TextView
+            style="@style/benchmarkSettingWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Include Blur Radius"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <CheckBox
+                android:id="@+id/cb_r_4px"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="4px"/>
+
+            <CheckBox
+                android:id="@+id/cb_r_8px"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="8px"/>
+
+            <CheckBox
+                android:id="@+id/cb_r_16px"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="16px"/>
+
+            <CheckBox
+                android:id="@+id/cb_r_24px"
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_weight="1"
+                android:text="24px"/>
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spinner_rounds"
+            style="@style/benchmarkSettingWidget"/>
+
+        <Spinner
+            android:id="@+id/spinner_algorithm"
+            style="@style/benchmarkSettingWidget"/>
+
+        <Button
+            android:id="@+id/btn_start"
+            style="@style/benchmarkSettingWidget"
+            android:text="Start Benchmark"/>
+    </LinearLayout>
+</ScrollView>

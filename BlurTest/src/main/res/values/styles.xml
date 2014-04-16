@@ -1,4 +1,5 @@
 <resources>
+
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/action_bar_theme</item>
@@ -14,8 +15,18 @@
         <item name="android:background">@color/halftransparent</item>
         <item name="android:titleTextStyle">@style/action_bar_text</item>
     </style>
+
     <style name="action_bar_text">
         <item name="android:textColor">@color/optionsTextColor</item>
         <item name="android:textSize">18dp</item>
+    </style>
+
+    <style name="benchmarkSettingWidget">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/optionsTextColor</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

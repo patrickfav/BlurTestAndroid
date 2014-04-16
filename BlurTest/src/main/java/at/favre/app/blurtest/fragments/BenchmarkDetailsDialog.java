@@ -22,8 +22,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.JsonUtil;
 
 /**
@@ -33,10 +33,10 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 	private static final String WRAPPER_KEY = "wrapperKey";
 
 
-	private BlurBenchmarkTask.BenchmarkWrapper wrapper;
+	private BenchmarkWrapper wrapper;
 	private DecimalFormat format;
 
-	public static BenchmarkDetailsDialog createInstance(BlurBenchmarkTask.BenchmarkWrapper wrapper) {
+	public static BenchmarkDetailsDialog createInstance(BenchmarkWrapper wrapper) {
 		BenchmarkDetailsDialog dialog = new BenchmarkDetailsDialog();
 		dialog.setWrapper(wrapper);
 		return dialog;
@@ -47,7 +47,7 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 		super.onCreate(savedInstanceState);
 
 		if(savedInstanceState != null) {
-			wrapper = JsonUtil.fromJsonString(savedInstanceState.getString(WRAPPER_KEY),BlurBenchmarkTask.BenchmarkWrapper.class);
+			wrapper = JsonUtil.fromJsonString(savedInstanceState.getString(WRAPPER_KEY),BenchmarkWrapper.class);
 		}
 	}
 
@@ -63,19 +63,17 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 	}
 
 
-	private GraphView createGraph(BlurBenchmarkTask.BenchmarkWrapper wrapper) {
+	private GraphView createGraph(BenchmarkWrapper wrapper) {
 		Resources res = getResources();
 		int lineThicknessPx = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, res.getDisplayMetrics()));
-
-
 
 		format = new DecimalFormat("#.0");
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		format.setRoundingMode(RoundingMode.HALF_UP);
 
-		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[wrapper.getStatInfo().getAvgBlur().size()];
-		for (int j = 0; j < wrapper.getStatInfo().getAvgBlur().size(); j++) {
-			data[j] = new GraphView.GraphViewData(j+1,wrapper.getStatInfo().getAvgBlur().get(j));
+		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[wrapper.getStatInfo().getBenchmarkData().size()];
+		for (int j = 0; j < wrapper.getStatInfo().getBenchmarkData().size(); j++) {
+			data[j] = new GraphView.GraphViewData(j+1,wrapper.getStatInfo().getBenchmarkData().get(j));
 		}
 
 		LineGraphView graphView = new LineGraphView(getActivity() , "");
@@ -94,9 +92,9 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 //			}
 //		});
 		if(wrapper.getStatInfo().getAsAvg().getMin() <= 16) {
-			graphView.addSeries(getStraightLine(16, wrapper.getStatInfo().getAvgBlur().size(), "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
+			graphView.addSeries(getStraightLine(16, wrapper.getStatInfo().getBenchmarkData().size(), "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
 		}
-		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getAvgBlur().size(), "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
+		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size(), "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
 		graphView.addSeries(new GraphViewSeries("Blur", seriesStyle, data));
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
@@ -135,7 +133,7 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 	}
 
 
-	public void setWrapper(BlurBenchmarkTask.BenchmarkWrapper wrapper) {
+	public void setWrapper(BenchmarkWrapper wrapper) {
 		this.wrapper = wrapper;
 	}
 

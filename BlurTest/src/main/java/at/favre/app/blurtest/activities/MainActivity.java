@@ -13,7 +13,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import at.favre.app.blurtest.R;
-import at.favre.app.blurtest.fragments.BlurBenchmarkFragment;
+import at.favre.app.blurtest.fragments.BlurBenchmarkSettingsFragment;
 import at.favre.app.blurtest.fragments.IFragmentWithBlurSettings;
 import at.favre.app.blurtest.fragments.LiveBlurFragment;
 import at.favre.app.blurtest.fragments.StaticBlurFragment;
@@ -28,8 +28,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//
-//		requestWindowFeature(Window.FEATURE_PROGRESS);
+
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.inc_spinner_item2,new String[]{"Static","Live","Benchmark"});
 		adapter.setDropDownViewResource(R.layout.inc_spinner_textview2);
@@ -109,13 +108,13 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				}
 				return true;
 			case 2:
-				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
+				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new BlurBenchmarkFragment(),BlurBenchmarkFragment.class.getSimpleName());
+					t.add(android.R.id.content,new BlurBenchmarkSettingsFragment(),BlurBenchmarkSettingsFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()));
+					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()));
 					t.commitAllowingStateLoss();
 				}
 				return true;

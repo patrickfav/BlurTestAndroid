@@ -23,16 +23,17 @@ import java.util.List;
 import java.util.Locale;
 
 import at.favre.app.blurtest.fragments.BenchmarkDetailsDialog;
+import at.favre.app.blurtest.models.BenchmarkWrapper;
 
 /**
  * Created by PatrickF on 14.04.2014.
  */
-public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.BenchmarkWrapper> {
+public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 	private DecimalFormat format;
 
-	public BenchmarkListAdapter(Context context, int resource, List<BlurBenchmarkTask.BenchmarkWrapper> objects) {
+	public BenchmarkListAdapter(Context context, int resource, List<BenchmarkWrapper> objects) {
 		super(context, resource, objects);
-		format = new DecimalFormat("#.0");
+		format = new DecimalFormat("0.0");
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		format.setRoundingMode(RoundingMode.HALF_UP);
 	}
