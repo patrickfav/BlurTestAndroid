@@ -2,6 +2,7 @@ package at.favre.app.blurtest.util;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.Log;
 
@@ -23,7 +24,7 @@ public class BitmapUtil {
 		}
 	}
 
-	public static File saveAndRecycleBitmap(Bitmap bitmap, String filename, String path) {
+	public static File saveBitmap(Bitmap bitmap, String filename, String path, boolean recycle) {
 		FileOutputStream out=null;
 		try {
 			File f = new File(path,filename);
@@ -40,7 +41,9 @@ public class BitmapUtil {
 			try{
 				out.close();
 			} catch(Throwable ignore) {}
-			bitmap.recycle();
+			if(recycle) {
+				bitmap.recycle();
+			}
 		}
 		return null;
 	}
@@ -48,5 +51,11 @@ public class BitmapUtil {
 	public static String getCacheDir(Context ctx) {
 		return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||!Environment.isExternalStorageRemovable() ?
 				ctx.getExternalCacheDir().getPath() : ctx.getCacheDir().getPath();
+	}
+
+	public static Bitmap flip(Bitmap src) {
+		Matrix m = new Matrix();
+		m.preScale(-1, 1);
+		return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
 	}
 }

@@ -59,7 +59,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 		if (!getItem(position).getStatInfo().isError()) {
 			viewHolder.tvAvg.setText(format.format(getItem(position).getStatInfo().getAsAvg().getNormalizedAvg()) + "ms");
 			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).into(viewHolder.imageView);
-			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
+			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapHeight() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());

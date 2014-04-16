@@ -74,9 +74,14 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			}
 
 			statInfo.setBenchmarkDuration(SystemClock.elapsedRealtime() - startWholeProcess);
-			return new BenchmarkWrapper(BitmapUtil.saveAndRecycleBitmap(blurredBitmap, UUID.randomUUID().toString().substring(0, 6) + "" + radius + "px_" + algorithm + ".png", BitmapUtil.getCacheDir(ctx)), statInfo);
+
+			String fileName =UUID.randomUUID().toString().substring(0, 6) + "" + radius + "px_" + algorithm + ".png";
+
+			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap,fileName, BitmapUtil.getCacheDir(ctx),false),
+					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
+					statInfo);
 		} catch (Exception e) {
-			return new BenchmarkWrapper(null, new StatInfo(e.getMessage()));
+			return new BenchmarkWrapper(null,null, new StatInfo(e.getMessage()));
 		}
 	}
 
@@ -91,15 +96,20 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 
 	public static class BenchmarkWrapper {
 		private String bitmapPath;
+		private String flippedBitmapPath;
 		private StatInfo statInfo;
 		private boolean additionalInfoVisibility = false;
 
 		public BenchmarkWrapper() {
 		}
 
-		public BenchmarkWrapper(File bitmapFile, StatInfo statInfo) {
-			this.bitmapPath = bitmapFile.getAbsolutePath();
+		public BenchmarkWrapper(File bitmapFile,File flippedBitmapFile, StatInfo statInfo) {
+			if(bitmapFile != null && flippedBitmapFile != null) {
+				this.bitmapPath = bitmapFile.getAbsolutePath();
+				this.flippedBitmapPath = flippedBitmapFile.getAbsolutePath();
+			}
 			this.statInfo = statInfo;
+
 			if(bitmapPath == null) {
 				statInfo.setError(true);
 			}
@@ -130,8 +140,18 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BlurBenchmarkTask.B
 			this.additionalInfoVisibility = additionalInfoVisibility;
 		}
 
+		public String getFlippedBitmapPath() {
+			return flippedBitmapPath;
+		}
+
+		public void setFlippedBitmapPath(String flippedBitmapPath) {
+			this.flippedBitmapPath = flippedBitmapPath;
+		}
+
 		@JsonIgnore
 		public File getBitmapAsFile() {return new File(bitmapPath);}
+		@JsonIgnore
+		public File getFlippedBitmapAsFile() {return new File(flippedBitmapPath);}
 	}
 
 	public static class StatInfo {
