@@ -5,4 +5,8 @@
     <color name="transparent">#00000000</color>
     <color name="darkgrey">#333333</color>
     <color name="optionsTextColor">#ccc</color>
+    <color name="graphBgGreen">#992ecc71</color>
+    <color name="graphBgYellow">#99f1c40f</color>
+    <color name="graphBgRed">#99e74c3c</color>
+    <color name="graphBlue">#993498db</color>
 </resources>

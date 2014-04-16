@@ -5,6 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,8 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
+
+import at.favre.app.blurtest.fragments.BenchmarkDetailsDialog;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -145,10 +148,19 @@ public class BenchmarkListAdapter extends ArrayAdapter<BlurBenchmarkTask.Benchma
 					getItem(position).setAdditionalInfoVisibility(false);
 				}
 			});
+
+			convertView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(getItem(position));
+					dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(),"details");
+				}
+			});
 		} else {
 			viewHolder.tvAvg.setText(getItem(position).getStatInfo().getErrorDescription());
 			viewHolder.imageView.setImageDrawable(new BitmapDrawable(getContext().getResources()));
 		}
+
 
 
 		return convertView;

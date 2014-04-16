@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 		switch (item.getItemId()) {
 			case R.id.action_settings:
 				for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-					if(fragment.isAdded() && fragment instanceof IFragmentWithBlurSettings) {
+					if(fragment != null && fragment.isAdded() && fragment instanceof IFragmentWithBlurSettings) {
 						((IFragmentWithBlurSettings) fragment).switchShowSettings();
 					}
 				}

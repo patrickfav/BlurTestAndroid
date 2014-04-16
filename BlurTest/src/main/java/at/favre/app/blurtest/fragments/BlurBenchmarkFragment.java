@@ -16,7 +16,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -30,6 +29,7 @@ import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.util.BitmapUtil;
+import at.favre.app.blurtest.util.JsonUtil;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -42,10 +42,9 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	private static final int MAX_RADIUS = 16;
 	private static final int START_RADIUS = 2;
 	private static final int BENCHMARK_ROUNDS = 100;
-	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2};
+	private static final int[] TEST_SUBJECT_RESID_LIST = {R.drawable.test_100x100_2,R.drawable.test_200x200_2,/*R.drawable.test_300x300_2,R.drawable.test_400x400_2*/};
 	private SettingsController settingsController;
 
-	private ObjectMapper objectMapper = new ObjectMapper();
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 //	private
 
@@ -62,11 +61,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		super.onCreate(savedInstanceState);
 
 		if(savedInstanceState != null) {
-			try {
-				benchmarkResultList = objectMapper.readValue(savedInstanceState.getString(BENCHMARK_LIST_KEY), BenchmarkResultList.class);
-			} catch (IOException e) {
-				Log.w(TAG, "Could not read list", e);
-			}
+			benchmarkResultList = JsonUtil.fromJsonString(savedInstanceState.getString(BENCHMARK_LIST_KEY), BenchmarkResultList.class);
 		}
 	}
 
@@ -111,11 +106,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		try {
-			outState.putString(BENCHMARK_LIST_KEY,objectMapper.writeValueAsString(benchmarkResultList));
-		} catch (Exception e) {
-			Log.w(TAG,"Could not save list",e);
-		}
+		outState.putString(BENCHMARK_LIST_KEY, JsonUtil.toJsonString(benchmarkResultList));
 	}
 
 	private void benchmark() {
@@ -123,6 +114,7 @@ public class BlurBenchmarkFragment extends Fragment implements IFragmentWithBlur
 		lockOrientation();
 		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
 		progressDialog.setProgress(0);
+		progressDialog.setCancelable(false);
 		progressDialog.show();
 		benchmarkResultList = new BenchmarkResultList();
 		nextTest(0,START_RADIUS);
