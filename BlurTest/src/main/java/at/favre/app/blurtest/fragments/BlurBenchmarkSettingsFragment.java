@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -208,6 +209,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
 		showProgressDialog(radius.size()*images.size());
+		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		benchmarkResultList = new BenchmarkResultList();
 		nextTest(0,0,images,radius);
 	}
@@ -259,7 +261,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		Log.d(TAG, "done benchmark");
 		progressDialog.setProgress(progressDialog.getMax());
 		progressDialog.dismiss();
-
+		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		saveTest();
 
 		if(btn != null) {
