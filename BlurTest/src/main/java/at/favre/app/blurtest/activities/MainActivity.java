@@ -2,7 +2,7 @@ package at.favre.app.blurtest.activities;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.renderscript.RenderScript;
+import android.support.v8.renderscript.RenderScript;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;

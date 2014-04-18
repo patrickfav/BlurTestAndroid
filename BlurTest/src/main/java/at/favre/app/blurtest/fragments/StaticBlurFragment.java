@@ -24,6 +24,7 @@ import android.widget.Toast;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
+import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.BlurUtil;
 
 public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSettings {
@@ -86,7 +87,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 		});
 
 		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
-		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BlurUtil.sizeOf(normalBitmap)/1024)+"kB");
+		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BitmapUtil.sizeOf(normalBitmap)/1024)+"kB");
 
 		return v;
     }
@@ -176,7 +177,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				Log.d(TAG, "Bluring duration " + duration + "ms");
 
 				if(!onlyReBlur) {
-					Toast.makeText(getActivity(), settingsController.getAlgorithm() + " /  insample " + settingsController.getInSampleSize() + " / radius " + settingsController.getRadius() + "px / " + duration + "ms" + " / " + (BlurUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), settingsController.getAlgorithm() + " /  insample " + settingsController.getInSampleSize() + " / radius " + settingsController.getRadius() + "px / " + duration + "ms" + " / " + (BitmapUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
 				}
 
 				if (settingsController.isShowCrossfade() && !onlyReBlur) {
@@ -192,7 +193,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				}
 
 				Bitmap blurBitmap = ((BitmapDrawable) imageViewBlur.getDrawable()).getBitmap();
-				((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + (BlurUtil.sizeOf(blurBitmap) / 1024) + "kB / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
+				((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + (BitmapUtil.sizeOf(blurBitmap) / 1024) + "kB / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
 			}
 		}
 	}

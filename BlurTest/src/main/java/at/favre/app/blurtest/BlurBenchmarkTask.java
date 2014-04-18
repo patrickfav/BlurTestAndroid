@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.renderscript.RenderScript;
+import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 
 import java.util.UUID;

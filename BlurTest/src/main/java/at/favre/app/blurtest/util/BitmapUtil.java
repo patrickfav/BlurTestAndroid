@@ -1,8 +1,10 @@
 package at.favre.app.blurtest.util;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
 
@@ -57,5 +59,15 @@ public class BitmapUtil {
 		Matrix m = new Matrix();
 		m.preScale(-1, 1);
 		return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
+	}
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	public static int sizeOf(Bitmap data) {
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+			return data.getRowBytes() * data.getHeight();
+		} else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+			return data.getByteCount();
+		} else {
+			return data.getAllocationByteCount();
+		}
 	}
 }

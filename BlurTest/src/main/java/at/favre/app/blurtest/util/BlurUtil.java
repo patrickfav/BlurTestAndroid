@@ -1,18 +1,17 @@
 package at.favre.app.blurtest.util;
 
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Build;
-import android.renderscript.Allocation;
-import android.renderscript.Element;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlend;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.renderscript.ScriptIntrinsicConvolve3x3;
-import android.renderscript.ScriptIntrinsicConvolve5x5;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.Element;
+import android.support.v8.renderscript.RenderScript;
+import android.support.v8.renderscript.ScriptIntrinsicBlend;
+import android.support.v8.renderscript.ScriptIntrinsicBlur;
+import android.support.v8.renderscript.ScriptIntrinsicConvolve3x3;
+import android.support.v8.renderscript.ScriptIntrinsicConvolve5x5;
 import android.util.Log;
 
 /**
@@ -46,8 +45,7 @@ public class BlurUtil {
 		if (Build.VERSION.SDK_INT >= 17) {
 			final Allocation input1 = Allocation.createFromBitmap(rs, bitmap1, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
 			final Allocation input2 = Allocation.createFromBitmap(rs, bitmap2, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
-
-			final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs,Element.U8_4(rs));
+			final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs, Element.U8_4(rs));
 			blendScript.forEachAdd(input1,input2);
 			input2.copyTo(bitmap1);
 
@@ -490,14 +488,5 @@ public class BlurUtil {
 		Log.v("pix", w + " " + h + " " + pix.length);
 		sentBitmap.setPixels(pix, 0, w, 0, 0, w, h);
 		return (sentBitmap);
-	}
-
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-	public static int sizeOf(Bitmap data) {
-		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-			return data.getRowBytes() * data.getHeight();
-		} else {
-			return data.getByteCount();
-		}
 	}
 }

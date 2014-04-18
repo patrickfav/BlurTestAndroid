@@ -154,7 +154,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			long start = SystemClock.elapsedRealtime();
 			dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
 			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(),true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
-			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(),true), bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+			Bitmap preBlur = BlurUtil.blur(((MainActivity)getActivity()).getRs(),crop(dest.copy(dest.getConfig(),true), bottomBlurView, settingsController.getInSampleSize()),4, BlurUtil.Algorithm.RS_GAUSSIAN);
+			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(),preBlur.copy(preBlur.getConfig(),true) , 1, settingsController.getAlgorithm())));
 			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
 			isWorking.compareAndSet(true, false);
 			return true;
@@ -184,17 +185,17 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		int bmpWidth = Math.round(viewWidth * scale);
 		int bmpHeight = Math.round(viewHeight * scale);
 
-		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
-			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
+		if (dest == null || dest.getWidth() != viewWidth || dest.getHeight() != viewHeight) {
+			dest = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
 		}
 
 		Canvas c = new Canvas(dest);
-		if (downSampling > 1) {
-			c.scale(scale, scale);
-		}
+//		if (downSampling > 1) {
+//			c.scale(scale, scale);
+//		}
 
 		view.draw(c);
-		return dest;
+		return Bitmap.createScaledBitmap(dest,bmpWidth,bmpHeight,false);
 	}
 
 	private Bitmap crop(Bitmap srcBmp, View canvasView, int downsampling) {
