@@ -1,5 +1,7 @@
 package at.favre.app.blurtest.models;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -7,12 +9,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.util.BlurUtil;
 
 /**
  * Created by PatrickF on 18.04.2014.
  */
 public class ResultTableModel {
+	public static final String TAG = ResultTableModel.class.getSimpleName();
 
     public enum DataType {AVG, MIN_MAX}
 
@@ -47,7 +51,7 @@ public class ResultTableModel {
     }
 
     public BenchmarkResultDatabase.BenchmarkEntry getCell(int row,int column) {
-        return tableModel.get(rows.get(row)).get(columns.get(column));
+        return tableModel.get(columns.get(row)).get(rows.get(column));
     }
 
     private BenchmarkWrapper getRecentWrapper(int row, int column) {
@@ -61,15 +65,19 @@ public class ResultTableModel {
     }
 
     public String getValue(int row, int column, DataType type) {
-        BenchmarkWrapper wrapper = getRecentWrapper(row, column);
-        if(wrapper != null) {
-            switch (type) {
-                case AVG:
-                    return wrapper.getStatInfo().getAsAvg().getAvg()+"ms";
-                case MIN_MAX:
-                    return wrapper.getStatInfo().getAsAvg().getMin()+"/"+wrapper.getStatInfo().getAsAvg().getMax()+"ms";
-            }
-        }
+		try {
+			BenchmarkWrapper wrapper = getRecentWrapper(row, column);
+			if (wrapper != null) {
+				switch (type) {
+					case AVG:
+						return BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(),"0.##") + "ms";
+					case MIN_MAX:
+						return BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(),"0.##") + "/" + BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(),"0.##") + "ms";
+				}
+			}
+		} catch (Exception e) {
+			Log.w(TAG, "Error while getting data",e);
+		}
         return "?";
     }
 

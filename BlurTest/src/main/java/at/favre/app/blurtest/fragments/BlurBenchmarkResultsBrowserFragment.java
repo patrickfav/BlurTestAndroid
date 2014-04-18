@@ -12,10 +12,13 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.inqbarna.tablefixheaders.TableFixHeaders;
+
 import java.util.TreeSet;
 
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.MainActivity;
+import at.favre.app.blurtest.adapter.ResultTableAdapter;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.util.BlurUtil;
@@ -26,10 +29,14 @@ import at.favre.app.blurtest.util.JsonUtil;
  */
 public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 
+	private TableFixHeaders table;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
-		fillResults(v);
+		table = (TableFixHeaders) v.findViewById(R.id.table);
+		table.setAdapter(new ResultTableAdapter(getActivity(),loadResultsDB()));
+		//fillResults(v);
 		return v;
 	}
 

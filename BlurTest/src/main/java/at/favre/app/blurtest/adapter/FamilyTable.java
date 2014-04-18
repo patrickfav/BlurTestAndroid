@@ -11,13 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.inqbarna.tablefixheaders.TableFixHeaders;
 import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import at.favre.app.blurtest.R;
 
 public class FamilyTable extends Activity {
 
@@ -57,11 +54,11 @@ public class FamilyTable extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.table);
-
-        TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
-        BaseTableAdapter baseTableAdapter = new FamilyNexusAdapter(this);
-        tableFixHeaders.setAdapter(baseTableAdapter);
+//        setContentView(R.layout.table);
+//
+//        TableFixHeaders tableFixHeaders = (TableFixHeaders) findViewById(R.id.table);
+//        BaseTableAdapter baseTableAdapter = new FamilyNexusAdapter(this);
+//        tableFixHeaders.setAdapter(baseTableAdapter);
     }
 
     public class FamilyNexusAdapter extends BaseTableAdapter {
@@ -147,7 +144,7 @@ public class FamilyTable extends Activity {
 
         private View getFirstHeader(int row, int column, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_table_header_first, parent, false);
+//                convertView = getLayoutInflater().inflate(R.layout.item_table_header_first, parent, false);
             }
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[0]);
             return convertView;
@@ -155,7 +152,7 @@ public class FamilyTable extends Activity {
 
         private View getHeader(int row, int column, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_table_header, parent, false);
+                //convertView = getLayoutInflater().inflate(R.layout.item_table_header, parent, false);
             }
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(headers[column + 1]);
             return convertView;
@@ -163,25 +160,25 @@ public class FamilyTable extends Activity {
 
         private View getFirstBody(int row, int column, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_table_first, parent, false);
+                //convertView = getLayoutInflater().inflate(R.layout.item_table_first, parent, false);
             }
-            convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
+            //convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
             return convertView;
         }
 
         private View getBody(int row, int column, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_table, parent, false);
+                //convertView = getLayoutInflater().inflate(R.layout.item_table, parent, false);
             }
-            convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
+            //convertView.setBackgroundResource(row % 2 == 0 ? R.drawable.bg_table_color1 : R.drawable.bg_table_color2);
             ((TextView) convertView.findViewById(android.R.id.text1)).setText(getDevice(row).data[column + 1]);
             return convertView;
         }
 
         private View getFamilyView(int row, int column, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = getLayoutInflater().inflate(R.layout.item_table_family, parent, false);
+                //convertView = getLayoutInflater().inflate(R.layout.item_table_family, parent, false);
             }
             final String string;
             if (column == -1) {
