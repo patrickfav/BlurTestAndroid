@@ -3,6 +3,7 @@ package at.favre.app.blurtest.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import at.favre.app.blurtest.util.Average;
@@ -23,6 +24,7 @@ public class StatInfo {
 	private BlurUtil.Algorithm algorithm;
 	private boolean error=false;
 	private String errorDescription;
+    private long date;
 
 	private Average<Double> avg;
 
@@ -36,6 +38,7 @@ public class StatInfo {
 		this.algorithm = algorithm;
 		this.rounds = rounds;
 		benchmarkData = new ArrayList<Double>();
+        date = new Date().getTime();
 	}
 
 	public StatInfo(String errorDescription, BlurUtil.Algorithm algorithm) {
@@ -126,7 +129,15 @@ public class StatInfo {
 		this.rounds = rounds;
 	}
 
-	@JsonIgnore
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    @JsonIgnore
 	public String getKeyString() {
 		return bitmapHeight+"x"+bitmapWidth+"_"+algorithm+"_"+ String.format("%02d", blurRadius)+"px";
 	}

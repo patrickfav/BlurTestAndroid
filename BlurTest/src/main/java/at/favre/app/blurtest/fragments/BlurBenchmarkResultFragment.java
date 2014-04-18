@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-import at.favre.app.blurtest.BenchmarkListAdapter;
+import at.favre.app.blurtest.adapter.BenchmarkListAdapter;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
 import at.favre.app.blurtest.models.BenchmarkResultList;

@@ -1,4 +1,4 @@
-package at.favre.app.blurtest;
+package at.favre.app.blurtest.adapter;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BenchmarkUtil;

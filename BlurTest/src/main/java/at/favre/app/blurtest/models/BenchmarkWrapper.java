@@ -3,11 +3,12 @@ package at.favre.app.blurtest.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.File;
+import java.util.Date;
 
 /**
 * Created by PatrickF on 16.04.2014.
 */
-public class BenchmarkWrapper {
+public class BenchmarkWrapper implements Comparable<BenchmarkWrapper> {
 	private String bitmapPath;
 	private String flippedBitmapPath;
 	private StatInfo statInfo;
@@ -65,4 +66,9 @@ public class BenchmarkWrapper {
 	public File getBitmapAsFile() {return new File(bitmapPath);}
 	@JsonIgnore
 	public File getFlippedBitmapAsFile() {return new File(flippedBitmapPath);}
+
+    @Override
+    public int compareTo(BenchmarkWrapper benchmarkWrapper) {
+        return new Date(getStatInfo().getDate()).compareTo(new Date(benchmarkWrapper.getStatInfo().getDate()));
+    }
 }
