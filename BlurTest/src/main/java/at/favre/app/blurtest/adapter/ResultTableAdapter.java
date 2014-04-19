@@ -18,9 +18,11 @@ import at.favre.app.blurtest.models.ResultTableModel;
 public class ResultTableAdapter extends BaseTableAdapter {
 
     private ResultTableModel model;
+    private ResultTableModel.DataType dataType;
     private Context ctx;
 
-    public ResultTableAdapter(Context ctx, BenchmarkResultDatabase db) {
+    public ResultTableAdapter(Context ctx, BenchmarkResultDatabase db, ResultTableModel.DataType dataType) {
+        this.dataType = dataType;
         model = new ResultTableModel(db);
 		this.ctx = ctx;
     }
@@ -60,7 +62,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 		}
 
         if (viewType == 2) {
-            switch (model.getRelativeType(row, column, ResultTableModel.DataType.AVG)) {
+            switch (model.getRelativeType(row, column, dataType,dataType.isMinIsBest())) {
                 case BEST:
                     ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.graphBgGreen));
                     break;
@@ -85,7 +87,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 		} else if(column < 0) {
 			return model.getRows().get(row);
 		} else {
-			return model.getValue(row,column, ResultTableModel.DataType.AVG);
+			return model.getValue(row,column, dataType);
 		}
 	}
 

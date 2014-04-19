@@ -17,11 +17,22 @@ import at.favre.app.blurtest.util.BlurUtil;
  */
 public class ResultTableModel {
 	public static final String TAG = ResultTableModel.class.getSimpleName();
+    public static final double BEST_WORST_THRESHOLD_PERCENTAGE = 5;
     public static final String MISSING = "?";
-    public static final String NUMBER_FORMAT = "0.00";
-    public static final String NUMBER_FORMAT_SORT = "00000000000.0000";
 
-    public enum DataType {AVG, MIN_MAX}
+    public static final String NUMBER_FORMAT = "0.00";
+
+    public enum DataType {AVG(true), MIN_MAX(true), OVER_16_MS(true);
+        private boolean minIsBest;
+
+        DataType(boolean minIsBest) {
+            this.minIsBest = minIsBest;
+        }
+
+        public boolean isMinIsBest() {
+            return minIsBest;
+        }
+    }
     public enum RelativeType {BEST, WORST, AVG}
 
     Map<String,Map<String,BenchmarkResultDatabase.BenchmarkEntry>> tableModel;
@@ -72,12 +83,7 @@ public class ResultTableModel {
 		try {
 			BenchmarkWrapper wrapper = getRecentWrapper(row, column);
 			if (wrapper != null) {
-				switch (type) {
-					case AVG:
-						return BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(),NUMBER_FORMAT) + "ms";
-					case MIN_MAX:
-						return BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(),NUMBER_FORMAT) + "/" + BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(),NUMBER_FORMAT) + "ms";
-				}
+				return getValueForType(wrapper,type).getRepresentation();
 			}
 		} catch (Exception e) {
 			Log.w(TAG, "Error while getting data",e);
@@ -85,11 +91,11 @@ public class ResultTableModel {
         return MISSING;
     }
 
-    public RelativeType getRelativeType(int row,int column, DataType type) {
+    public RelativeType getRelativeType(int row,int column, DataType type, boolean minIsBest) {
         if(row < 0 || column < 0) {
             return RelativeType.AVG;
         }
-        List<String> columns = new ArrayList<String>();
+        List<Double> columns = new ArrayList<Double>();
         BenchmarkResultDatabase.BenchmarkEntry entry;
         BenchmarkWrapper wrapper=null;
         for (int i = 0; i < this.columns.size(); i++) {
@@ -101,32 +107,36 @@ public class ResultTableModel {
             }
 
             if(wrapper != null) {
-                switch (type) {
-                    case AVG:
-                        columns.add(BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(), NUMBER_FORMAT_SORT));
-                        break;
-                    case MIN_MAX:
-                        columns.add(BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), NUMBER_FORMAT_SORT) + "/" + BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), NUMBER_FORMAT_SORT));
-                        break;
-                }
+                columns.add(getValueForType(wrapper,type).getValue());
             } else {
-                columns.add(MISSING);
+                columns.add(Double.NEGATIVE_INFINITY);
             }
         }
-        List<String> sortedColumns = new ArrayList<String>(columns);
+        List<Double> sortedColumns = new ArrayList<Double>(columns);
         Collections.sort(sortedColumns);
 
-        String columnVal = columns.get(column);
+        Double columnVal = columns.get(column);
 
-        if(columnVal.equals(MISSING)) {
+        if(columnVal.equals(Double.NEGATIVE_INFINITY)) {
             return RelativeType.AVG;
         }
 
-        int order = sortedColumns.indexOf(columnVal);
-        if(order == 0) {
-            return RelativeType.BEST;
-        } else if(order == (columns.size()-1)) {
-            return RelativeType.WORST;
+        double minThreshold = sortedColumns.get(0)+(sortedColumns.get(0)*BEST_WORST_THRESHOLD_PERCENTAGE/100);
+        double maxThreshold = sortedColumns.get(columns.size()-1)-(sortedColumns.get(columns.size()-1)*BEST_WORST_THRESHOLD_PERCENTAGE/100);
+        if(columnVal <= minThreshold && columnVal >= maxThreshold) {
+            return RelativeType.AVG;
+        } else if(columnVal <= minThreshold) {
+            if(minIsBest) {
+                return RelativeType.BEST;
+            } else {
+                return RelativeType.WORST;
+            }
+        } else if(columnVal >= maxThreshold) {
+            if(minIsBest) {
+                return RelativeType.WORST;
+            } else {
+                return RelativeType.BEST;
+            }
         } else {
             return RelativeType.AVG;
         }
@@ -138,5 +148,52 @@ public class ResultTableModel {
 
     public List<String> getColumns() {
         return columns;
+    }
+
+    public static StatValue getValueForType(BenchmarkWrapper wrapper, DataType type) {
+        switch (type) {
+            case AVG:
+                return new StatValue(wrapper.getStatInfo().getAsAvg().getAvg(),
+                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(), NUMBER_FORMAT)+"ms");
+            case MIN_MAX:
+                return new StatValue(wrapper.getStatInfo().getAsAvg().getMax()+wrapper.getStatInfo().getAsAvg().getMin(),
+                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#")+"/"+BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#")+"ms");
+            case OVER_16_MS:
+                return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(16d),
+                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(16d), NUMBER_FORMAT)+"%");
+        }
+        return new StatValue();
+    }
+
+    public static class StatValue {
+        public static final String MISSING = "?";
+
+        private final Double value;
+        private final String representation;
+        private final boolean noValue;
+
+        public StatValue(Double value, String representation) {
+            this.value = value;
+            this.representation = representation;
+            noValue = false;
+        }
+
+        public StatValue() {
+            value =Double.NEGATIVE_INFINITY;
+            representation =MISSING;
+            noValue = true;
+        }
+
+        public Double getValue() {
+            return value;
+        }
+
+        public String getRepresentation() {
+            return representation;
+        }
+
+        public boolean isNoValue() {
+            return noValue;
+        }
     }
 }

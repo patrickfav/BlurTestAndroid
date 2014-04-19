@@ -113,6 +113,23 @@ public class Average<T extends Number> {
 		return data.first();
 	}
 
+    public List<T> getValuesGreaterThanGiven(double lowerLimit) {
+        List<T> overList = new ArrayList<T>();
+        for (T t : data) {
+            if(lowerLimit < t.doubleValue()) {
+                overList.add(t);
+            }
+        }
+        return overList;
+    }
+
+    public double getPercentageOverGivenValue(double lowerLimit) {
+        double overCount = getValuesGreaterThanGiven(lowerLimit).size();
+        double wholeCount = data.size();
+
+        return wholeCount * overCount /100;
+    }
+
 	public static class ConfidenceIntervall {
 		private final double high;
 		private final double low;

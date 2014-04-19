@@ -2,8 +2,15 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:blurapp="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_select_datatype"
+        android:icon="@drawable/ic_fastfwd"
+        android:orderInCategory="1"
+        blurapp:showAsAction="ifRoom"
+        android:visible="true"
+        blurapp:actionViewClass="android.widget.Spinner"
+        android:title="Select shown Datatype"/>
     <item android:id="@+id/action_delete"
           android:icon="@drawable/ic_content_discard"
-          blurapp:showAsAction="ifRoom"
+          blurapp:showAsAction="never"
           android:title="Delete Data"/>
 </menu>
