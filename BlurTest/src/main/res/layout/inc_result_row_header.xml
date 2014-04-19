@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="@dimen/table_row_header_width"
+             android:layout_height="@dimen/table_cell_height"
+            android:background="@drawable/row_header_bg">
+    <TextView
+        android:id="@+id/text"
+        style="@style/resultTableCell"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:textColor="@color/tableCellTextColor"
+        android:layout_width="100dp"
+        android:ellipsize="end"/>
+</FrameLayout>

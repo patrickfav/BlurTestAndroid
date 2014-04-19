@@ -10,12 +10,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -52,7 +54,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	private int rounds=100;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
-	private Button btn;
 	private Spinner algorithmSpinner;
 	private Spinner roundsSpinner;
 
@@ -73,6 +74,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 		if(savedInstanceState !=  null) {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);
 			algorithm = BlurUtil.Algorithm.valueOf(savedInstanceState.getString(ALGO_KEY));
@@ -82,24 +84,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_bechmark_settings,container,false);
-
-		btn = (Button) v.findViewById(R.id.btn_start);
-		btn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				benchmark();
-			}
-		});
-		btn.setOnLongClickListener(new View.OnLongClickListener() {
-			@Override
-			public boolean onLongClick(View view) {
-				roundsSpinner.setSelection(0);
-				cbSize100.setChecked(true);cbSize200.setChecked(true);cbSize300.setChecked(true);
-				cbSize400.setChecked(false);cbSize500.setChecked(false);cbSize600.setChecked(false);
-				cBradius4px.setChecked(true);cBradius8px.setChecked(true);cBradius16px.setChecked(true);cBradius24px.setChecked(false);
-				return true;
-			}
-		});
 
 		cBradius4px = (CheckBox) v.findViewById(R.id.cb_r_4px);
 		cBradius8px = (CheckBox) v.findViewById(R.id.cb_r_8px);
@@ -197,6 +181,15 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		return radius;
 	}
 
+    private void benchmarkAll() {
+        List<Integer> radius = Arrays.asList(new Integer[]{4,8,16,24});
+        List<Integer> images = Arrays.asList(new Integer[]{R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2,R.drawable.test_500x500_2,R.drawable.test_600x600_2});
+        rounds = 10;
+        showProgressDialog(radius.size()*images.size()*BlurUtil.Algorithm.values().length);
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        nextTest(0,0,0,images,radius,Arrays.asList(BlurUtil.Algorithm.values()));
+    }
+
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
 
@@ -211,7 +204,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		showProgressDialog(radius.size()*images.size());
 		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		benchmarkResultList = new BenchmarkResultList();
-		nextTest(0,0,images,radius);
+		nextTest(0,0,0,images,radius, Arrays.asList(algorithm));
 	}
 
 	private void showProgressDialog(int max) {
@@ -235,22 +228,26 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 	}
 
-	private void nextTest(final int photoIndex, final int radiusIndex, final List<Integer> imageList , final List<Integer> radiusList) {
-		if(radiusIndex >= radiusList.size()) {
-			nextTest(photoIndex+1,0,imageList,radiusList);
+	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<Integer> imageList , final List<Integer> radiusList, final List<BlurUtil.Algorithm> algorithmList) {
+        if(radiusIndex >= radiusList.size()) {
+			nextTest(photoIndex+1,0,algoIndex,imageList,radiusList, algorithmList);
 		} else {
 			if(photoIndex >= imageList.size()) {
-				testDone();
+                nextTest(0, 0, algoIndex+1, imageList, radiusList, algorithmList);
 			} else {
-				new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithm, ((MainActivity) getActivity()).getRs(), getActivity()) {
-					@Override
-					protected void onPostExecute(BenchmarkWrapper wrapper) {
-						progressDialog.setProgress(progressDialog.getProgress()+1);
-						benchmarkResultList.getBenchmarkWrappers().add(wrapper);
-						Log.d(TAG, "next test");
-						nextTest(photoIndex, radiusIndex+1,imageList,radiusList);
-					}
-				}.execute();
+                if(algoIndex >= algorithmList.size()) {
+                    testDone();
+                } else {
+                    new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithmList.get(algoIndex), ((MainActivity) getActivity()).getRs(), getActivity()) {
+                        @Override
+                        protected void onPostExecute(BenchmarkWrapper wrapper) {
+                            progressDialog.setProgress(progressDialog.getProgress() + 1);
+                            benchmarkResultList.getBenchmarkWrappers().add(wrapper);
+                            Log.d(TAG, "next test");
+                            nextTest(photoIndex, radiusIndex + 1, algoIndex, imageList, radiusList, algorithmList);
+                        }
+                    }.execute();
+                }
 			}
 		}
 	}
@@ -264,9 +261,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		saveTest();
 
-		if(btn != null) {
-			btn.setEnabled(true);
-		}
 		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
 		Intent i = new Intent(getActivity(), BenchmarkResultActivity.class);
@@ -302,7 +296,27 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		settings.edit().putString(MainActivity.PREF_RESULTS,JsonUtil.toJsonString(db)).commit();
 	}
 
-	@Override
+    @Override
+    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.benchmark_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_benchmark:
+                benchmark();
+                return true;
+            case R.id.action_benchmark_all:
+                benchmarkAll();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
 	public void onDestroy() {
 		super.onDestroy();
 		if(progressDialog != null) {

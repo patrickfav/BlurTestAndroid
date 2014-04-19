@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:blurapp="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_benchmark"
+          android:icon="@drawable/ic_play"
+          blurapp:showAsAction="ifRoom"
+          android:title="Start Benchmark"/>
+    <item android:id="@+id/action_benchmark_all"
+        android:icon="@drawable/ic_fastfwd"
+        blurapp:showAsAction="never"
+        android:title="Benchmark All"/>
+</menu>

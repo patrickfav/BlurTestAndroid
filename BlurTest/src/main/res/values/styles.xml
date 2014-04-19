@@ -16,6 +16,14 @@
         <item name="android:titleTextStyle">@style/action_bar_text</item>
     </style>
 
+    <style name="ellipsize">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+        <item name="android:scrollHorizontally">true</item>
+    </style>
+
     <style name="action_bar_text">
         <item name="android:textColor">@color/optionsTextColor</item>
         <item name="android:textSize">18dp</item>
@@ -30,11 +38,12 @@
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="resultTableCell">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="resultTableCell" parent="ellipsize">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:textSize">14sp</item>
         <item name="android:padding">4dp</item>
-        <item name="android:gravity">right</item>
+        <item name="android:gravity">right|clip_vertical</item>
+
     </style>
 </resources>

@@ -11,4 +11,5 @@
     <color name="graphBlue">#993498db</color>
     <color name="tableHeaderBg">#d35400</color>
     <color name="tableRowHeaderBg">#c0392b</color>
+    <color name="tableCellTextColor">#333</color>
 </resources>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content">
+    android:layout_width="@dimen/table_cell_width"
+    android:layout_height="@dimen/table_cell_height"
+    android:background="@drawable/cell_bg">
+
     <TextView
         android:id="@+id/text"
-        style="@style/resultTableCell"/>
+        android:textColor="@color/tableCellTextColor"
+        style="@style/resultTableCell" />
 </FrameLayout>

@@ -1,7 +1,6 @@
 package at.favre.app.blurtest.adapter;
 
 import android.content.Context;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,10 +45,10 @@ public class ResultTableAdapter extends BaseTableAdapter {
 
 			switch (viewType) {
 				case 0:
-					layoutId = R.layout.inc_result_header;
+					layoutId = R.layout.inc_result_column_header;
 					break;
 				case 1:
-					layoutId = R.layout.inc_result_cell;
+					layoutId = R.layout.inc_result_row_header;
 					break;
 				case 2:
 					layoutId = R.layout.inc_result_cell;
@@ -59,6 +58,20 @@ public class ResultTableAdapter extends BaseTableAdapter {
 			}
 			convertView = inflater.inflate(layoutId,parent,false);
 		}
+
+        if (viewType == 2) {
+            switch (model.getRelativeType(row, column, ResultTableModel.DataType.AVG)) {
+                case BEST:
+                    ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.graphBgGreen));
+                    break;
+                case WORST:
+                    ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.graphBgRed));
+                    break;
+                default:
+                    ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.tableCellTextColor));
+                    break;
+            }
+        }
 
 		((TextView) convertView.findViewById(R.id.text)).setText(getText(row,column));
 		return convertView;
@@ -78,12 +91,20 @@ public class ResultTableAdapter extends BaseTableAdapter {
 
     @Override
     public int getWidth(int column) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100, ctx.getResources().getDisplayMetrics());
+        if(column <0) {
+            return (int) ctx.getResources().getDimension(R.dimen.table_row_header_width);
+        } else {
+            return (int) ctx.getResources().getDimension(R.dimen.table_cell_width);
+        }
     }
 
     @Override
     public int getHeight(int row) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 38, ctx.getResources().getDisplayMetrics());
+        if(row <0) {
+            return (int) ctx.getResources().getDimension(R.dimen.table_column_header_height);
+        } else {
+            return (int) ctx.getResources().getDimension(R.dimen.table_cell_height);
+        }
     }
 
     @Override
