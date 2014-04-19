@@ -181,31 +181,30 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		return radius;
 	}
 
-    private void benchmarkAll() {
-        List<Integer> radius = Arrays.asList(new Integer[]{4,8,16,24});
-        List<Integer> images = Arrays.asList(new Integer[]{R.drawable.test_100x100_2,R.drawable.test_200x200_2,R.drawable.test_300x300_2,R.drawable.test_400x400_2,R.drawable.test_500x500_2,R.drawable.test_600x600_2});
-        rounds = 10;
-        showProgressDialog(radius.size()*images.size()*BlurUtil.Algorithm.values().length);
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        nextTest(0,0,0,images,radius,Arrays.asList(BlurUtil.Algorithm.values()));
-    }
-
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
 
 		List<Integer> radius = getRadiusSizesFromSettings();
 		List<Integer> images = getImagesFromSettings();
-
+        List<BlurUtil.Algorithm> algorithms = getAlgorithms();
 		if(radius.isEmpty() || images.isEmpty()) {
 			Toast.makeText(getActivity(),"Choose at least one radius and image size",Toast.LENGTH_SHORT).show();
 			return;
 		}
 		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
-		showProgressDialog(radius.size()*images.size());
+		showProgressDialog(radius.size()*images.size()  * algorithms.size());
 		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		benchmarkResultList = new BenchmarkResultList();
-		nextTest(0,0,0,images,radius, Arrays.asList(algorithm));
+		nextTest(0,0,0,images,radius, algorithms);
 	}
+
+    public List<BlurUtil.Algorithm> getAlgorithms() {
+        if(algorithm.equals(BlurUtil.Algorithm.ALL)) {
+            return BlurUtil.Algorithm.getAllAlgorithms();
+        } else {
+            return  Arrays.asList(algorithm);
+        }
+    }
 
 	private void showProgressDialog(int max) {
 		lockOrientation();
@@ -308,9 +307,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
             case R.id.action_benchmark:
                 benchmark();
                 return true;
-            case R.id.action_benchmark_all:
-                benchmarkAll();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -324,7 +320,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 	}
 
-	public static class Rounds {
+    public static class Rounds {
 		private int rounds;
 
 		public Rounds(int rounds) {

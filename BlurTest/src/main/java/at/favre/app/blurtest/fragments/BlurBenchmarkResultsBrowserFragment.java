@@ -5,6 +5,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -31,12 +34,40 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 
 	private TableFixHeaders table;
 
-	@Override
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.results_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_delete:
+                deleteData();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void deleteData() {
+        SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
+        settings.edit().putString(MainActivity.PREF_RESULTS,JsonUtil.toJsonString(new BenchmarkResultDatabase())).commit();
+        table.setAdapter(new ResultTableAdapter(getActivity(),loadResultsDB()));
+    }
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
 		table = (TableFixHeaders) v.findViewById(R.id.table);
 		table.setAdapter(new ResultTableAdapter(getActivity(),loadResultsDB()));
-		//fillResults(v);
 		return v;
 	}
 
@@ -52,7 +83,7 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 
 			TableRow th = new TableRow(getActivity());
 			th.addView(createTextView("","",th));
-			for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.values()) {
+			for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
 				th.addView(createTextView(algorithm.toString(), algorithm.toString(), th));
 			}
 			th.setBackgroundColor(getResources().getColor(R.color.tableHeaderBg));
@@ -65,7 +96,7 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 				v.setBackgroundColor(getResources().getColor(R.color.tableRowHeaderBg));
 				tr.addView(v);
 
-				for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.values()) {
+				for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
 					BenchmarkResultDatabase.BenchmarkEntry entry = resultsDB.getByCategoryAndAlgorithm(rowHeader,algorithm);
 					if(entry == null || entry.getWrapper().isEmpty()) {
 						tr.addView(createTextView("?", "", tr));

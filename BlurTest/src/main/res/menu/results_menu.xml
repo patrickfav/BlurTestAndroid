@@ -2,8 +2,8 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:blurapp="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_benchmark"
-          android:icon="@drawable/ic_av_play_over_video"
+    <item android:id="@+id/action_delete"
+          android:icon="@drawable/ic_content_discard"
           blurapp:showAsAction="ifRoom"
-          android:title="Start Benchmark"/>
+          android:title="Delete Data"/>
 </menu>

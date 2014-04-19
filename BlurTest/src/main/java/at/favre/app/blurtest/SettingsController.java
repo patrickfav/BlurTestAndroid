@@ -33,7 +33,7 @@ public class SettingsController {
 	private int radius;
 	private int inSampleSize;
 	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
-	private List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
+	private List<BlurUtil.Algorithm> algorithmList = BlurUtil.Algorithm.getAllAlgorithms();
 	private boolean showCrossfade = true;
 
 	public SettingsController(View v,final SeekBar.OnSeekBarChangeListener radiusChangeListener,final SeekBar.OnSeekBarChangeListener sampleSizeChangeListener,

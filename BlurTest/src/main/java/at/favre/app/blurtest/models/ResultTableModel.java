@@ -34,7 +34,7 @@ public class ResultTableModel {
 
     private void setUpModel(BenchmarkResultDatabase db) {
         columns = new ArrayList<String>();
-        for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.values()) {
+        for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
             columns.add(algorithm.toString());
         }
         Collections.sort(columns);

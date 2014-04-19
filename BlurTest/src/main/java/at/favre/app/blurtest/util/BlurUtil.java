@@ -14,13 +14,26 @@ import android.support.v8.renderscript.ScriptIntrinsicConvolve3x3;
 import android.support.v8.renderscript.ScriptIntrinsicConvolve5x5;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by PatrickF on 07.04.2014.
  */
 public class BlurUtil {
 	private static final String TAG = BlurUtil.class.getSimpleName();
 
-	public enum Algorithm {RS_GAUSSIAN, RS_SIMPLEBLUR_3x3,RS_SIMPLEBLUR_5x5, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR}
+	public enum Algorithm {ALL, RS_GAUSSIAN, RS_SIMPLEBLUR_3x3,RS_SIMPLEBLUR_5x5, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR;
+        public static List<Algorithm> getAllAlgorithms() {
+            List<Algorithm> algorithms = new ArrayList<Algorithm>();
+            for (Algorithm algorithm : values()) {
+                if(!algorithm.equals(ALL)) {
+                    algorithms.add(algorithm);
+                }
+            }
+            return algorithms;
+        }
+    }
 
 	public static Bitmap blur(RenderScript rs, Bitmap bitmap, int radius, Algorithm algorithm) {
 		switch (algorithm) {
