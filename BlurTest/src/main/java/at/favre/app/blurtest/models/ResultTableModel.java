@@ -123,19 +123,17 @@ public class ResultTableModel {
 
         double minThreshold = sortedColumns.get(0)+(sortedColumns.get(0)*BEST_WORST_THRESHOLD_PERCENTAGE/100);
         double maxThreshold = sortedColumns.get(columns.size()-1)-(sortedColumns.get(columns.size()-1)*BEST_WORST_THRESHOLD_PERCENTAGE/100);
-        if(columnVal <= minThreshold && columnVal >= maxThreshold) {
-            return RelativeType.AVG;
-        } else if(columnVal <= minThreshold) {
+         if(columnVal >= maxThreshold && columnVal <= sortedColumns.get(columns.size()-1)) {
             if(minIsBest) {
-                return RelativeType.BEST;
-            } else {
                 return RelativeType.WORST;
+            } else {
+                return RelativeType.BEST;
             }
-        } else if(columnVal >= maxThreshold) {
+        } else if(columnVal <= minThreshold && columnVal >= sortedColumns.get(0)) {
             if(minIsBest) {
-                return RelativeType.WORST;
-            } else {
                 return RelativeType.BEST;
+            } else {
+                return RelativeType.WORST;
             }
         } else {
             return RelativeType.AVG;

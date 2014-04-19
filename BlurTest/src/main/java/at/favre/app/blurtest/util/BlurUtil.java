@@ -23,7 +23,7 @@ import java.util.List;
 public class BlurUtil {
 	private static final String TAG = BlurUtil.class.getSimpleName();
 
-	public enum Algorithm {ALL, RS_GAUSSIAN, RS_SIMPLEBLUR_3x3,RS_SIMPLEBLUR_5x5, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR;
+	public enum Algorithm {ALL, RS_GAUSSIAN, RS_SIMPLEBLUR_3x3,RS_SIMPLEBLUR_5x5, STACKBLUR, GAUSSIAN_BLUR_FAST, BOX_BLUR, NONE;
         public static List<Algorithm> getAllAlgorithms() {
             List<Algorithm> algorithms = new ArrayList<Algorithm>();
             for (Algorithm algorithm : values()) {
@@ -61,7 +61,6 @@ public class BlurUtil {
 			final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs, Element.U8_4(rs));
 			blendScript.forEachAdd(input1,input2);
 			input2.copyTo(bitmap1);
-
 			return bitmap1;
 		} else {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
