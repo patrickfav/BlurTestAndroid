@@ -7,14 +7,12 @@ import android.os.AsyncTask;
 import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 
-import java.util.UUID;
-
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.models.StatInfo;
 import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.BlurUtil;
-import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -75,7 +73,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
 			statInfo.setBenchmarkDuration((BenchmarkUtil.elapsedRealTimeNanos() - startWholeProcess)/1000000l);
 
-			String fileName =UUID.randomUUID().toString().substring(0, 6) + "" + radius + "px_" + algorithm + ".png";
+			String fileName = master.getWidth()+"x"+master.getHeight()+"_" + radius + "px_" + algorithm + ".png";
 			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false),
 					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
 					statInfo);

@@ -20,10 +20,10 @@ public class BenchmarkUtil {
 	}
 
 	public static long elapsedRealTimeNanos() {
-		if(Build.VERSION.SDK_INT >= 17) {
+		if (Build.VERSION.SDK_INT >= 17) {
 			return SystemClock.elapsedRealtimeNanos();
 		}
-		return SystemClock.elapsedRealtime()*1000000l;
+		return SystemClock.elapsedRealtime() * 1000000l;
 	}
 
 	public static String formatNum(double number) {

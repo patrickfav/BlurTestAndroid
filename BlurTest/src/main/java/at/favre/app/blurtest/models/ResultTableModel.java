@@ -23,17 +23,23 @@ public class ResultTableModel {
 
     public static final String NUMBER_FORMAT = "0.00";
 
-    public enum DataType {AVG(true), MIN_MAX(true), OVER_16_MS(true), MPIXEL_PER_S(false);
-        private boolean minIsBest;
+    public enum DataType {AVG(true, "ms"), MIN_MAX(true, "ms"), OVER_16_MS(true, "%"), MPIXEL_PER_S(false, "MPix/s");
+        private final boolean minIsBest;
+		private final String unit;
 
-        DataType(boolean minIsBest) {
+        DataType(boolean minIsBest, String unit) {
             this.minIsBest = minIsBest;
-        }
+			this.unit = unit;
+		}
 
         public boolean isMinIsBest() {
             return minIsBest;
         }
-    }
+
+		public String getUnit() {
+			return unit;
+		}
+	}
     public enum RelativeType {BEST, WORST, AVG}
 
     Map<String,Map<String,BenchmarkResultDatabase.BenchmarkEntry>> tableModel;
@@ -74,12 +80,7 @@ public class ResultTableModel {
 
     private BenchmarkWrapper getRecentWrapper(int row, int column) {
         BenchmarkResultDatabase.BenchmarkEntry entry = getCell(row,column);
-        if(entry != null && !entry.getWrapper().isEmpty()) {
-            Collections.sort(entry.getWrapper());
-            return entry.getWrapper().get(0);
-        } else {
-            return null;
-        }
+        return BenchmarkResultDatabase.getRecentWrapper(entry);
     }
 
     public String getValue(int row, int column, DataType type) {
@@ -152,19 +153,21 @@ public class ResultTableModel {
     }
 
     public static StatValue getValueForType(BenchmarkWrapper wrapper, DataType type) {
-        switch (type) {
-            case AVG:
-                return new StatValue(wrapper.getStatInfo().getAsAvg().getAvg(),
-                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(), NUMBER_FORMAT)+"ms");
-            case MIN_MAX:
-                return new StatValue(wrapper.getStatInfo().getAsAvg().getMax()+wrapper.getStatInfo().getAsAvg().getMin(),
-                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#")+"/"+BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#")+"ms");
-            case OVER_16_MS:
-                return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH),
-                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH), NUMBER_FORMAT)+"%");
-			case MPIXEL_PER_S:
-				return new StatValue(wrapper.getStatInfo().getThroughputMPixelsPerSec(),BenchmarkUtil.formatNum(wrapper.getStatInfo().getThroughputMPixelsPerSec(), NUMBER_FORMAT)+"MP/s");
-        }
+		if(wrapper != null) {
+			switch (type) {
+				case AVG:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getAvg(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(), NUMBER_FORMAT) + "ms");
+				case MIN_MAX:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getMax() + wrapper.getStatInfo().getAsAvg().getMin(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#") + "/" + BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#") + "ms");
+				case OVER_16_MS:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH), NUMBER_FORMAT) + "%");
+				case MPIXEL_PER_S:
+					return new StatValue(wrapper.getStatInfo().getThroughputMPixelsPerSec(), BenchmarkUtil.formatNum(wrapper.getStatInfo().getThroughputMPixelsPerSec(), NUMBER_FORMAT) + "MP/s");
+			}
+		}
         return new StatValue();
     }
 

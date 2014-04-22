@@ -48,6 +48,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	private View topBlurView;
 	private View bottomBlurView;
 	private TextView tvPerformance;
+	private TextView tvImageSizes;
 
 	private AtomicBoolean isWorking = new AtomicBoolean(false);
 
@@ -82,6 +83,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		bottomBlurView = v.findViewById(R.id.bottomCanvas);
 
 		tvPerformance = (TextView) v.findViewById(R.id.tv_performance);
+		tvImageSizes = (TextView) v.findViewById(R.id.tv_imagesizes);
 
 		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
@@ -158,6 +160,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(),crop(dest.copy(dest.getConfig(),true), bottomBlurView, settingsController.getInSampleSize()) , settingsController.getRadius(), settingsController.getAlgorithm())));
 			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
+			tvImageSizes.setText(((BitmapDrawable)topBlurView.getBackground()).getBitmap().getWidth()+"x"+((BitmapDrawable)topBlurView.getBackground()).getBitmap().getHeight()+" / "+((BitmapDrawable)bottomBlurView.getBackground()).getBitmap().getWidth()+"x"+((BitmapDrawable)bottomBlurView.getBackground()).getBitmap().getHeight());
 			isWorking.compareAndSet(true, false);
 			return true;
 		} else {

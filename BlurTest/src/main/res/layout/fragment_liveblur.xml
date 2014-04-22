@@ -20,8 +20,9 @@
     <View
         android:id="@+id/topCanvas"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="?attr/actionBarSize"
         android:layout_gravity="top"
+        android:layout_marginTop="25dp"
         />
 
     <FrameLayout
@@ -40,6 +41,16 @@
             android:layout_marginLeft="26dp"
             android:layout_marginRight="26dp"
             />
+        <TextView
+            android:id="@+id/tv_imagesizes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|left"
+            android:padding="4dp"
+            android:shadowColor="#000"
+            android:shadowRadius="2"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="9sp"/>
 
         <TextView
             android:id="@+id/tv_performance"

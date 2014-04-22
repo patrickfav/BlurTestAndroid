@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,23 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 
 import com.inqbarna.tablefixheaders.TableFixHeaders;
-
-import java.util.TreeSet;
 
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.adapter.ResultTableAdapter;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.ResultTableModel;
-import at.favre.app.blurtest.util.BenchmarkUtil;
-import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
 import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
@@ -36,9 +29,12 @@ import at.favre.app.blurtest.util.TranslucentLayoutUtil;
  * Created by PatrickF on 16.04.2014.
  */
 public class BlurBenchmarkResultsBrowserFragment extends Fragment {
+	private static final String TAG = BlurBenchmarkResultsBrowserFragment.class.getSimpleName();
 
 	private TableFixHeaders table;
     private ResultTableModel.DataType dataType = ResultTableModel.DataType.AVG;
+	private BenchmarkResultDatabase db;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,60 +92,18 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
         return v;
 	}
 
-	private void fillResults(View rootView) {
-		BenchmarkResultDatabase resultsDB = loadResultsDB();
-
-		if(resultsDB != null) {
-			TableLayout tl = (TableLayout) rootView.findViewById(R.id.table);
-			TreeSet<String> rowHeaders = new TreeSet<String>();
-			for (BenchmarkResultDatabase.BenchmarkEntry benchmarkEntry : resultsDB.getEntryList()) {
-				rowHeaders.add(benchmarkEntry.getCategory());
-			}
-
-			TableRow th = new TableRow(getActivity());
-			th.addView(createTextView("","",th));
-			for (EBlurAlgorithm algorithm : EBlurAlgorithm.getAllAlgorithms()) {
-				th.addView(createTextView(algorithm.toString(), algorithm.toString(), th));
-			}
-			th.setBackgroundColor(getResources().getColor(R.color.tableHeaderBg));
-			tl.addView(th);
-
-
-			for (String rowHeader : rowHeaders) {
-				TableRow tr = new TableRow(getActivity());
-				View v = createTextView(rowHeader,rowHeader,tr);
-				v.setBackgroundColor(getResources().getColor(R.color.tableRowHeaderBg));
-				tr.addView(v);
-
-				for (EBlurAlgorithm algorithm : EBlurAlgorithm.getAllAlgorithms()) {
-					BenchmarkResultDatabase.BenchmarkEntry entry = resultsDB.getByCategoryAndAlgorithm(rowHeader,algorithm);
-					if(entry == null || entry.getWrapper().isEmpty()) {
-						tr.addView(createTextView("?", "", tr));
-					} else {
-						tr.addView(createTextView(BenchmarkUtil.formatNum(entry.getWrapper().get(0).getStatInfo().getAsAvg().getAvg()), entry.getWrapper().get(0).getStatInfo().getKeyString(), tr));
-					}
-
-				}
-				tl.addView(tr);
-			}
-		}
-	}
-
 	private BenchmarkResultDatabase loadResultsDB() {
-		SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
-		String resultsString = settings.getString(MainActivity.PREF_RESULTS,null);
-		if(resultsString != null) {
-			return JsonUtil.fromJsonString(resultsString, BenchmarkResultDatabase.class);
-		} else {
-			return null;
+		if (db == null) {
+			Log.d(TAG, "start load db");
+			SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
+			String resultsString = settings.getString(MainActivity.PREF_RESULTS, null);
+			if (resultsString != null) {
+				db = JsonUtil.fromJsonString(resultsString, BenchmarkResultDatabase.class);
+				Log.d(TAG, "done load db");
+			} else {
+				Log.d(TAG, "done load db");
+			}
 		}
-	}
-
-	private View createTextView(String text,String tag, TableRow tl) {
-		FrameLayout layout = (FrameLayout) getActivity().getLayoutInflater().inflate(R.layout.inc_result_cell,tl,false);
-		TextView tv = (TextView) layout.getChildAt(0);
-		tv.setTag(tag);
-		tv.setText(text);
-		return layout;
+		return db;
 	}
 }

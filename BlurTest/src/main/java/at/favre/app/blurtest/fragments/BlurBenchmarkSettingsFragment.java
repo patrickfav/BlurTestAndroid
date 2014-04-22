@@ -293,7 +293,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 
 		for (BenchmarkWrapper benchmarkWrapper : benchmarkResultList.getBenchmarkWrappers()) {
 			if(!benchmarkWrapper.getStatInfo().isError()) {
-				BenchmarkResultDatabase.BenchmarkEntry template = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper.getStatInfo().getKeyString(), benchmarkWrapper.getStatInfo().getCategoryString(), new ArrayList<BenchmarkWrapper>());
+				BenchmarkResultDatabase.BenchmarkEntry template = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper);
 				if(db.getEntryList().contains(template)) {
 					db.getEntryList().get(db.getEntryList().indexOf(template)).getWrapper().add(benchmarkWrapper);
 				} else {

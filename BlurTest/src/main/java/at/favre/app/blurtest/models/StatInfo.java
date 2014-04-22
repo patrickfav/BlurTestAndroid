@@ -137,7 +137,8 @@ public class StatInfo {
         this.date = date;
     }
 
-	@JsonIgnore double getThroughputMPixelsPerSec() {
+	@JsonIgnore
+	public double getThroughputMPixelsPerSec() {
 		return (double) bitmapWidth * (double) bitmapHeight / getAsAvg().getAvg() * 1000d / 1000000d;
 	}
 
@@ -145,11 +146,15 @@ public class StatInfo {
 	public String getKeyString() {
 		return bitmapHeight+"x"+bitmapWidth+"_"+algorithm+"_"+ String.format("%02d", blurRadius)+"px";
 	}
+
 	@JsonIgnore
 	public String getCategoryString() {
-		return bitmapHeight+"x"+bitmapWidth+" / "+ BenchmarkUtil.formatNum(blurRadius,"00")+"px";
+		return getImageSizeCategoryString()+" / "+ BenchmarkUtil.formatNum(blurRadius,"00")+"px";
 	}
-
+	@JsonIgnore
+	public String getImageSizeCategoryString() {
+		return bitmapHeight+"x"+bitmapWidth;
+	}
 	@JsonIgnore
 	public String getBitmapKBSize() {
 		return String.valueOf((double)Math.round((double) (bitmapHeight * bitmapWidth) / 1024d * 100d) / 100d)+"kB";

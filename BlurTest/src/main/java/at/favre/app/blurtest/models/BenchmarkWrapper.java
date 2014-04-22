@@ -69,6 +69,6 @@ public class BenchmarkWrapper implements Comparable<BenchmarkWrapper> {
 
     @Override
     public int compareTo(BenchmarkWrapper benchmarkWrapper) {
-        return new Date(getStatInfo().getDate()).compareTo(new Date(benchmarkWrapper.getStatInfo().getDate()));
+        return new Date(getStatInfo().getDate()).compareTo(new Date(benchmarkWrapper.getStatInfo().getDate())) * -1;
     }
 }
