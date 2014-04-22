@@ -5,6 +5,7 @@
     <color name="transparent">#00000000</color>
     <color name="darkgrey">#333333</color>
     <color name="optionsTextColor">#ccc</color>
+    <color name="optionsTextColorLowKey">#99cccccc</color>
     <color name="graphBgGreen">#992ecc71</color>
     <color name="graphBgYellow">#99f1c40f</color>
     <color name="graphBgRed">#99e74c3c</color>
@@ -12,4 +13,6 @@
     <color name="tableHeaderBg">#d35400</color>
     <color name="tableRowHeaderBg">#c0392b</color>
     <color name="tableCellTextColor">#333</color>
+    <color name="redImageViewOverly">#44e74c3c</color>
+    <color name="redImageViewOverlyText">#e74c3c</color>
 </resources>

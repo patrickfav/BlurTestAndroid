@@ -30,6 +30,7 @@ import at.favre.app.blurtest.models.ResultTableModel;
 import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
+import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
 /**
  * Created by PatrickF on 16.04.2014.
@@ -91,6 +92,7 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
 		table = (TableFixHeaders) v.findViewById(R.id.table);
 		table.setAdapter(new ResultTableAdapter(getActivity(), loadResultsDB(), dataType));
+		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
         return v;
 	}
 

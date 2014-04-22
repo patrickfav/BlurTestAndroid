@@ -34,6 +34,7 @@ import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 import at.favre.app.blurtest.view.ObservableScrollView;
 
 /**
@@ -134,7 +135,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			public void onNothingSelected(AdapterView<?> adapterView) {}
 		},null);
 		settingsController.setVisibility(true,true,false,false);
-
+		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
+		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(),topBlurView);
 		return v;
 	}
 

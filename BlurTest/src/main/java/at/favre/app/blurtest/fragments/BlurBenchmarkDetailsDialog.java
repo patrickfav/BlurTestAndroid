@@ -18,6 +18,7 @@ import com.jjoe64.graphview.LineGraphView;
 import com.squareup.picasso.Picasso;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.JsonUtil;
 
@@ -69,8 +70,8 @@ public class BlurBenchmarkDetailsDialog extends DialogFragment {
 		LineGraphView graphView = new LineGraphView(getActivity() , "");
 		GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgGreen),lineThicknessPx);
 
-		if(wrapper.getStatInfo().getAsAvg().getMin() <= 16) {
-			graphView.addSeries(getStraightLine(16, wrapper.getStatInfo().getBenchmarkData().size()-1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
+		if(wrapper.getStatInfo().getAsAvg().getMin() <= IBlur.MS_THRESHOLD_FOR_SMOOTH) {
+			graphView.addSeries(getStraightLine(IBlur.MS_THRESHOLD_FOR_SMOOTH, wrapper.getStatInfo().getBenchmarkData().size()-1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
 		}
 		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size()-1, "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
 		graphView.addSeries(new GraphViewSeries("Blur", seriesStyle, data));
@@ -98,6 +99,7 @@ public class BlurBenchmarkDetailsDialog extends DialogFragment {
 		graphView.getGraphViewStyle().setNumVerticalLabels(4);
 		graphView.getGraphViewStyle().setVerticalLabelsAlign(Paint.Align.CENTER);
 		graphView.getGraphViewStyle().setVerticalLabelsWidth( (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 34, res.getDisplayMetrics()));
+		graphView.getGraphViewStyle().setTextSize((int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, res.getDisplayMetrics())));
 
 		return graphView;
 	}

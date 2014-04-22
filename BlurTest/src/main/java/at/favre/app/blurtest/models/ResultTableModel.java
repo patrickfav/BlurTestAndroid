@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
@@ -22,7 +23,7 @@ public class ResultTableModel {
 
     public static final String NUMBER_FORMAT = "0.00";
 
-    public enum DataType {AVG(true), MIN_MAX(true), OVER_16_MS(true);
+    public enum DataType {AVG(true), MIN_MAX(true), OVER_16_MS(true), MPIXEL_PER_S(false);
         private boolean minIsBest;
 
         DataType(boolean minIsBest) {
@@ -51,9 +52,11 @@ public class ResultTableModel {
         Collections.sort(columns);
 
         TreeSet<String> rowHeaders = new TreeSet<String>();
-        for (BenchmarkResultDatabase.BenchmarkEntry benchmarkEntry : db.getEntryList()) {
-            rowHeaders.add(benchmarkEntry.getCategory());
-        }
+		if(db != null) {
+			for (BenchmarkResultDatabase.BenchmarkEntry benchmarkEntry : db.getEntryList()) {
+				rowHeaders.add(benchmarkEntry.getCategory());
+			}
+		}
         rows = new ArrayList<String>(rowHeaders);
 
         tableModel = new HashMap<String, Map<String, BenchmarkResultDatabase.BenchmarkEntry>>();
@@ -157,8 +160,10 @@ public class ResultTableModel {
                 return new StatValue(wrapper.getStatInfo().getAsAvg().getMax()+wrapper.getStatInfo().getAsAvg().getMin(),
                         BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#")+"/"+BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#")+"ms");
             case OVER_16_MS:
-                return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(16d),
-                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(16d), NUMBER_FORMAT)+"%");
+                return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH),
+                        BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH), NUMBER_FORMAT)+"%");
+			case MPIXEL_PER_S:
+				return new StatValue(wrapper.getStatInfo().getThroughputMPixelsPerSec(),BenchmarkUtil.formatNum(wrapper.getStatInfo().getThroughputMPixelsPerSec(), NUMBER_FORMAT)+"MP/s");
         }
         return new StatValue();
     }

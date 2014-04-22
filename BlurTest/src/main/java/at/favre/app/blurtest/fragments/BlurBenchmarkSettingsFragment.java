@@ -39,6 +39,7 @@ import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
+import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -116,6 +117,8 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
             algorithmGroup.addView(createAlgorithmChecbox(algorithm1));
         }
         ((CheckBox) algorithmGroup.getChildAt(0)).setChecked(true);
+
+		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.rootScrollView));
         return v;
 	}
 

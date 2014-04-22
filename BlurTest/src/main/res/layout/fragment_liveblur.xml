@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,34 +17,39 @@
             android:layout_height="match_parent"/>
     </FrameLayout>
 
-    <include layout="@layout/inc_settings"/>
-
     <View
         android:id="@+id/topCanvas"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/translucentPaddingTop"
+        android:layout_height="60dp"
         android:layout_gravity="top"
         />
 
-    <View
-        android:id="@+id/bottomCanvas"
+    <FrameLayout
+        android:id="@+id/contentWrapper"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="26dp"
-        android:layout_marginRight="26dp"
-        android:layout_marginBottom="@dimen/translucentPaddingBottom"
-        />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_performance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/optionsTextColor"
-        android:padding="4dp"
-        android:textSize="9sp"
-        android:shadowRadius="2"
-        android:shadowColor="#000"
-        android:layout_marginBottom="@dimen/translucentPaddingBottom"
-        android:layout_gravity="bottom|right"/>
+        <include layout="@layout/inc_settings"/>
+
+
+        <View
+            android:id="@+id/bottomCanvas"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="26dp"
+            android:layout_marginRight="26dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_performance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:padding="4dp"
+            android:shadowColor="#000"
+            android:shadowRadius="2"
+            android:textColor="@color/optionsTextColor"
+            android:textSize="9sp"/>
+    </FrameLayout>
 </FrameLayout>

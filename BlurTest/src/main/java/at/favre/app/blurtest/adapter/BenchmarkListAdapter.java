@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BenchmarkUtil;
@@ -48,6 +49,8 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.imageView = (ImageView) convertView.findViewById(R.id.thumbnail);
 			viewHolder.tvDeviation = (TextView) convertView.findViewById(R.id.tv_deviation);
 			viewHolder.tvErrMsg = (TextView) convertView.findViewById(R.id.tv_errMsg);
+			viewHolder.tvAdditionalInfo = (TextView) convertView.findViewById(R.id.tv_algorithm);
+			viewHolder.tvOver16ms = (TextView) convertView.findViewById(R.id.tv_over16ms);
 			viewHolder.frontImageWrapper = (FrameLayout) convertView.findViewById(R.id.thumbnail_front);
 			viewHolder.backImageWrapper = (FrameLayout) convertView.findViewById(R.id.thumbnail_back);
 			convertView.setTag(viewHolder);
@@ -76,6 +79,11 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 					"blur median: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMedian())+"ms\n"+
 					"blur avg/normalized: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms\n"+
 					"benchmark: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getBenchmarkDuration())+"ms\n");
+
+			viewHolder.tvAdditionalInfo.setText(getItem(position).getStatInfo().getRounds() + " Rounds / " + getItem(position).getStatInfo().getAlgorithm().toString());
+			viewHolder.tvOver16ms.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)) + "% over "+IBlur.MS_THRESHOLD_FOR_SMOOTH+"ms");
+			viewHolder.tvOver16ms.getLayoutParams().height = ((int) ((double) viewHolder.frontImageWrapper.getHeight() * getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)/100d));
+			viewHolder.tvOver16ms.requestLayout();
 
 			if (!getItem(position).isAdditionalInfoVisibility()) {
 				viewHolder.frontImageWrapper.setVisibility(View.VISIBLE);
@@ -171,6 +179,8 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.tvWidthHeight.setVisibility(View.GONE);
 			viewHolder.tvImageInfo.setVisibility(View.GONE);
 			viewHolder.tvBlurRadius.setVisibility(View.GONE);
+			viewHolder.tvAdditionalInfo.setVisibility(View.GONE);
+			viewHolder.tvOver16ms.setVisibility(View.GONE);
 		}
 
 
@@ -185,6 +195,8 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 		TextView tvImageInfo;
 		TextView tvBlurRadius;
 		TextView tvErrMsg;
+		TextView tvAdditionalInfo;
+		TextView tvOver16ms;
 		ImageView imageView;
 		FrameLayout frontImageWrapper;
 		FrameLayout backImageWrapper;

@@ -7,13 +7,13 @@
               android:paddingLeft="12dp"
               android:paddingRight="12dp"
               android:paddingBottom="12dp"
-              android:paddingTop="?attr/actionBarSize">
+              android:paddingTop="6dp">
 
     <TextView
         android:id="@+id/tv_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="RS_GAUSSIAN"
+        android:text="Benchmark Results"
         android:textColor="@color/optionsTextColor"
         android:textSize="34sp"/>
 </LinearLayout>

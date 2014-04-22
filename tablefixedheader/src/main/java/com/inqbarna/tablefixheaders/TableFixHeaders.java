@@ -95,7 +95,11 @@ public class TableFixHeaders extends ViewGroup {
 	 *            The attributes of the XML tag that is inflating the view.
 	 */
 	public TableFixHeaders(Context context, AttributeSet attrs) {
-		super(context, attrs);
+		this(context,attrs,0);
+	}
+
+	public TableFixHeaders(Context context, AttributeSet attrs, int defStyle) {
+		super(context, attrs, defStyle);
 
 		this.headView = null;
 		this.rowViewList = new ArrayList<View>();

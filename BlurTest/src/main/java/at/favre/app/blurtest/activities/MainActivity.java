@@ -2,11 +2,11 @@ package at.favre.app.blurtest.activities;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v8.renderscript.RenderScript;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v8.renderscript.RenderScript;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
@@ -20,7 +20,7 @@ import at.favre.app.blurtest.fragments.StaticBlurFragment;
 /**
  * Created by PatrickF on 10.04.2014.
  */
-public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavigationListener {
+public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
 	public static final String PREF_NAME = "at.favre.app.blurtest.sharedpref";
 	public static final String PREF_RESULTS = "results";
 
@@ -31,20 +31,19 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 		super.onCreate(savedInstanceState);
 
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,new String[]{"Benchmark","Results","Static","Live"});
-		getSupportActionBar().setListNavigationCallbacks(adapter,this);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"Benchmark", "Results", "Static", "Live"});
+		getSupportActionBar().setListNavigationCallbacks(adapter, this);
 
 		setContentView(R.layout.activity_main);
-
-		if(savedInstanceState == null) {
-			onNavigationItemSelected(0,0);
+		if (savedInstanceState == null) {
+			onNavigationItemSelected(0, 0);
 		}
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		if(rs != null) {
+		if (rs != null) {
 			rs.destroy();
 			rs = null;
 		}
@@ -55,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 		switch (item.getItemId()) {
 			case R.id.action_settings:
 				for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-					if(fragment != null && fragment.isAdded() && fragment instanceof IFragmentWithBlurSettings) {
+					if (fragment != null && fragment.isAdded() && fragment instanceof IFragmentWithBlurSettings) {
 						((IFragmentWithBlurSettings) fragment).switchShowSettings();
 					}
 				}
@@ -68,7 +67,7 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 	@Override
 	public boolean onNavigationItemSelected(int i, long l) {
 
-		if(getSupportFragmentManager().getFragments() != null) {
+		if (getSupportFragmentManager().getFragments() != null) {
 			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 			for (Fragment fragment : getSupportFragmentManager().getFragments()) {
 				t.detach(fragment);
@@ -78,9 +77,9 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 
 		switch (i) {
 			case 0:
-				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new BlurBenchmarkSettingsFragment(),BlurBenchmarkSettingsFragment.class.getSimpleName());
+					t.add(android.R.id.content, new BlurBenchmarkSettingsFragment(), BlurBenchmarkSettingsFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -89,9 +88,9 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				}
 				return true;
 			case 1:
-				if(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsBrowserFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsBrowserFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new BlurBenchmarkResultsBrowserFragment(),BlurBenchmarkResultsBrowserFragment.class.getSimpleName());
+					t.add(android.R.id.content, new BlurBenchmarkResultsBrowserFragment(), BlurBenchmarkResultsBrowserFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -100,9 +99,9 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				}
 				return true;
 			case 2:
-				if(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new StaticBlurFragment(),StaticBlurFragment.class.getSimpleName());
+					t.add(android.R.id.content, new StaticBlurFragment(), StaticBlurFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -111,9 +110,9 @@ public class MainActivity extends ActionBarActivity implements  ActionBar.OnNavi
 				}
 				return true;
 			case 3:
-				if(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content,new LiveBlurFragment(),LiveBlurFragment.class.getSimpleName());
+					t.add(android.R.id.content, new LiveBlurFragment(), LiveBlurFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();

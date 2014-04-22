@@ -137,6 +137,10 @@ public class StatInfo {
         this.date = date;
     }
 
+	@JsonIgnore double getThroughputMPixelsPerSec() {
+		return (double) bitmapWidth * (double) bitmapHeight / getAsAvg().getAvg() * 1000d / 1000000d;
+	}
+
     @JsonIgnore
 	public String getKeyString() {
 		return bitmapHeight+"x"+bitmapWidth+"_"+algorithm+"_"+ String.format("%02d", blurRadius)+"px";

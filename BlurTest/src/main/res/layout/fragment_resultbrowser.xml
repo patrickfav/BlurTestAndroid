@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tableWrapper"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="@dimen/translucentPaddingTop">
+    android:layout_height="match_parent">
 
     <com.inqbarna.tablefixheaders.TableFixHeaders
         android:id="@+id/table"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        />
 </FrameLayout>

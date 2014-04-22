@@ -15,7 +15,21 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:src="@drawable/placeholder"
             android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/tv_over16ms"
+            android:layout_width="match_parent"
+            android:layout_height="63dp"
+            android:layout_gravity="bottom"
+            android:text="100% over 16ms"
+            android:textSize="9sp"
+            android:gravity="left|bottom"
+            android:paddingBottom="22dp"
+            android:paddingLeft="4dp"
+            android:textColor="@color/redImageViewOverlyText"
+            android:background="@color/redImageViewOverly"/>
 
         <TextView
             android:id="@+id/tv_width_height"
@@ -101,12 +115,14 @@
         android:id="@+id/tv_avg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="28sp"
+        android:textSize="32sp"
         android:paddingLeft="8dp"
         android:text="10.3ms"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:gravity="bottom"
         android:textColor="@color/optionsTextColor"
+        android:paddingBottom="0dp"
         />
 
     <TextView
@@ -116,8 +132,19 @@
         android:textSize="12sp"
         android:text="+/-3ms"
         android:layout_toLeftOf="@+id/tv_avg"
-        android:layout_alignBottom="@+id/tv_avg"
+        android:layout_alignBaseline="@+id/tv_avg"
         android:textColor="@color/optionsTextColor"
+        />
+
+    <TextView
+        android:id="@+id/tv_algorithm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:text="100 Rounds / RS_GAUSSIAN"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/optionsTextColorLowKey"
         />
 
 </RelativeLayout>

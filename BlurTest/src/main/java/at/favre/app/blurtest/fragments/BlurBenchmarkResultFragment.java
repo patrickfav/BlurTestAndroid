@@ -2,6 +2,9 @@ package at.favre.app.blurtest.fragments;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,15 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 
-import at.favre.app.blurtest.adapter.BenchmarkListAdapter;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
+import at.favre.app.blurtest.adapter.BenchmarkListAdapter;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.util.JsonUtil;
 
@@ -75,8 +77,6 @@ public class BlurBenchmarkResultFragment extends Fragment {
 
 	private void setBackground() {
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty() && !benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getStatInfo().isError()) {
-			getView().findViewById(R.id.innerRoot).setBackgroundColor(getResources().getColor(R.color.halftransparent));
-
 			new AsyncTask<Void,Void,Bitmap>() {
 				@Override
 				protected Bitmap doInBackground(Void... voids) {
@@ -90,7 +90,7 @@ public class BlurBenchmarkResultFragment extends Fragment {
 				@Override
 				protected void onPostExecute(Bitmap bitmap) {
 					if(getView() != null) {
-						getView().findViewById(R.id.root).setBackgroundDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {new BitmapDrawable(getActivity().getResources(), bitmap),new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
 					}
 				}
 			}.execute();
@@ -99,7 +99,7 @@ public class BlurBenchmarkResultFragment extends Fragment {
 
 	private void setUpListView() {
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
-			((TextView) headerView.findViewById(R.id.tv_header)).setText(benchmarkResultList.getBenchmarkWrappers().get(0).getStatInfo().getAlgorithm().toString());
+			//((TextView) headerView.findViewById(R.id.tv_header)).setText(benchmarkResultList.getBenchmarkWrappers().get(0).getStatInfo().getAlgorithm().toString());
             listView.removeHeaderView(headerView);
 			listView.addHeaderView(headerView);
 			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkResultList.getBenchmarkWrappers());

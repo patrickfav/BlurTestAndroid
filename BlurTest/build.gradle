@@ -20,23 +20,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    productFlavors {
-        x86 {
-            ndk {
-                abiFilter "x86"
-            }
-        }
-        arm {
-            ndk {
-                abiFilter "armeabi-v7a"
-            }
-        }
-        mips {
-            ndk {
-                abiFilter "mips"
-            }
-        }
-    }
     packagingOptions {
         exclude 'META-INF/NOTICE'
         exclude 'META-INF/LICENSE'
@@ -49,6 +32,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.+'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.+'
+    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile project(':tablefixedheader')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }

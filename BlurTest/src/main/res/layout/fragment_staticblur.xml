@@ -1,4 +1,4 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,34 +22,34 @@
             android:src="@drawable/photo1"/>
     </FrameLayout>
 
-    <TextView
-        android:id="@+id/tv_resolution_normal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="100x200"
-        android:background="@color/quartertransparent"
-        android:textColor="@color/optionsTextColor"
-        android:padding="2dp"
-        android:layout_marginTop="@dimen/translucentPaddingTop"
-        android:textSize="9sp"
-        android:shadowColor="#000"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"/>
+    <FrameLayout
+        android:id="@+id/contentWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/tv_resolution_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="100x200"
+            android:textColor="@color/optionsTextColor"
+            android:padding="2dp"
+            android:textSize="9sp"
+            android:shadowColor="#000"
+            android:shadowRadius="2"
+            android:layout_gravity="top|right"/>
 
 
-    <include layout="@layout/inc_settings"/>
+        <include layout="@layout/inc_settings"/>
 
-    <TextView
-        android:id="@+id/tv_resolution_blur"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/optionsTextColor"
-        android:padding="4dp"
-        android:textSize="9sp"
-        android:shadowColor="#000"
-        android:shadowRadius="2"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/translucentPaddingBottom"/>
-
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_resolution_blur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/optionsTextColor"
+            android:padding="4dp"
+            android:textSize="9sp"
+            android:shadowColor="#000"
+            android:shadowRadius="2"
+            android:layout_gravity="bottom|right"/>
+    </FrameLayout>
+</FrameLayout>

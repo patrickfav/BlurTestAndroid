@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:background="@color/quartertransparent"
     android:padding="8dp"
-    android:layout_marginTop="@dimen/translucentPaddingTop"
     android:visibility="visible">
 
     <TextView

@@ -7,7 +7,7 @@
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="400dp"
-        android:src="@drawable/test_400x400_2"
+
         android:scaleType="centerCrop"/>
     <FrameLayout
         android:id="@+id/graph"

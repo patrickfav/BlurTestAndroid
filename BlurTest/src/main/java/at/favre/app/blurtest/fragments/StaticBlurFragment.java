@@ -26,6 +26,7 @@ import at.favre.app.blurtest.SettingsController;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
 public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSettings {
 	private static final String TAG = StaticBlurFragment.class.getSimpleName();
@@ -89,6 +90,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
 		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BitmapUtil.sizeOf(normalBitmap)/1024)+"kB");
 
+		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
 		return v;
     }
 
@@ -177,7 +179,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				Log.d(TAG, "Bluring duration " + duration + "ms");
 
 				if(!onlyReBlur) {
-					Toast.makeText(getActivity(), settingsController.getAlgorithm() + " /  insample " + settingsController.getInSampleSize() + " / radius " + settingsController.getRadius() + "px / " + duration + "ms" + " / " + (BitmapUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
+					//Toast.makeText(getActivity(), settingsController.getAlgorithm() + " /  insample " + settingsController.getInSampleSize() + " / radius " + settingsController.getRadius() + "px / " + duration + "ms" + " / " + (BitmapUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
 				}
 
 				if (settingsController.isShowCrossfade() && !onlyReBlur) {
