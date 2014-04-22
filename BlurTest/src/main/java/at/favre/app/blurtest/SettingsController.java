@@ -13,11 +13,9 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 10.04.2014.
@@ -32,8 +30,8 @@ public class SettingsController {
 
 	private int radius;
 	private int inSampleSize;
-	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
-	private List<BlurUtil.Algorithm> algorithmList = BlurUtil.Algorithm.getAllAlgorithms();
+	private EBlurAlgorithm algorithm = EBlurAlgorithm.RS_GAUSSIAN;
+	private List<EBlurAlgorithm> algorithmList = EBlurAlgorithm.getAllAlgorithms();
 	private boolean showCrossfade = true;
 
 	public SettingsController(View v,final SeekBar.OnSeekBarChangeListener radiusChangeListener,final SeekBar.OnSeekBarChangeListener sampleSizeChangeListener,
@@ -82,7 +80,7 @@ public class SettingsController {
 		});
 
 		algorithmSpinner = (Spinner)  v.findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(new ArrayAdapter<BlurUtil.Algorithm>(v.getContext(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
+		algorithmSpinner.setAdapter(new ArrayAdapter<EBlurAlgorithm>(v.getContext(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
 		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -100,9 +98,9 @@ public class SettingsController {
 		});
 
 		if(Build.VERSION.SDK_INT >= 17) {
-			algorithmSpinner.setSelection(algorithmList.indexOf(BlurUtil.Algorithm.RS_GAUSSIAN));
+			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.RS_GAUSSIAN));
 		} else {
-			algorithmSpinner.setSelection(algorithmList.indexOf(BlurUtil.Algorithm.STACKBLUR));
+			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.STACKBLUR));
 		}
 
 
@@ -205,7 +203,7 @@ public class SettingsController {
 		return inSampleSize;
 	}
 
-	public BlurUtil.Algorithm getAlgorithm() {
+	public EBlurAlgorithm getAlgorithm() {
 		return algorithm;
 	}
 

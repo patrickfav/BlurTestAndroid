@@ -39,7 +39,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 
     @Override
     public View getView(int row, int column, View convertView, ViewGroup parent) {
-    	int viewType = getItemViewType(row,column);
+    	int viewType = getItemViewType(row, column);
 
 		if(convertView == null) {
 			LayoutInflater inflater = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

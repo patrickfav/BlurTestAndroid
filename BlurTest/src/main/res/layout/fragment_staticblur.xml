@@ -30,7 +30,7 @@
         android:background="@color/quartertransparent"
         android:textColor="@color/optionsTextColor"
         android:padding="2dp"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/translucentPaddingTop"
         android:textSize="9sp"
         android:shadowColor="#000"
         android:layout_alignParentTop="true"
@@ -43,12 +43,13 @@
         android:id="@+id/tv_resolution_blur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/quartertransparent"
         android:textColor="@color/optionsTextColor"
         android:padding="4dp"
         android:textSize="9sp"
         android:shadowColor="#000"
+        android:shadowRadius="2"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"/>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/translucentPaddingBottom"/>
 
 </RelativeLayout>

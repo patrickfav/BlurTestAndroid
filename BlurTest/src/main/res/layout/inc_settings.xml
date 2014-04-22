@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/halftransparent"
+    android:background="@color/quartertransparent"
     android:padding="8dp"
-    android:layout_marginTop="?attr/actionBarSize"
+    android:layout_marginTop="@dimen/translucentPaddingTop"
     android:visibility="visible">
 
     <TextView

@@ -13,6 +13,7 @@ android {
         renderscriptTargetApi 19
         renderscriptSupportMode true
     }
+
     buildTypes {
         release {
             runProguard true

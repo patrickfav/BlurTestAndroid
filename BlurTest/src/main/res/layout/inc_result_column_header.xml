@@ -10,5 +10,7 @@
         android:textSize="12sp"
         android:gravity="center"
         android:layout_gravity="center"
+        android:textStyle="bold"
+        android:textColor="#fff"
         />
 </FrameLayout>

@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.TreeSet;
 
 import at.favre.app.blurtest.util.BenchmarkUtil;
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 18.04.2014.
@@ -45,7 +45,7 @@ public class ResultTableModel {
 
     private void setUpModel(BenchmarkResultDatabase db) {
         columns = new ArrayList<String>();
-        for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
+        for (EBlurAlgorithm algorithm : EBlurAlgorithm.getAllAlgorithms()) {
             columns.add(algorithm.toString());
         }
         Collections.sort(columns);
@@ -60,7 +60,7 @@ public class ResultTableModel {
         for (String column : columns) {
             tableModel.put(column, new HashMap<String, BenchmarkResultDatabase.BenchmarkEntry>());
             for (String row : rows) {
-                tableModel.get(column).put(row, db.getByCategoryAndAlgorithm(row, BlurUtil.Algorithm.valueOf(column)));
+                tableModel.get(column).put(row, db.getByCategoryAndAlgorithm(row, EBlurAlgorithm.valueOf(column)));
             }
         }
     }

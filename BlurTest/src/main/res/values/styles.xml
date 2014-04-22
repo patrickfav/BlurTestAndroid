@@ -1,18 +1,21 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
-        <item name="android:windowActionBarOverlay">true</item>
+    <style name="AppThemeRaw" parent="Theme.AppCompat">
+        <item name="android:windowActionBarOverlay">false</item>
         <item name="android:actionBarStyle">@style/action_bar_theme</item>
         <item name="android:actionMenuTextColor">@color/optionsTextColor</item>
 
         <!-- Support library compatibility -->
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">false</item>
         <item name="actionBarStyle">@style/action_bar_theme</item>
         <item name="actionMenuTextColor">@color/optionsTextColor</item>
     </style>
 
+    <style name="AppTheme" parent="AppThemeRaw">
+    </style>
+
     <style name="action_bar_theme" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/halftransparent</item>
+        <item name="android:background">@color/quartertransparent</item>
         <item name="android:titleTextStyle">@style/action_bar_text</item>
     </style>
 
@@ -33,17 +36,16 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/optionsTextColor</item>
-        <item name="android:paddingBottom">12dp</item>
-        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">@dimen/form_element_std_padding</item>
+        <item name="android:paddingTop">@dimen/form_element_std_padding</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="resultTableCell" parent="ellipsize">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:gravity">right|clip_vertical</item>
-
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:gravity">right|center_vertical</item>
     </style>
 </resources>

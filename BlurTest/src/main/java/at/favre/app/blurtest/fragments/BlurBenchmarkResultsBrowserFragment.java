@@ -28,7 +28,7 @@ import at.favre.app.blurtest.adapter.ResultTableAdapter;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.ResultTableModel;
 import at.favre.app.blurtest.util.BenchmarkUtil;
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
 
 /**
@@ -90,8 +90,8 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
 		table = (TableFixHeaders) v.findViewById(R.id.table);
-		table.setAdapter(new ResultTableAdapter(getActivity(),loadResultsDB(), dataType));
-		return v;
+		table.setAdapter(new ResultTableAdapter(getActivity(), loadResultsDB(), dataType));
+        return v;
 	}
 
 	private void fillResults(View rootView) {
@@ -106,7 +106,7 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 
 			TableRow th = new TableRow(getActivity());
 			th.addView(createTextView("","",th));
-			for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
+			for (EBlurAlgorithm algorithm : EBlurAlgorithm.getAllAlgorithms()) {
 				th.addView(createTextView(algorithm.toString(), algorithm.toString(), th));
 			}
 			th.setBackgroundColor(getResources().getColor(R.color.tableHeaderBg));
@@ -119,7 +119,7 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 				v.setBackgroundColor(getResources().getColor(R.color.tableRowHeaderBg));
 				tr.addView(v);
 
-				for (BlurUtil.Algorithm algorithm : BlurUtil.Algorithm.getAllAlgorithms()) {
+				for (EBlurAlgorithm algorithm : EBlurAlgorithm.getAllAlgorithms()) {
 					BenchmarkResultDatabase.BenchmarkEntry entry = resultsDB.getByCategoryAndAlgorithm(rowHeader,algorithm);
 					if(entry == null || entry.getWrapper().isEmpty()) {
 						tr.addView(createTextView("?", "", tr));

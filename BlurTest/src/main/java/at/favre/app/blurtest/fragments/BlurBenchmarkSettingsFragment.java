@@ -9,6 +9,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,12 +31,13 @@ import java.util.List;
 import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
+import at.favre.app.blurtest.activities.BenchmarkResultsBrowserActivity;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BitmapUtil;
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
 
 /**
@@ -44,17 +46,14 @@ import at.favre.app.blurtest.util.JsonUtil;
 public class BlurBenchmarkSettingsFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkSettingsFragment.class.getSimpleName();
 
-	private static List<BlurUtil.Algorithm> algorithmList = new ArrayList<BlurUtil.Algorithm>(Arrays.asList(BlurUtil.Algorithm.values()));
+	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
 	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
 	private static final String ROUNDS_KEY = "ROUNDS_KEY";
-	private static final String ALGO_KEY = "ALGO_KEY";
 
-	private BlurUtil.Algorithm algorithm = BlurUtil.Algorithm.RS_GAUSSIAN;
 	private int rounds=100;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
-	private Spinner algorithmSpinner;
 	private Spinner roundsSpinner;
 
 	private CheckBox cBradius4px;
@@ -69,6 +68,8 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	private CheckBox cbSize500;
 	private CheckBox cbSize600;
 
+    private ViewGroup algorithmGroup;
+
 	private ProgressDialog progressDialog;
 
 	@Override
@@ -77,7 +78,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
         setHasOptionsMenu(true);
 		if(savedInstanceState !=  null) {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);
-			algorithm = BlurUtil.Algorithm.valueOf(savedInstanceState.getString(ALGO_KEY));
 		}
 	}
 
@@ -97,20 +97,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		cbSize500 = (CheckBox) v.findViewById(R.id.cb_s_500);
 		cbSize600 = (CheckBox) v.findViewById(R.id.cb_s_600);
 
-		algorithmSpinner = (Spinner)  v.findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(new ArrayAdapter<BlurUtil.Algorithm>(getActivity(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
-		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				algorithm = algorithmList.get(i);
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-
-			}
-		});
-		algorithmSpinner.setSelection(algorithmList.indexOf(algorithm));
-
 		roundsSpinner = (Spinner)  v.findViewById(R.id.spinner_rounds);
 		roundsSpinner.setAdapter(new ArrayAdapter<Rounds>(getActivity(),android.R.layout.simple_spinner_dropdown_item,roundArray));
 		roundsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -125,9 +111,28 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		});
 		roundsSpinner.setSelection(Arrays.asList(roundArray).indexOf(new Rounds(rounds)));
 
-		return v;
+        algorithmGroup = (ViewGroup) v.findViewById(R.id.algorithm_wrapper);
+        for (EBlurAlgorithm algorithm1 : algorithmList) {
+            algorithmGroup.addView(createAlgorithmChecbox(algorithm1));
+        }
+        ((CheckBox) algorithmGroup.getChildAt(0)).setChecked(true);
+        return v;
 	}
 
+    private CheckBox createAlgorithmChecbox(EBlurAlgorithm algorithm) {
+        CheckBox cb = new CheckBox(getActivity());
+        cb.setText(algorithm.toString());
+        cb.setTag(algorithm);
+        cb.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
+        cb.setTextColor(getResources().getColor(R.color.optionsTextColor));
+        cb.setPadding(0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding),0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding));
+        return cb;
+    }
+
+    public void showResultsBrowser() {
+        Intent i = new Intent(getActivity(), BenchmarkResultsBrowserActivity.class);
+        startActivity(i);
+    }
 
 	@Override
 	public void onResume() {
@@ -137,8 +142,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt(ROUNDS_KEY,rounds);
-		outState.putString(ALGO_KEY,algorithm.toString());
+		outState.putInt(ROUNDS_KEY, rounds);
 	}
 
 	private List<Integer> getImagesFromSettings() {
@@ -181,30 +185,34 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		return radius;
 	}
 
+    private List<EBlurAlgorithm> getAllSelectedAlgorithms() {
+        List<EBlurAlgorithm> algorithms = new ArrayList<EBlurAlgorithm>();
+        for (int i = 0; i <algorithmGroup.getChildCount(); i++) {
+            CheckBox cb = (CheckBox) algorithmGroup.getChildAt(i);
+            if(cb.isChecked()) {
+                algorithms.add((EBlurAlgorithm) algorithmGroup.getChildAt(i).getTag());
+            }
+        }
+        return algorithms;
+    }
+
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
 
 		List<Integer> radius = getRadiusSizesFromSettings();
 		List<Integer> images = getImagesFromSettings();
-        List<BlurUtil.Algorithm> algorithms = getAlgorithms();
-		if(radius.isEmpty() || images.isEmpty()) {
+        List<EBlurAlgorithm> algorithms = getAllSelectedAlgorithms();
+        int benchmarkCount = radius.size()*images.size()  * algorithms.size();
+		if(benchmarkCount <= 0) {
 			Toast.makeText(getActivity(),"Choose at least one radius and image size",Toast.LENGTH_SHORT).show();
 			return;
 		}
 		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
-		showProgressDialog(radius.size()*images.size()  * algorithms.size());
+		showProgressDialog(benchmarkCount);
 		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		benchmarkResultList = new BenchmarkResultList();
 		nextTest(0,0,0,images,radius, algorithms);
 	}
-
-    public List<BlurUtil.Algorithm> getAlgorithms() {
-        if(algorithm.equals(BlurUtil.Algorithm.ALL)) {
-            return BlurUtil.Algorithm.getAllAlgorithms();
-        } else {
-            return  Arrays.asList(algorithm);
-        }
-    }
 
 	private void showProgressDialog(int max) {
 		lockOrientation();
@@ -227,7 +235,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		}
 	}
 
-	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<Integer> imageList , final List<Integer> radiusList, final List<BlurUtil.Algorithm> algorithmList) {
+	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<Integer> imageList , final List<Integer> radiusList, final List<EBlurAlgorithm> algorithmList) {
         if(radiusIndex >= radiusList.size()) {
 			nextTest(photoIndex+1,0,algoIndex,imageList,radiusList, algorithmList);
 		} else {

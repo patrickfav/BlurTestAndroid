@@ -14,6 +14,7 @@ import at.favre.app.blurtest.models.StatInfo;
 import at.favre.app.blurtest.util.BenchmarkUtil;
 import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -30,11 +31,11 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private Bitmap master;
 	private int benchmarkRounds;
 	private int radius;
-	private BlurUtil.Algorithm algorithm;
+	private EBlurAlgorithm algorithm;
 	private Context ctx;
 	private RenderScript rs;
 
-	public BlurBenchmarkTask(int bitmapDrawableResId, int benchmarkRounds, int radius, BlurUtil.Algorithm algorithm, RenderScript rs, Context ctx) {
+	public BlurBenchmarkTask(int bitmapDrawableResId, int benchmarkRounds, int radius, EBlurAlgorithm algorithm, RenderScript rs, Context ctx) {
 		this.bitmapDrawableResId = bitmapDrawableResId;
 		this.benchmarkRounds = benchmarkRounds;
 		this.radius = radius;

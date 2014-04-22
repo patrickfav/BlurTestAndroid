@@ -9,7 +9,8 @@
         style="@style/resultTableCell"
         android:textSize="12sp"
         android:gravity="center"
-        android:textColor="@color/tableCellTextColor"
+        android:textColor="#fff"
         android:layout_width="100dp"
+        android:textStyle="bold"
         android:ellipsize="end"/>
 </FrameLayout>

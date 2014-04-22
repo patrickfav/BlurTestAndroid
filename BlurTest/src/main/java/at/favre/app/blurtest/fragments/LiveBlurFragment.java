@@ -85,7 +85,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		mPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 			@Override
 			public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-				updateBlurView();
+                updateBlurView();
 			}
 
 			@Override
@@ -104,7 +104,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 				}
 			}
 		};
-		mPager.getViewTreeObserver().addOnGlobalLayoutListener(ogl);
+		//mPager.getViewTreeObserver().addOnGlobalLayoutListener(ogl);
 
 
 		settingsController = new SettingsController(v,new SeekBar.OnSeekBarChangeListener() {
@@ -185,7 +185,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		int bmpHeight = Math.round(viewHeight * scale);
 
 		if (dest == null || dest.getWidth() != bmpWidth || dest.getHeight() != bmpHeight) {
-			dest = Bitmap.createBitmap(viewWidth, viewHeight, Bitmap.Config.ARGB_8888);
+			dest = Bitmap.createBitmap(bmpWidth, bmpHeight, Bitmap.Config.ARGB_8888);
 		}
 
 		Canvas c = new Canvas(dest);

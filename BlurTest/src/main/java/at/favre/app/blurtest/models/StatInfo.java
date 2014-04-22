@@ -8,7 +8,7 @@ import java.util.List;
 
 import at.favre.app.blurtest.util.Average;
 import at.favre.app.blurtest.util.BenchmarkUtil;
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
 * Created by PatrickF on 16.04.2014.
@@ -21,7 +21,7 @@ public class StatInfo {
 	private int bitmapWidth;
 	private int blurRadius;
 	private int rounds;
-	private BlurUtil.Algorithm algorithm;
+	private EBlurAlgorithm algorithm;
 	private boolean error=false;
 	private String errorDescription;
     private long date;
@@ -31,7 +31,7 @@ public class StatInfo {
 	public StatInfo() {
 	}
 
-	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, BlurUtil.Algorithm algorithm, int rounds) {
+	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, EBlurAlgorithm algorithm, int rounds) {
 		this.bitmapHeight = bitmapHeight;
 		this.bitmapWidth = bitmapWidth;
 		this.blurRadius = blurRadius;
@@ -41,7 +41,7 @@ public class StatInfo {
         date = new Date().getTime();
 	}
 
-	public StatInfo(String errorDescription, BlurUtil.Algorithm algorithm) {
+	public StatInfo(String errorDescription, EBlurAlgorithm algorithm) {
 		this.errorDescription = errorDescription;
 		this.error = true;
 		this.algorithm =algorithm;
@@ -105,11 +105,11 @@ public class StatInfo {
 		this.blurRadius = blurRadius;
 	}
 
-	public BlurUtil.Algorithm getAlgorithm() {
+	public EBlurAlgorithm getAlgorithm() {
 		return algorithm;
 	}
 
-	public void setAlgorithm(BlurUtil.Algorithm algorithm) {
+	public void setAlgorithm(EBlurAlgorithm algorithm) {
 		this.algorithm = algorithm;
 	}
 

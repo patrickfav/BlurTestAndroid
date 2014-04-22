@@ -4,13 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/benchmark_bg"
-    android:paddingTop="?attr/actionBarSize">
+    android:paddingTop="@dimen/translucentPaddingTop"
+    android:paddingBottom="@dimen/translucentPaddingBottom">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="8dp">
 
         <TextView
             style="@style/benchmarkSettingWidget"
@@ -131,12 +134,23 @@
                 android:text="24px"/>
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/spinner_rounds"
-            style="@style/benchmarkSettingWidget"/>
+
+        <TextView
+            style="@style/benchmarkSettingWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Include Blur Algorithms"/>
+
+        <LinearLayout
+            android:id="@+id/algorithm_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <Spinner
-            android:id="@+id/spinner_algorithm"
+            android:id="@+id/spinner_rounds"
             style="@style/benchmarkSettingWidget"/>
     </LinearLayout>
 </ScrollView>

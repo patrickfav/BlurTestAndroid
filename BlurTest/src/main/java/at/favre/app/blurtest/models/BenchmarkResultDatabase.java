@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
 
-import at.favre.app.blurtest.util.BlurUtil;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 16.04.2014.
@@ -43,7 +43,7 @@ public class BenchmarkResultDatabase {
 	}
 
 	@JsonIgnore
-	public BenchmarkEntry getByCategoryAndAlgorithm(String category, BlurUtil.Algorithm algorithm) {
+	public BenchmarkEntry getByCategoryAndAlgorithm(String category, EBlurAlgorithm algorithm) {
 		for (BenchmarkEntry benchmarkEntry : entryList) {
 			if(benchmarkEntry.getCategory().equals(category)) {
 				if(!benchmarkEntry.getWrapper().isEmpty() && benchmarkEntry.getWrapper().get(0).getStatInfo().getAlgorithm().equals(algorithm)) {

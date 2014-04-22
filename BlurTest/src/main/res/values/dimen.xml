@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="table_cell_width">100dp</dimen>
-    <dimen name="table_cell_height">32dp</dimen>
+    <dimen name="table_cell_height">38dp</dimen>
     <dimen name="table_row_header_width">110dp</dimen>
-    <dimen name="table_column_header_height">28dp</dimen>
+    <dimen name="table_column_header_height">30dp</dimen>
+    <dimen name="form_element_std_padding">12dp</dimen>
+
+    <dimen name="translucentPaddingTop">?attr/actionBarSize</dimen>
+    <dimen name="translucentPaddingBottom">0dp</dimen>
+    <dimen name="translucentPaddingRight">0dp</dimen>
 </resources>
