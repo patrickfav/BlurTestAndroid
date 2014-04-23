@@ -3,7 +3,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="@dimen/table_cell_width"
     android:layout_height="@dimen/table_cell_height"
-    android:background="@drawable/cell_bg">
+    android:background="@drawable/cell_bg_selector">
 
     <TextView
         android:id="@+id/text"

@@ -1,6 +1,7 @@
 package at.favre.app.blurtest.adapter;
 
 import android.content.Context;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.ResultTableModel;
 
@@ -60,7 +62,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 			}
 			convertView = inflater.inflate(layoutId,parent,false);
 		}
-
+		convertView.setOnClickListener(null);
         if (viewType == 2) {
             switch (model.getRelativeType(row, column, dataType,dataType.isMinIsBest())) {
                 case BEST:
@@ -73,6 +75,14 @@ public class ResultTableAdapter extends BaseTableAdapter {
                     ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.tableCellTextColor));
                     break;
             }
+			convertView.setTag(model.getCell(row,column));
+			convertView.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
+					dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(),"details");
+				}
+			});
         }
 
 		((TextView) convertView.findViewById(R.id.text)).setText(getText(row,column));

@@ -22,8 +22,6 @@ import at.favre.app.blurtest.fragments.StaticBlurFragment;
  * Created by PatrickF on 10.04.2014.
  */
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
-	public static final String PREF_NAME = "at.favre.app.blurtest.sharedpref";
-	public static final String PREF_RESULTS = "results";
 
 	private RenderScript rs;
 

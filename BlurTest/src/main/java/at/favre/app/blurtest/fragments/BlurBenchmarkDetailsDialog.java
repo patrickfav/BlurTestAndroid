@@ -20,6 +20,7 @@ import com.squareup.picasso.Picasso;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
+import at.favre.app.blurtest.util.GraphUtil;
 import at.favre.app.blurtest.util.JsonUtil;
 
 /**
@@ -71,9 +72,9 @@ public class BlurBenchmarkDetailsDialog extends DialogFragment {
 		GraphViewSeries.GraphViewSeriesStyle seriesStyle = new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgGreen),lineThicknessPx);
 
 		if(wrapper.getStatInfo().getAsAvg().getMin() <= IBlur.MS_THRESHOLD_FOR_SMOOTH) {
-			graphView.addSeries(getStraightLine(IBlur.MS_THRESHOLD_FOR_SMOOTH, wrapper.getStatInfo().getBenchmarkData().size()-1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
+			graphView.addSeries(GraphUtil.getStraightLine(IBlur.MS_THRESHOLD_FOR_SMOOTH, wrapper.getStatInfo().getBenchmarkData().size() - 1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBgRed), lineThicknessPx)));
 		}
-		graphView.addSeries(getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size()-1, "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
+		graphView.addSeries(GraphUtil.getStraightLine((int) wrapper.getStatInfo().getAsAvg().getAvg(), wrapper.getStatInfo().getBenchmarkData().size()-1, "Avg", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphBlue), lineThicknessPx)));
 		graphView.addSeries(new GraphViewSeries("Blur", seriesStyle, data));
 		graphView.setScrollable(true);
 		graphView.setScalable(true);
@@ -105,12 +106,7 @@ public class BlurBenchmarkDetailsDialog extends DialogFragment {
 	}
 
 
-	private GraphViewSeries getStraightLine(int heightY,int maxX,String name,GraphViewSeries.GraphViewSeriesStyle seriesStyle) {
-		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[2];
-		data[0] = new GraphView.GraphViewData(0,heightY);
-		data[1] = new GraphView.GraphViewData(maxX,heightY);
-		return new GraphViewSeries(name,seriesStyle,data);
-	}
+
 
 
 	public void setWrapper(BenchmarkWrapper wrapper) {

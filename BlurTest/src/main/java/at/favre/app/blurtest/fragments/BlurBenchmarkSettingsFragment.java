@@ -1,9 +1,7 @@
 package at.favre.app.blurtest.fragments;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -28,16 +26,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import at.favre.app.blurtest.BenchmarkStorage;
 import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
 import at.favre.app.blurtest.activities.BenchmarkResultsBrowserActivity;
 import at.favre.app.blurtest.activities.MainActivity;
-import at.favre.app.blurtest.models.BenchmarkResultDatabase;
+import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
 import at.favre.app.blurtest.util.BitmapUtil;
-import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.util.JsonUtil;
 import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
@@ -279,31 +277,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
     }
 
 	private void saveTest() {
-		// Restore preferences
-		SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
-		String resultsString = settings.getString(MainActivity.PREF_RESULTS,null);
-		BenchmarkResultDatabase db;
-
-		if(resultsString == null) {
-			db = new BenchmarkResultDatabase();
-		} else {
-			db = JsonUtil.fromJsonString(resultsString,BenchmarkResultDatabase.class);
-		}
-
-
-		for (BenchmarkWrapper benchmarkWrapper : benchmarkResultList.getBenchmarkWrappers()) {
-			if(!benchmarkWrapper.getStatInfo().isError()) {
-				BenchmarkResultDatabase.BenchmarkEntry template = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper);
-				if(db.getEntryList().contains(template)) {
-					db.getEntryList().get(db.getEntryList().indexOf(template)).getWrapper().add(benchmarkWrapper);
-				} else {
-					template.getWrapper().add(benchmarkWrapper);
-					db.getEntryList().add(template);
-				}
-			}
-		}
-
-		settings.edit().putString(MainActivity.PREF_RESULTS,JsonUtil.toJsonString(db)).commit();
+		BenchmarkStorage.getInstance(getActivity()).saveTest(benchmarkResultList.getBenchmarkWrappers());
 	}
 
     @Override

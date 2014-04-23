@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.storage.StorageManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
@@ -28,12 +29,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import at.favre.app.blurtest.BenchmarkStorage;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
+import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.ResultTableModel;
 import at.favre.app.blurtest.util.BenchmarkUtil;
+import at.favre.app.blurtest.util.GraphUtil;
 import at.favre.app.blurtest.util.JsonUtil;
 import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
@@ -48,7 +52,6 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 
 	private List<ResultTableModel.DataType> dataTypeList = Arrays.asList(ResultTableModel.DataType.values());
 	private List<Integer> radiusList;
-	private BenchmarkResultDatabase db;
 	private Spinner radiusSpinner, dataTypeSpinner;
 
 	private int radius=16;
@@ -67,7 +70,7 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_benchmarkdiagram,container,false);
-		radiusList = new ArrayList<Integer>(loadResultsDB().getAllBlurRadii());
+		radiusList = new ArrayList<Integer>(BenchmarkStorage.getInstance(getActivity()).loadResultsDB().getAllBlurRadii());
 		radiusSpinner = (Spinner)  v.findViewById(R.id.spinner_radius);
 		radiusSpinner.setAdapter(new ArrayAdapter<Integer>(getActivity(),android.R.layout.simple_spinner_dropdown_item,radiusList));
 		radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -111,7 +114,7 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 	private void updateGraph() {
 		FrameLayout layout = (FrameLayout) getView().findViewById(R.id.graph);
 		layout.removeAllViews();
-		layout.addView(createGraph(loadResultsDB(), dataType,radius));
+		layout.addView(createGraph(BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType,radius));
 	}
 
 	private GraphView createGraph(BenchmarkResultDatabase database, final ResultTableModel.DataType dataType, int blurRadius) {
@@ -124,8 +127,13 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 			dataMap.put(eBlurAlgorithm,new ArrayList<GraphView.GraphViewData>());
 			int i = 0;
 			for (String imageSize : imageSizes) {
-				dataMap.get(eBlurAlgorithm).add(i,new GraphView.GraphViewData(i,ResultTableModel.getValueForType(BenchmarkResultDatabase.getRecentWrapper(database.getByImageSizeAndRadiusAndAlgorithm(imageSize, blurRadius, eBlurAlgorithm)),dataType).getValue()));
-				i++;
+				ResultTableModel.StatValue val = ResultTableModel.getValueForType(BenchmarkResultDatabase.getRecentWrapper(database.getByImageSizeAndRadiusAndAlgorithm(imageSize, blurRadius, eBlurAlgorithm)), dataType);
+				if(val.getValue() != Double.NEGATIVE_INFINITY) {
+					dataMap.get(eBlurAlgorithm).add(i, new GraphView.GraphViewData(i, val.getValue()));
+					i++;
+				} else {
+					break;
+				}
 			}
 		}
 
@@ -147,10 +155,16 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 				if (!isValueX) {
 					return BenchmarkUtil.formatNum(value,"0.0") + dataType.getUnit();
 				} else {
-					return imageSizes.get((int) Math.round(value));
+					if(!imageSizes.isEmpty()) {
+						return imageSizes.get((int) Math.round(value));
+					}
+					return "";
 				}
 			}
 		});
+		if(dataType.getUnit().equalsIgnoreCase("ms") && dataType.isMinIsBest() && !imageSizes.isEmpty()) {
+			graphView.addSeries(GraphUtil.getStraightLine(IBlur.MS_THRESHOLD_FOR_SMOOTH, imageSizes.size() - 1, "16ms", new GraphViewSeries.GraphViewSeriesStyle(res.getColor(R.color.graphMidnightBlue), lineThicknessPx)));
+		}
 		graphView.getGraphViewStyle().setHorizontalLabelsColor(res.getColor(R.color.optionsTextColor));
 		graphView.getGraphViewStyle().setNumHorizontalLabels(6);
 		graphView.getGraphViewStyle().setVerticalLabelsColor(res.getColor(R.color.optionsTextColor));
@@ -167,20 +181,5 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		outState.putString(DATATYPE_KEY,dataType.toString());
 		outState.putInt(RADIUS_KEY, radius);
-	}
-
-	private BenchmarkResultDatabase loadResultsDB() {
-		if (db == null) {
-			Log.d(TAG, "start load db");
-			SharedPreferences settings = getActivity().getSharedPreferences(MainActivity.PREF_NAME, Context.MODE_PRIVATE);
-			String resultsString = settings.getString(MainActivity.PREF_RESULTS, null);
-			if (resultsString != null) {
-				db = JsonUtil.fromJsonString(resultsString, BenchmarkResultDatabase.class);
-				Log.d(TAG, "done load db");
-			} else {
-				Log.d(TAG, "done load db");
-			}
-		}
-		return db;
 	}
 }
