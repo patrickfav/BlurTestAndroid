@@ -13,6 +13,7 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
@@ -30,8 +31,8 @@ public class SettingsController {
 
 	private int radius;
 	private int inSampleSize;
-	private EBlurAlgorithm algorithm = EBlurAlgorithm.RS_GAUSSIAN;
-	private List<EBlurAlgorithm> algorithmList = EBlurAlgorithm.getAllAlgorithms();
+	private EBlurAlgorithm algorithm = EBlurAlgorithm.RS_GAUSS_FAST;
+	private List<EBlurAlgorithm> algorithmList = Arrays.asList(EBlurAlgorithm.values());
 	private boolean showCrossfade = true;
 
 	public SettingsController(View v,final SeekBar.OnSeekBarChangeListener radiusChangeListener,final SeekBar.OnSeekBarChangeListener sampleSizeChangeListener,
@@ -98,7 +99,7 @@ public class SettingsController {
 		});
 
 		if(Build.VERSION.SDK_INT >= 17) {
-			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.RS_GAUSSIAN));
+			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.RS_GAUSS_FAST));
 		} else {
 			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.STACKBLUR));
 		}

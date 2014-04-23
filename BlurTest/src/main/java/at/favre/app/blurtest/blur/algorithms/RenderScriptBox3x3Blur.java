@@ -4,17 +4,18 @@ import android.graphics.Bitmap;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicConvolve5x5;
+import android.support.v8.renderscript.ScriptIntrinsicConvolve3x3;
 
+import at.favre.app.blurtest.blur.BlurKernels;
 import at.favre.app.blurtest.blur.IBlur;
 
 /**
  * Created by PatrickF on 20.04.2014.
  */
-public class RenderScriptConvolve5x5Blur implements IBlur {
+public class RenderScriptBox3x3Blur implements IBlur {
     private RenderScript rs;
 
-    public RenderScriptConvolve5x5Blur(RenderScript rs) {
+    public RenderScriptBox3x3Blur(RenderScript rs) {
         this.rs = rs;
     }
 
@@ -22,8 +23,8 @@ public class RenderScriptConvolve5x5Blur implements IBlur {
     public Bitmap blur(int radius, Bitmap bitmapOriginal) {
         Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
         Allocation output = Allocation.createTyped(rs, input.getType());
-        final ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
-        script.setCoefficients(new float[] {0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.0425f,0.05f,0.0425f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,  0.04f,0.04f,0.04f,0.04f,0.04f,});
+        final ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
+        script.setCoefficients(BlurKernels.BOX_3x3);
         for (int i = 0; i < radius; i++) {
             script.setInput(input);
             script.forEach(output);

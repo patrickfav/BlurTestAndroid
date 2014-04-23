@@ -75,14 +75,18 @@ public class ResultTableAdapter extends BaseTableAdapter {
                     ((TextView) convertView.findViewById(R.id.text)).setTextColor(ctx.getResources().getColor(R.color.tableCellTextColor));
                     break;
             }
-			convertView.setTag(model.getCell(row,column));
-			convertView.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
-					dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(),"details");
-				}
-			});
+			BenchmarkResultDatabase.BenchmarkEntry value = model.getCell(row, column);
+			convertView.setTag(value);
+			if(BenchmarkResultDatabase.getRecentWrapper(value) != null) {
+				convertView.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
+						dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), "details");
+
+					}
+				});
+			}
         }
 
 		((TextView) convertView.findViewById(R.id.text)).setText(getText(row,column));

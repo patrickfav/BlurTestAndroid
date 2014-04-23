@@ -23,7 +23,7 @@ public class ResultTableModel {
 
     public static final String NUMBER_FORMAT = "0.00";
 
-    public enum DataType {AVG(true, "ms"), MIN_MAX(true, "ms"), OVER_16_MS(true, "%"), MPIXEL_PER_S(false, "MPix/s");
+    public enum DataType {AVG(true, "ms"), MIN(true, "ms"),MAX(true, "ms"),MEDIAN(true, "ms"),CONF_95(true, "ms"), OVER_16_MS(true, "%"), MPIXEL_PER_S(false, "MPix/s");
         private final boolean minIsBest;
 		private final String unit;
 
@@ -158,9 +158,18 @@ public class ResultTableModel {
 				case AVG:
 					return new StatValue(wrapper.getStatInfo().getAsAvg().getAvg(),
 							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getAvg(), NUMBER_FORMAT) + "ms");
-				case MIN_MAX:
-					return new StatValue(wrapper.getStatInfo().getAsAvg().getMax() + wrapper.getStatInfo().getAsAvg().getMin(),
-							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#") + "/" + BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#") + "ms");
+				case MIN:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getMin(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMin(), "0.#") + "ms");
+				case MAX:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getMax(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMax(), "0.#") + "ms");
+				case MEDIAN:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().getMedian(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getMedian(), "0.#") + "ms");
+				case CONF_95:
+					return new StatValue(wrapper.getStatInfo().getAsAvg().get95PercentConfidenceIntervall().getStdError()+wrapper.getStatInfo().getAsAvg().get95PercentConfidenceIntervall().getAvg(),
+							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().get95PercentConfidenceIntervall().getAvg(), "0.#")+"ms +/-"+BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().get95PercentConfidenceIntervall().getStdError(), "0.#"));
 				case OVER_16_MS:
 					return new StatValue(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH),
 							BenchmarkUtil.formatNum(wrapper.getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH), NUMBER_FORMAT) + "%");

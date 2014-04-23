@@ -21,7 +21,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -35,7 +34,6 @@ import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
-import at.favre.app.blurtest.util.BitmapUtil;
 import at.favre.app.blurtest.util.JsonUtil;
 import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
@@ -208,7 +206,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 			Toast.makeText(getActivity(),"Choose at least one radius and image size",Toast.LENGTH_SHORT).show();
 			return;
 		}
-		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(getActivity())));
 		showProgressDialog(benchmarkCount);
 		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		benchmarkResultList = new BenchmarkResultList();

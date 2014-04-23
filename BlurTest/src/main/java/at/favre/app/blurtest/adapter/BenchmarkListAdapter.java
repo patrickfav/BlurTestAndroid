@@ -73,7 +73,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapHeight() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
-			viewHolder.tvDeviation.setText("+/-" + BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getDeviationsInPercent()) + "ms");
+			viewHolder.tvDeviation.setText("+/-" + BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getStdError()) + "ms");
 			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+
 					"blur min/max: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMin())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMax())+"ms\n"+
 					"blur median: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMedian())+"ms\n"+

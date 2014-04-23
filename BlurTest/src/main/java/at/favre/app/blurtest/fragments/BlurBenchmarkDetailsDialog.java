@@ -105,10 +105,6 @@ public class BlurBenchmarkDetailsDialog extends DialogFragment {
 		return graphView;
 	}
 
-
-
-
-
 	public void setWrapper(BenchmarkWrapper wrapper) {
 		this.wrapper = wrapper;
 	}

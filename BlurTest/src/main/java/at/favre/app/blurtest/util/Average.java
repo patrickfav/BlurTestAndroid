@@ -84,14 +84,15 @@ public class Average<T extends Number> {
 		return getConfidenceIntervall(2.58d);
 	}
 
-	private ConfidenceIntervall getConfidenceIntervall(double stdDeviations) {
-		if(!cache.containsKey(stdDeviations)) {
+	private ConfidenceIntervall getConfidenceIntervall(double confidenceLevel) {
+		if(!cache.containsKey(confidenceLevel)) {
 			double stddev = Math.sqrt(getVariance());
-			double lo = getAvg() - stdDeviations * stddev;
-			double hi = getAvg() + stdDeviations * stddev;
-			cache.put(stdDeviations, new ConfidenceIntervall(lo, hi, getAvg()));
+			double stdErr = confidenceLevel * stddev;
+			double lo = getAvg() - stdErr;
+			double hi = getAvg() + stdErr;
+			cache.put(confidenceLevel, new ConfidenceIntervall(getAvg(), stdErr));
 		}
-		return cache.get(stdDeviations);
+		return cache.get(confidenceLevel);
 	}
 
 	public double getVariance() {
@@ -127,34 +128,24 @@ public class Average<T extends Number> {
         double overCount = getValuesGreaterThanGiven(lowerLimit).size();
         double wholeCount = data.size();
 
-        return wholeCount * overCount /100;
+        return  (overCount * 100) / wholeCount;
     }
 
 	public static class ConfidenceIntervall {
-		private final double high;
-		private final double low;
 		private final double avg;
+		private final double stdError;
 
-		public ConfidenceIntervall(double low, double high, double avg) {
-			this.high = high;
-			this.low = low;
+		public ConfidenceIntervall(double avg, double stdError) {
 			this.avg = avg;
-		}
-
-		public double getHigh() {
-			return high;
-		}
-
-		public double getLow() {
-			return low;
+			this.stdError = stdError;
 		}
 
 		public double getAvg() {
 			return avg;
 		}
 
-		public double getDeviationsInPercent() {
-			return (high-avg + avg-low)/2d;
+		public double getStdError() {
+			return stdError;
 		}
 	}
 }
