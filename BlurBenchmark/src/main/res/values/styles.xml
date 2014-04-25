@@ -13,7 +13,8 @@
 
     <style name="AppTheme" parent="AppThemeRaw">
     </style>
-
+    <style name="AppThemeFullTranslucent" parent="AppTheme">
+    </style>
     <style name="action_bar_theme" parent="@android:style/Widget.Holo.ActionBar">
         <item name="android:background">@color/quartertransparent</item>
         <item name="android:titleTextStyle">@style/action_bar_text</item>

@@ -3,10 +3,10 @@ localProps.load(new FileInputStream(file('../signing.properties')))
 
 apply plugin: 'android'
 
-
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.3"
+
     signingConfigs {
         release {
             storeFile file(localProps.getProperty('RELEASE_KEYSTORE_PATH','fillhere'))
@@ -15,10 +15,11 @@ android {
             keyPassword localProps.getProperty('RELEASE_KEY_PW','')
         }
     }
+
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
-        versionCode 1
+        versionCode 5
         versionName "1.0"
         renderscriptTargetApi 19
         renderscriptSupportMode true
@@ -30,7 +31,7 @@ android {
         }
         release {
             runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            proguardFiles 'proguard-rules.txt'
             signingConfig signingConfigs.release
         }
     }
