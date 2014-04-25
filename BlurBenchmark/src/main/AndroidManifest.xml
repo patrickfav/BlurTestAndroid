@@ -9,7 +9,7 @@
         android:label="Blur"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.MainActivity">
+            android:name="at.favre.app.blurbenchmark.activities.MainActivity">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -17,7 +17,7 @@
         </activity>
         <activity
             android:theme="@style/AppThemeFullTranslucent"
-            android:name=".activities.BenchmarkResultActivity">
+            android:name="at.favre.app.blurbenchmark.activities.BenchmarkResultActivity">
         </activity>
     </application>
 

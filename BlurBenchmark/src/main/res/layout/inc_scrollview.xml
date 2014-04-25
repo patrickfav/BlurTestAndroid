@@ -6,7 +6,7 @@
              android:orientation="vertical"
              android:background="#fff">
 
-    <at.favre.app.blurtest.view.ObservableScrollView
+    <at.favre.app.blurbenchmark.view.ObservableScrollView
         android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -38,5 +38,5 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
-    </at.favre.app.blurtest.view.ObservableScrollView>
+    </at.favre.app.blurbenchmark.view.ObservableScrollView>
 </FrameLayout>
