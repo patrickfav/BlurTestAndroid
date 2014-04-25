@@ -98,14 +98,9 @@ public class SettingsController {
 			}
 		});
 
-		if(Build.VERSION.SDK_INT >= 17) {
-			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.RS_GAUSS_FAST));
-		} else {
-			algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.STACKBLUR));
-		}
+        algorithmSpinner.setSelection(algorithmList.indexOf(EBlurAlgorithm.RS_GAUSS_FAST));
 
-
-		((CheckBox) v.findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
+        ((CheckBox) v.findViewById(R.id.cb_crossfade)).setChecked(showCrossfade);
 		((CheckBox) v.findViewById(R.id.cb_crossfade)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
