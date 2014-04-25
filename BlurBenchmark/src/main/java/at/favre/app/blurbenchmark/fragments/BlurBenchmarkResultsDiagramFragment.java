@@ -105,9 +105,11 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 	}
 
 	private void updateGraph() {
-		FrameLayout layout = (FrameLayout) getView().findViewById(R.id.graph);
-		layout.removeAllViews();
-		layout.addView(createGraph(BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType,radius));
+		if(BenchmarkStorage.getInstance(getActivity()).loadResultsDB() != null) {
+			FrameLayout layout = (FrameLayout) getView().findViewById(R.id.graph);
+			layout.removeAllViews();
+			layout.addView(createGraph(BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType, radius));
+		}
 	}
 
 	private GraphView createGraph(BenchmarkResultDatabase database, final ResultTableModel.DataType dataType, int blurRadius) {
