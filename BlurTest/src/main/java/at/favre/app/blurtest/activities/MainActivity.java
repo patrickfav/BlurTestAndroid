@@ -1,6 +1,5 @@
 package at.favre.app.blurtest.activities;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -141,7 +140,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
 
 	public RenderScript getRs() {
-		if (rs == null && Build.VERSION.SDK_INT > 16) {
+		if (rs == null) {
 			rs = RenderScript.create(this);
 		}
 		return rs;

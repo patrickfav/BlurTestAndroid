@@ -78,7 +78,8 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
 					statInfo);
 		} catch (Throwable e) {
-			return new BenchmarkWrapper(null,null, new StatInfo(e.getMessage(),algorithm));
+            Log.e(TAG,"Could not complete benchmark",e);
+			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm));
 		}
 	}
 
