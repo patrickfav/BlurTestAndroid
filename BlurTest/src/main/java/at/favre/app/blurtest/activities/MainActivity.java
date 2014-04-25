@@ -22,7 +22,7 @@ import at.favre.app.blurtest.fragments.StaticBlurFragment;
  * Created by PatrickF on 10.04.2014.
  */
 public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
-
+	public final static String DIALOG_TAG = "blurdialog";
 	private RenderScript rs;
 
 	@Override
@@ -69,7 +69,9 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 		if (getSupportFragmentManager().getFragments() != null) {
 			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 			for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-				t.detach(fragment);
+				if(fragment != null && fragment.getTag() != null && !MainActivity.DIALOG_TAG.equals(fragment.getTag())) {
+					t.detach(fragment);
+				}
 			}
 			t.commitAllowingStateLoss();
 		}

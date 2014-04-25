@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.blur.IBlur;
 import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkWrapper;
@@ -165,7 +166,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 				@Override
 				public void onClick(View view) {
 					BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(getItem(position));
-					dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(),"details");
+					dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
 				}
 			});
 		} else {

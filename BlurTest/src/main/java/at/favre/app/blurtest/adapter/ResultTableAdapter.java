@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
 
 import at.favre.app.blurtest.R;
+import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.fragments.BlurBenchmarkDetailsDialog;
 import at.favre.app.blurtest.models.BenchmarkResultDatabase;
 import at.favre.app.blurtest.models.ResultTableModel;
@@ -82,7 +83,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 					@Override
 					public void onClick(View view) {
 						BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
-						dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), "details");
+						dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
 
 					}
 				});

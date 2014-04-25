@@ -69,6 +69,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		dest=null;
 	}
 
 	@Override
@@ -138,7 +139,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		},null);
 		settingsController.setVisibility(true,true,false,false);
 		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
-		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(),topBlurView);
+		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(),v.findViewById(R.id.topCanvasWrapper));
 		return v;
 	}
 
@@ -206,10 +207,10 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		float scale = 1f / downsampling;
 		return Bitmap.createBitmap(
 				srcBmp,
-				Math.round(canvasView.getX()*scale),
-				Math.round(canvasView.getY()*scale),
-				Math.round(canvasView.getWidth()*scale),
-				Math.round(canvasView.getHeight()*scale)
+				(int) Math.floor((canvasView.getX())*scale),
+				(int) Math.floor((canvasView.getY())*scale),
+				(int) Math.floor((canvasView.getWidth())*scale),
+				(int) Math.floor((canvasView.getHeight())*scale)
 		);
 	}
 
