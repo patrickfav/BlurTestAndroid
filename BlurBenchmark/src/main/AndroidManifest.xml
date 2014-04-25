@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="at.favre.app.blurtest"
+    package="at.favre.app.blurbenchmark"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application

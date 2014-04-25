@@ -15,6 +15,6 @@
  */
 
 #pragma version(1)
-#pragma rs java_package_name(at.favre.app.blurtest)
+#pragma rs java_package_name(at.favre.app.blurbenchmark)
 
 
