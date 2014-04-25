@@ -83,7 +83,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 
 			viewHolder.tvAdditionalInfo.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getThroughputMPixelsPerSec()) + " MPixS / " + getItem(position).getStatInfo().getAlgorithm().toString());
 			viewHolder.tvOver16ms.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)) + "% over "+IBlur.MS_THRESHOLD_FOR_SMOOTH+"ms");
-			viewHolder.tvOver16ms.getLayoutParams().height = ((int) ((double) viewHolder.frontImageWrapper.getHeight() * getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)/100d));
+			viewHolder.tvOver16ms.getLayoutParams().height = ((int) ((double) viewHolder.frontImageWrapper.getLayoutParams().height * getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)/100d));
 			viewHolder.tvOver16ms.requestLayout();
 
 			if (!getItem(position).isAdditionalInfoVisibility()) {

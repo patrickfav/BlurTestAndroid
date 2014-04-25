@@ -1,10 +1,20 @@
+def Properties localProps = new Properties()
+localProps.load(new FileInputStream(file('../signing.properties')))
+
 apply plugin: 'android'
 
 
 android {
     compileSdkVersion 19
     buildToolsVersion "19.0.3"
-
+    signingConfigs {
+        release {
+            storeFile file(localProps.getProperty('RELEASE_KEYSTORE_PATH','fillhere'))
+            storePassword localProps.getProperty('RELEASE_KEYSTORE_PW','')
+            keyAlias localProps.getProperty('RELEASE_KEY_ALIAS','')
+            keyPassword localProps.getProperty('RELEASE_KEY_PW','')
+        }
+    }
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 19
@@ -16,8 +26,9 @@ android {
 
     buildTypes {
         release {
-            runProguard true
+            runProguard false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
         }
     }
     packagingOptions {

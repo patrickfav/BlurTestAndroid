@@ -1,1 +1,1 @@
-include ':BlurTest', ':tablefixedheader'
+include ':BlurBenchmark', ':tablefixedheader'

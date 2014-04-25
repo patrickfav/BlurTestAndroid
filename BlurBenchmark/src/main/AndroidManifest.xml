@@ -16,10 +16,8 @@
             </intent-filter>
         </activity>
         <activity
+            android:theme="@style/AppThemeFullTranslucent"
             android:name=".activities.BenchmarkResultActivity">
-        </activity>
-        <activity
-            android:name=".activities.BenchmarkResultsBrowserActivity">
         </activity>
     </application>
 

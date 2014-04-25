@@ -29,7 +29,6 @@ import at.favre.app.blurtest.BenchmarkStorage;
 import at.favre.app.blurtest.BlurBenchmarkTask;
 import at.favre.app.blurtest.R;
 import at.favre.app.blurtest.activities.BenchmarkResultActivity;
-import at.favre.app.blurtest.activities.BenchmarkResultsBrowserActivity;
 import at.favre.app.blurtest.activities.MainActivity;
 import at.favre.app.blurtest.blur.EBlurAlgorithm;
 import at.favre.app.blurtest.models.BenchmarkResultList;
@@ -126,11 +125,6 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
         cb.setTextColor(getResources().getColor(R.color.optionsTextColor));
         cb.setPadding(0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding),0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding));
         return cb;
-    }
-
-    public void showResultsBrowser() {
-        Intent i = new Intent(getActivity(), BenchmarkResultsBrowserActivity.class);
-        startActivity(i);
     }
 
 	@Override

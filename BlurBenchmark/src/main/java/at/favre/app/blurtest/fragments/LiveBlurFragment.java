@@ -139,7 +139,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		},null);
 		settingsController.setVisibility(true,true,false,false);
 		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
-		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(),v.findViewById(R.id.topCanvasWrapper));
+		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(),v.findViewById(R.id.topCanvasWrapper),true);
 		return v;
 	}
 

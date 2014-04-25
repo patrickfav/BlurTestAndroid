@@ -24,11 +24,13 @@ public class TranslucentLayoutUtil {
 		}
 	}
 
-	public static void setTranslucentThemeInsetsWithoutActionbarHeight(Activity context, View view) {
+	public static void setTranslucentThemeInsetsWithoutActionbarHeight(Activity context, View view, boolean addAdditionalStatusBarHeight) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return;
 
 		SystemBarTintManager tintManager = new SystemBarTintManager(context);
 		SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
-		view.setPadding(0, config.getPixelInsetTop(false)+ config.getStatusBarHeight(), config.getPixelInsetRight(), config.getPixelInsetBottom());
+		view.setPadding(0, config.getPixelInsetTop(false)+ (addAdditionalStatusBarHeight ? config.getStatusBarHeight(): 0), config.getPixelInsetRight(), config.getPixelInsetBottom());
 	}
+
+
 }

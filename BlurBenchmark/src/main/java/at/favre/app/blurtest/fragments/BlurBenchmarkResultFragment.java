@@ -24,6 +24,7 @@ import at.favre.app.blurtest.activities.BenchmarkResultActivity;
 import at.favre.app.blurtest.adapter.BenchmarkListAdapter;
 import at.favre.app.blurtest.models.BenchmarkResultList;
 import at.favre.app.blurtest.util.JsonUtil;
+import at.favre.app.blurtest.util.TranslucentLayoutUtil;
 
 /**
  * Created by PatrickF on 14.04.2014.
@@ -50,6 +51,7 @@ public class BlurBenchmarkResultFragment extends Fragment {
 		if(savedInstanceState != null) {
 			benchmarkResultList = JsonUtil.fromJsonString(savedInstanceState.getString(BenchmarkResultActivity.BENCHMARK_LIST_KEY), BenchmarkResultList.class);
 		}
+
 	}
 
 	@Override
@@ -58,6 +60,7 @@ public class BlurBenchmarkResultFragment extends Fragment {
 		headerView = inflater.inflate(R.layout.list_benchmark_header,null);
 
 		listView = (ListView) v.findViewById(R.id.listview);
+		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(), listView,false);
 		setUpListView();
 		return v;
 	}
