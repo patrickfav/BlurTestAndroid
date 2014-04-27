@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/benchmark_bg">
+    <TextView
+        android:id="@+id/tv_noresults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="28sp"
+        android:padding="16dp"
+        android:gravity="center"
+        android:text="Could not find any data. Have you executed a Benchmark?"
+        android:visibility="gone"/>
 
     <com.inqbarna.tablefixheaders.TableFixHeaders
         android:id="@+id/table"

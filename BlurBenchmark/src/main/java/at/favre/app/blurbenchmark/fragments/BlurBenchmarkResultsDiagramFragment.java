@@ -62,38 +62,44 @@ public class BlurBenchmarkResultsDiagramFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_benchmarkdiagram,container,false);
-		radiusList = new ArrayList<Integer>(BenchmarkStorage.getInstance(getActivity()).loadResultsDB().getAllBlurRadii());
-		radiusSpinner = (Spinner)  v.findViewById(R.id.spinner_radius);
-		radiusSpinner.setAdapter(new ArrayAdapter<Integer>(getActivity(),android.R.layout.simple_spinner_dropdown_item,radiusList));
-		radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				radius = ((Integer)adapterView.getAdapter().getItem(i));
-				updateGraph();
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
+		View v = inflater.inflate(R.layout.fragment_resultsdiagram,container,false);
+		if(BenchmarkStorage.getInstance(getActivity()).loadResultsDB() == null) {
+			v.findViewById(R.id.contentWrapper).setVisibility(View.GONE);
+			v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
+		} else {
+			radiusList = new ArrayList<Integer>(BenchmarkStorage.getInstance(getActivity()).loadResultsDB().getAllBlurRadii());
+			radiusSpinner = (Spinner) v.findViewById(R.id.spinner_radius);
+			radiusSpinner.setAdapter(new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_dropdown_item, radiusList));
+			radiusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+					radius = ((Integer) adapterView.getAdapter().getItem(i));
+					updateGraph();
+				}
 
-			}
-		});
-		radiusSpinner.setSelection(radiusList.indexOf(radius));
+				@Override
+				public void onNothingSelected(AdapterView<?> adapterView) {
 
-		dataTypeSpinner = (Spinner)  v.findViewById(R.id.spinner_datatypes);
-		dataTypeSpinner.setAdapter(new ArrayAdapter<ResultTableModel.DataType>(getActivity(),android.R.layout.simple_spinner_dropdown_item,dataTypeList));
-		dataTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				dataType = ((ResultTableModel.DataType)adapterView.getAdapter().getItem(i));
-				updateGraph();
-			}
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
+				}
+			});
+			radiusSpinner.setSelection(radiusList.indexOf(radius));
 
-			}
-		});
-		dataTypeSpinner.setSelection(dataTypeList.indexOf(dataType));
+			dataTypeSpinner = (Spinner) v.findViewById(R.id.spinner_datatypes);
+			dataTypeSpinner.setAdapter(new ArrayAdapter<ResultTableModel.DataType>(getActivity(), android.R.layout.simple_spinner_dropdown_item, dataTypeList));
+			dataTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				@Override
+				public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+					dataType = ((ResultTableModel.DataType) adapterView.getAdapter().getItem(i));
+					updateGraph();
+				}
 
+				@Override
+				public void onNothingSelected(AdapterView<?> adapterView) {
+
+				}
+			});
+			dataTypeSpinner.setSelection(dataTypeList.indexOf(dataType));
+		}
 		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
 		return v;
 	}

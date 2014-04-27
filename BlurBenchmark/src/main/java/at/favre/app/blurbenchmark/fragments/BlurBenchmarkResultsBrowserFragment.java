@@ -37,6 +37,21 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
+		table = (TableFixHeaders) v.findViewById(R.id.table);
+
+		if(BenchmarkStorage.getInstance(getActivity()).loadResultsDB() == null) {
+			table.setVisibility(View.GONE);
+			v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
+		} else {
+			table.setAdapter(new ResultTableAdapter(getActivity(), BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
+			TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
+		}
+		return v;
+	}
+
     @Override
     public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -78,13 +93,6 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
         table.setAdapter(new ResultTableAdapter(getActivity(),BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
     }
 
-    @Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
-		table = (TableFixHeaders) v.findViewById(R.id.table);
-		table.setAdapter(new ResultTableAdapter(getActivity(), BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
-		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
-        return v;
-	}
+
 
 }

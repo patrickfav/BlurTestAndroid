@@ -118,7 +118,7 @@ public class SettingsController {
 
 	public void switchShow(){
 		if(settingsWrapper.getVisibility() == View.VISIBLE) {
-			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.animator.slide_out_from_top);
+			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.anim.slide_out_from_top);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				@Override
 				public void onAnimationStart(Animation animation) {
@@ -140,7 +140,7 @@ public class SettingsController {
 		} else {
 			settingsWrapper.setVisibility(View.VISIBLE);
 
-			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.animator.slide_in_from_top);
+			final Animation anim = AnimationUtils.loadAnimation(settingsWrapper.getContext(), R.anim.slide_in_from_top);
 			anim.setAnimationListener(new Animation.AnimationListener() {
 				@Override
 				public void onAnimationStart(Animation animation) {

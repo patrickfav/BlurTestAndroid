@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
@@ -144,6 +146,37 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		//this is a hack so that it will be immediatly blurred, ViewTreeObserver does not work here because the images are loaded async by picasso
+		Handler handler = new Handler(Looper.getMainLooper());
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				updateBlurView();
+			}
+		},300);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				updateBlurView();
+			}
+		},600);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				updateBlurView();
+			}
+		},900);
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				updateBlurView();
+			}
+		},1200);
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.main_menu, menu);
@@ -154,20 +187,24 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	}
 
 	private boolean updateBlurView() {
-		if (getView() != null && !isWorking.get() && topBlurView.getWidth() != 0 && topBlurView.getHeight() != 0) {
-			isWorking.compareAndSet(false, true);
-			long start = SystemClock.elapsedRealtime();
-			dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
-			topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
-			bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity)getActivity()).getRs(),crop(dest.copy(dest.getConfig(),true), bottomBlurView, settingsController.getInSampleSize()) , settingsController.getRadius(), settingsController.getAlgorithm())));
-			checkAndSetPerformanceTextView(SystemClock.elapsedRealtime()-start);
-			tvImageSizes.setText(((BitmapDrawable)topBlurView.getBackground()).getBitmap().getWidth()+"x"+((BitmapDrawable)topBlurView.getBackground()).getBitmap().getHeight()+" / "+((BitmapDrawable)bottomBlurView.getBackground()).getBitmap().getWidth()+"x"+((BitmapDrawable)bottomBlurView.getBackground()).getBitmap().getHeight());
-			isWorking.compareAndSet(true, false);
-			return true;
-		} else {
-			Log.v(TAG, "skip blur frame");
-			return false;
+		try {
+			if (getView() != null && !isWorking.get() && topBlurView.getWidth() != 0 && topBlurView.getHeight() != 0) {
+				isWorking.compareAndSet(false, true);
+				long start = SystemClock.elapsedRealtime();
+				dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
+				topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+				bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+				checkAndSetPerformanceTextView(SystemClock.elapsedRealtime() - start);
+				tvImageSizes.setText(((BitmapDrawable) topBlurView.getBackground()).getBitmap().getWidth() + "x" + ((BitmapDrawable) topBlurView.getBackground()).getBitmap().getHeight() + " / " + ((BitmapDrawable) bottomBlurView.getBackground()).getBitmap().getWidth() + "x" + ((BitmapDrawable) bottomBlurView.getBackground()).getBitmap().getHeight());
+				isWorking.compareAndSet(true, false);
+				return true;
+			} else {
+				Log.v(TAG, "skip blur frame");
+			}
+		} catch (Exception e) {
+			Log.e(TAG,"Could not create blur view",e);
 		}
+		return false;
 	}
 
 	private void checkAndSetPerformanceTextView(long currentRunMs) {

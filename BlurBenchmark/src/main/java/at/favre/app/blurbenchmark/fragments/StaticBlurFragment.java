@@ -183,10 +183,10 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				}
 
 				if (settingsController.isShowCrossfade() && !onlyReBlur) {
-					final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.animator.alpha_fadeout);
+					final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadeout);
 					anim.setFillAfter(true);
 					imageViewNormal.startAnimation(anim);
-					final Animation anim2 = AnimationUtils.loadAnimation(getActivity(), R.animator.alpha_fadein);
+					final Animation anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadein);
 					anim2.setFillAfter(true);
 					imageViewBlur.startAnimation(anim2);
 				} else {

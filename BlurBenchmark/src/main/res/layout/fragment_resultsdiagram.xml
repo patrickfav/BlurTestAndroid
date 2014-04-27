@@ -5,6 +5,17 @@
              android:layout_height="match_parent"
              android:background="@drawable/benchmark_bg">
 
+    <TextView
+        android:id="@+id/tv_noresults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="Could not find any data. Have you executed a Benchmark?"
+        android:textSize="28sp"
+        android:visibility="gone"/>
+
     <LinearLayout
         android:id="@+id/contentWrapper"
         android:layout_width="match_parent"
@@ -20,12 +31,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:text="Radius: "
-                android:textSize="18sp"
-                android:gravity="right"
                 android:layout_gravity="center"
-                android:layout_weight="4"/>
+                android:layout_marginRight="8dp"
+                android:layout_weight="4"
+                android:gravity="right"
+                android:text="Radius: "
+                android:textSize="18sp"/>
+
             <Spinner
                 android:id="@+id/spinner_radius"
                 android:layout_width="0dp"
@@ -42,12 +54,13 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="8dp"
-                android:text="Datatype: "
-                android:textSize="18sp"
-                android:gravity="right"
                 android:layout_gravity="center"
-                android:layout_weight="4"/>
+                android:layout_marginRight="8dp"
+                android:layout_weight="4"
+                android:gravity="right"
+                android:text="Datatype: "
+                android:textSize="18sp"/>
+
             <Spinner
                 android:id="@+id/spinner_datatypes"
                 android:layout_width="0dp"
@@ -55,11 +68,6 @@
                 android:layout_weight="6"/>
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/graph"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin="6dp"/>
+
     </LinearLayout>
 </FrameLayout>
