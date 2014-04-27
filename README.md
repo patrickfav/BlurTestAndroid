@@ -5,7 +5,9 @@ This is a simple benchmark and showcase app on whats possible with blurring in A
 
 Download App
 -------------
-The app is in the playstore, you can get it here https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark
+![App Icon](BlurBenchmark/src/main/res/drawable-mdpi/ic_launcher.png)
+
+The app is in the playstore, you can get it here https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark. Sorry because of the size, but many high res pictures are included ;)
 
 Blur Benchmark
 ------------
@@ -15,10 +17,9 @@ Here you chose, the image sizes, blur radii and algorithm you want to benchmark.
 
 After running some benchmaks you see the results list, where you can click on each element and see a diagramm on the length of each round. This also reveals that this benchmark is polluted by garbage collection
 
-![results view](misc/readme/readme_screen02.png)
 
-![diagrams](misc/readme/readme_screen04.png)
-
+<img style="float: left" src="misc/readme/readme_screen02.png" />
+<img style="float: left; padding:15px;" src="misc/readme/readme_screen04.png" />
 
 Later you can examine the latest runs in a table view or comparative in a diagram with diffrent options on the values to see.
 ![diagrams](misc/readme/readme_screen03.png)
