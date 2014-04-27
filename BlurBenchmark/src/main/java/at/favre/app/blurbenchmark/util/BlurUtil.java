@@ -12,7 +12,6 @@ import android.support.v8.renderscript.ScriptIntrinsicBlend;
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.blur.algorithms.BoxBlur;
 import at.favre.app.blurbenchmark.blur.algorithms.GaussianFastBlur;
-import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptBox3x3Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptBox5x5Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussian5x5Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussianBlur;
@@ -28,8 +27,6 @@ public class BlurUtil {
 		switch (algorithm) {
 			case RS_GAUSS_FAST:
 				return new RenderScriptGaussianBlur(rs).blur(radius, bitmap);
-			case RS_BOX_3x3:
-                return new RenderScriptBox3x3Blur(rs).blur(radius, bitmap);
             case RS_BOX_5x5:
 				return new RenderScriptBox5x5Blur(rs).blur(radius, bitmap);
 			case RS_GAUSS_5x5:
