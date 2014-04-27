@@ -67,7 +67,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			for (int i = 0; i < benchmarkRounds; i++) {
 				long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
 				blurredBitmap = master.copy(master.getConfig(), true);
-				blurredBitmap = BlurUtil.blur(rs, blurredBitmap, radius, algorithm);
+				blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
 				statInfo.getBenchmarkData().add((BenchmarkUtil.elapsedRealTimeNanos() - startBlur)/1000000d);
 			}
 

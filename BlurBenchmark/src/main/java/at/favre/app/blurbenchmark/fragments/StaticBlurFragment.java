@@ -160,7 +160,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 			Bitmap blurredBitmap=null;
 
 			try {
-				blurredBitmap = BlurUtil.blur(((MainActivity)getActivity()).getRs(),blurTemplate.copy(blurTemplate.getConfig(),true), settingsController.getRadius(), settingsController.getAlgorithm());
+				blurredBitmap = BlurUtil.blur(((MainActivity)getActivity()).getRs(),getActivity(),blurTemplate.copy(blurTemplate.getConfig(),true), settingsController.getRadius(), settingsController.getAlgorithm());
 			} catch (Exception e) {
 				Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
 			}

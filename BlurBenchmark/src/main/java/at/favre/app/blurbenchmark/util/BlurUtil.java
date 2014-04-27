@@ -1,6 +1,7 @@
 package at.favre.app.blurbenchmark.util;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
 import android.support.v8.renderscript.Allocation;
@@ -15,6 +16,7 @@ import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptBox3x3Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptBox5x5Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussian5x5Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussianBlur;
+import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptStackBlur;
 import at.favre.app.blurbenchmark.blur.algorithms.StackBlur;
 
 /**
@@ -22,7 +24,7 @@ import at.favre.app.blurbenchmark.blur.algorithms.StackBlur;
  */
 public class BlurUtil {
 
-    public static Bitmap blur(RenderScript rs, Bitmap bitmap, int radius, EBlurAlgorithm algorithm) {
+    public static Bitmap blur(RenderScript rs,Context ctx, Bitmap bitmap, int radius, EBlurAlgorithm algorithm) {
 		switch (algorithm) {
 			case RS_GAUSS_FAST:
 				return new RenderScriptGaussianBlur(rs).blur(radius, bitmap);
@@ -32,6 +34,8 @@ public class BlurUtil {
 				return new RenderScriptBox5x5Blur(rs).blur(radius, bitmap);
 			case RS_GAUSS_5x5:
 				return new RenderScriptGaussian5x5Blur(rs).blur(radius, bitmap);
+			case RS_STACKBLUR:
+				return new RenderScriptStackBlur(rs,ctx).blur(radius, bitmap);
             case STACKBLUR:
 				return new StackBlur().blur(radius, bitmap);
 			case GAUSS_FAST:

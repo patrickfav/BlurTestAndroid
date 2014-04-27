@@ -192,8 +192,8 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 				isWorking.compareAndSet(false, true);
 				long start = SystemClock.elapsedRealtime();
 				dest = drawViewToBitmap(dest, getView().findViewById(R.id.wrapper), settingsController.getInSampleSize());
-				topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
-				bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(), crop(dest.copy(dest.getConfig(), true), bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+				topBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(),getActivity(), crop(dest.copy(dest.getConfig(), true), topBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
+				bottomBlurView.setBackgroundDrawable(new BitmapDrawable(getResources(), BlurUtil.blur(((MainActivity) getActivity()).getRs(),getActivity(), crop(dest.copy(dest.getConfig(), true), bottomBlurView, settingsController.getInSampleSize()), settingsController.getRadius(), settingsController.getAlgorithm())));
 				checkAndSetPerformanceTextView(SystemClock.elapsedRealtime() - start);
 				tvImageSizes.setText(((BitmapDrawable) topBlurView.getBackground()).getBitmap().getWidth() + "x" + ((BitmapDrawable) topBlurView.getBackground()).getBitmap().getHeight() + " / " + ((BitmapDrawable) bottomBlurView.getBackground()).getBitmap().getWidth() + "x" + ((BitmapDrawable) bottomBlurView.getBackground()).getBitmap().getHeight());
 				isWorking.compareAndSet(true, false);

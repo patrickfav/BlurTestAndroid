@@ -9,9 +9,9 @@ import at.favre.app.blurbenchmark.R;
  * Created by PatrickF on 20.04.2014.
  */
 public enum EBlurAlgorithm {
-    RS_GAUSS_FAST(R.color.graphBgGreen), RS_BOX_3x3(R.color.graphBgOrange), RS_BOX_5x5(R.color.graphBlue),
-	RS_GAUSS_5x5(R.color.graphBgWhite), STACKBLUR(R.color.graphBgYellow), GAUSS_FAST(R.color.graphBgRed),
-	BOX_BLUR(R.color.graphBgTurquoise), NONE(R.color.graphBgBlack);
+    RS_GAUSS_FAST(R.color.graphBgGreen), RS_BOX_5x5(R.color.graphBlue),
+	RS_GAUSS_5x5(R.color.graphBgWhite), RS_STACKBLUR(R.color.graphBgViolet),STACKBLUR(R.color.graphBgYellow),
+	GAUSS_FAST(R.color.graphBgRed), BOX_BLUR(R.color.graphBgTurquoise), NONE(R.color.graphBgBlack);
 
 	private final int colorResId;
 
