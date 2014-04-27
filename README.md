@@ -56,5 +56,8 @@ Explanation of Blur Algorithms
 ------------
 
 * RS_GAUSS_FAST is [ScriptIntrinsicBlur](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicBlur.html) from the Renderscript framework - the default and best/fastest blur algorithm on android
-* RS_BOX_3x3,RS_BOX_5x5,RS_GAUSS_5x5 are convolve matrix based blur algorithms powerd by Renderscripts [ScriptIntrinsicConvolve5x5/ScriptIntrinsicConvolve3x3](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicConvolve5x5.html) class. The only difference are the used kernels and size of [convolve matrix](http://en.wikipedia.org/wiki/Kernel_(image_processing)).
+* RS_BOX_5x5,RS_GAUSS_5x5 are convolve matrix based blur algorithms powerd by Renderscripts [ScriptIntrinsicConvolve](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicConvolve5x5.html) class. The only difference are the used kernels (gaussian matrix and average matrix) of [convolve matrix](http://en.wikipedia.org/wiki/Kernel_(image_processing)). Instead of radius it uses passes, so a radius parameter of 16 makes the convolve algorithm applied 16 times onto the image.  
 * STACKBLUR found here http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html and a [java implentation from github Yahel Bouaziz](https://github.com/PomepuyN/BlurEffectForAndroidDesign/blob/master/BlurEffect/src/com/npi/blureffect/Blur.java)
+* RS_STACKBLUR is the Renderscript implementation of Stackblur
+* GAUSS_FAST java implementation from here http://stackoverflow.com/a/13436737/774398. Fast but ignores edges.
+* BOX_BLUR java implementaiton from here http://stackoverflow.com/questions/8218438. Really slow and under average visual quality.
