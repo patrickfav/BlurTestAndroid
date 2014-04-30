@@ -1,5 +1,5 @@
-def Properties localProps = new Properties()
-localProps.load(new FileInputStream(file('../signing.properties')))
+def Properties localProps = getSigningProperties()
+
 
 apply plugin: 'android'
 
@@ -51,3 +51,15 @@ dependencies {
     compile project(':tablefixedheader')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
+
+
+def getSigningProperties() {
+    def Properties props = new Properties()
+    try {
+        props.load(new FileInputStream(file('../signing.properties')))
+    }catch (Exception e) {//just load any file to not get error
+        props.load(new FileInputStream(file('../local.properties')))
+    }
+    return props
+}
+
