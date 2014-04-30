@@ -20,6 +20,7 @@ After running some benchmaks you see the results list, where you can click on ea
 ![benchmark view](misc/readme/readme_screen02.png)
 
 Later you can examine the latest runs in a table view or comparative in a diagram with diffrent options on the values to see.
+
 ![diagrams](misc/readme/readme_screen03.png)
 
 
