@@ -17,9 +17,7 @@ Here you chose, the image sizes, blur radii and algorithm you want to benchmark.
 
 After running some benchmaks you see the results list, where you can click on each element and see a diagramm on the length of each round. This also reveals that this benchmark is polluted by garbage collection
 
-
-<img style="float: left" src="misc/readme/readme_screen02.png" />
-<img style="float: left; padding:15px;" src="misc/readme/readme_screen04.png" />
+![benchmark view](misc/readme/readme_screen02.png)
 
 Later you can examine the latest runs in a table view or comparative in a diagram with diffrent options on the values to see.
 ![diagrams](misc/readme/readme_screen03.png)
