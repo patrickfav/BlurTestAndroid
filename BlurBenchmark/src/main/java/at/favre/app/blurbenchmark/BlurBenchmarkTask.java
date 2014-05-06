@@ -19,6 +19,7 @@ import at.favre.app.blurbenchmark.util.BlurUtil;
  */
 public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private static final String TAG = BlurBenchmarkTask.class.getSimpleName();
+    private static final int WARMUP_ROUNDS = 3;
 
 	private StatInfo statInfo;
 
@@ -62,8 +63,14 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
 			Bitmap blurredBitmap = null;
 
+            Log.d(TAG,"Warmup");
+            for (int i = 0; i < WARMUP_ROUNDS; i++) {
+                long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
+                blurredBitmap = master.copy(master.getConfig(), true);
+                blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
+            }
 
-
+            Log.d(TAG,"Start benchmark");
 			for (int i = 0; i < benchmarkRounds; i++) {
 				long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
 				blurredBitmap = master.copy(master.getConfig(), true);
