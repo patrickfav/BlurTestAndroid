@@ -33,10 +33,10 @@ The time of each round will be saved and from this data certain simple statistic
 
 Here are the explanations of misc. values
 
-* MPixel/s - the theoretical average performance without taking picture size into consideration, similar to the fillrate of a graphicscard (image width * height / average runtime in sec * 1000)
-* Over 16ms - percentage of rounds that were "too slow" for live blurring, eg. slower than 16ms
-* 95% [Confidence Intervall](https://en.wikipedia.org/wiki/Confidence_interval) - the average +/- the deviance that has 95% of the values
-* [Median](https://en.wikipedia.org/wiki/Median) -  the numerical value separating the higher half of a data sample from the lower half
+* __MPixel/s__ - the theoretical average performance without taking picture size into consideration, similar to the fillrate of a graphicscard (image width * height / average runtime in sec * 1000)
+* __Over 16ms__ - percentage of rounds that were "too slow" for live blurring, eg. slower than 16ms
+* __95% [Confidence Intervall](https://en.wikipedia.org/wiki/Confidence_interval)__ - the average +/- the deviance that has 95% of the values
+* __[Median](https://en.wikipedia.org/wiki/Median)__ -  the numerical value separating the higher half of a data sample from the lower half
 
 Live Blur
 ------------
@@ -70,14 +70,16 @@ This is a simple showcase to check out the different settings (blur radius, algo
 Explanation of Blur Algorithms (and credits)
 ------------
 
-* RS_GAUSS_FAST is [ScriptIntrinsicBlur](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicBlur.html) from the Renderscript framework - the default and best/fastest blur algorithm on android
-* RS_BOX_5x5,RS_GAUSS_5x5 are convolve matrix based blur algorithms powerd by Renderscripts [ScriptIntrinsicConvolve](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicConvolve5x5.html) class. The only difference are the used kernels (gaussian matrix and average matrix) of [convolve matrix](http://en.wikipedia.org/wiki/Kernel_(image_processing)). Instead of radius it uses passes, so a radius parameter of 16 makes the convolve algorithm applied 16 times onto the image.
-* STACKBLUR found [here](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html) and a [java implentation from github Yahel Bouaziz](https://github.com/PomepuyN/BlurEffectForAndroidDesign/blob/master/BlurEffect/src/com/npi/blureffect/Blur.java)
-* RS_STACKBLUR is the Renderscript implementation of Stackblur from [here](https://github.com/kikoso/android-stackblur/blob/master/StackBlur/src/blur.rs)
-* GAUSS_FAST java implementation from [here](http://stackoverflow.com/a/13436737/774398). Fast but ignores edges.
-* BOX_BLUR java implementaiton from  [here](http://stackoverflow.com/questions/8218438). Really slow and under average visual quality.
+* __RS_GAUSS_FAST__ is [ScriptIntrinsicBlur](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicBlur.html) from the Renderscript framework - the default and best/fastest blur algorithm on android
+* __RS_BOX_5x5__,RS_GAUSS_5x5 are convolve matrix based blur algorithms powerd by Renderscripts [ScriptIntrinsicConvolve](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicConvolve5x5.html) class. The only difference are the used kernels (gaussian matrix and average matrix) of [convolve matrix](http://en.wikipedia.org/wiki/Kernel_(image_processing)). Instead of radius it uses passes, so a radius parameter of 16 makes the convolve algorithm applied 16 times onto the image.
+* __STACKBLUR__ found [here](http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html) and a [java implentation from github Yahel Bouaziz](https://github.com/PomepuyN/BlurEffectForAndroidDesign/blob/master/BlurEffect/src/com/npi/blureffect/Blur.java)
+* __RS_STACKBLUR__ is the Renderscript implementation of Stackblur from [here](https://github.com/kikoso/android-stackblur/blob/master/StackBlur/src/blur.rs)
+* __GAUSS_FAST__ java implementation from [here](http://stackoverflow.com/a/13436737/774398). Fast but ignores edges.
+* __BOX_BLUR__ java implementaiton from  [here](http://stackoverflow.com/questions/8218438). Really slow and under average visual quality.
 
 Extra Credits
 ------------
 
 * This project uses a gradle converted version of BraisGabin's project [TableFixHeaders](https://github.com/InQBarna/TableFixHeaders)
+* For setting the correct paddings with translucent nav- & systembars jgilfelt's [SystemBarTint](https://github.com/jgilfelt/SystemBarTint) is used
+* Adittional [Picasso](http://square.github.io/picasso/) and [Jackson](http://jackson.codehaus.org/) is used 
