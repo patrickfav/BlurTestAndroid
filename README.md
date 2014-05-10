@@ -5,9 +5,9 @@ This is a simple benchmark and showcase app on whats possible with blurring in A
 
 ## Download App
 
-![App Icon](BlurBenchmark/src/main/res/drawable-mdpi/ic_launcher.png)
+![App Icon](http://developer.android.com/images/brand/en_app_rgb_wo_60.png)
 
-The app is in the playstore, you can get it here https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark. Sorry because of the size, but many high res pictures are included ;)
+The app is in the playstore, you can get it here (Blur Benchmark)[https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark]. Sorry because of the size, but many high res pictures are included ;)
 
 ## Blur Benchmark
 
