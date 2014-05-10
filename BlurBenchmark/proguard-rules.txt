@@ -15,3 +15,42 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+-keepattributes EnclosingMethod, Signature
+
+#Keep classes that are referenced on the AndroidManifest
+-keepnames public class * extends android.app.Activity
+-keep public class * extends android.app.Application
+-keep public class * extends android.app.Service
+-keep public class * extends android.content.BroadcastReceiver
+-keep public class * extends android.content.ContentProvider
+-keep public class com.android.vending.licensing.ILicensingService
+
+#keep jackson
+-keepnames class com.fasterxml.jackson.** { *; }
+-dontwarn com.fasterxml.jackson.databind.**
+
+#keep picasso
+-keep class com.jjoe64.** { *; }
+-keep interface com.jjoe64.** { *; }
+
+#keep picasso
+-keep class com.squareup.** { *; }
+-keep interface com.squareup.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+#keep systembartint
+-keep class com.readystatesoftware.** { *; }
+-keep interface com.readystatesoftware.** { *; }
+
+-keep class at.favre.app.blurbenchmark.models.** {*;}
+-keep class at.favre.app.blurbenchmark.blur.** {*;}
+
+#-keep interface at.favre.app.** {*;}
+#-keep interface at.favre.app.** {*;}
+
+# get rid of the logging stuff
+-assumenosideeffects class android.util.Log {
+#    public static int v(...);
+#    public static int d(...);
+}

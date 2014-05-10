@@ -1,6 +1,7 @@
 package at.favre.app.blurbenchmark.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -39,8 +40,8 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 /**
  * Created by PatrickF on 14.04.2014.
  */
-public class BlurBenchmarkSettingsFragment extends Fragment {
-	private static final String TAG = BlurBenchmarkSettingsFragment.class.getSimpleName();
+public class BlurBenchmarkFragment extends Fragment {
+	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
 
 	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
 	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
@@ -48,7 +49,9 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	private static final String ROUNDS_KEY = "ROUNDS_KEY";
 
 	private int rounds=100;
+	private boolean run =false;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
+	private BlurBenchmarkTask task;
 
 	private Spinner roundsSpinner;
 
@@ -191,7 +194,7 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 
 	private void benchmark() {
 		Log.d(TAG,"start benchmark");
-
+		run=true;
 		List<Integer> radius = getRadiusSizesFromSettings();
 		List<Integer> images = getImagesFromSettings();
         List<EBlurAlgorithm> algorithms = getAllSelectedAlgorithms();
@@ -214,8 +217,14 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 		progressDialog.setMessage("Benchmark in progress");
 		progressDialog.setMax(max);
 		progressDialog.setProgress(0);
-		progressDialog.setCancelable(false);
+		progressDialog.setCancelable(true);
 		progressDialog.show();
+		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			@Override
+			public void onCancel(DialogInterface dialogInterface) {
+				cancelTests();
+			}
+		});
 	}
 
 	private void lockOrientation() {
@@ -228,43 +237,51 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
 	}
 
 	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<Integer> imageList , final List<Integer> radiusList, final List<EBlurAlgorithm> algorithmList) {
-        if(radiusIndex >= radiusList.size()) {
-			nextTest(photoIndex+1,0,algoIndex,imageList,radiusList, algorithmList);
-		} else {
-			if(photoIndex >= imageList.size()) {
-                nextTest(0, 0, algoIndex+1, imageList, radiusList, algorithmList);
+        if(run) {
+			if (radiusIndex >= radiusList.size()) {
+				nextTest(photoIndex + 1, 0, algoIndex, imageList, radiusList, algorithmList);
 			} else {
-                if(algoIndex >= algorithmList.size()) {
-                    testDone();
-                } else {
-                    new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithmList.get(algoIndex), ((MainActivity) getActivity()).getRs(), getActivity()) {
-                        @Override
-                        protected void onPostExecute(BenchmarkWrapper wrapper) {
-                            progressDialog.setProgress(progressDialog.getProgress() + 1);
-                            benchmarkResultList.getBenchmarkWrappers().add(wrapper);
-                            Log.d(TAG, "next test");
-                            nextTest(photoIndex, radiusIndex + 1, algoIndex, imageList, radiusList, algorithmList);
-                        }
-                    }.execute();
-                }
+				if (photoIndex >= imageList.size()) {
+					nextTest(0, 0, algoIndex + 1, imageList, radiusList, algorithmList);
+				} else {
+					if (algoIndex >= algorithmList.size()) {
+						testDone();
+					} else {
+						task = new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithmList.get(algoIndex), ((MainActivity) getActivity()).getRs(), getActivity()) {
+							@Override
+							protected void onPostExecute(BenchmarkWrapper wrapper) {
+								progressDialog.setProgress(progressDialog.getProgress() + 1);
+								benchmarkResultList.getBenchmarkWrappers().add(wrapper);
+								Log.d(TAG, "next test");
+								nextTest(photoIndex, radiusIndex + 1, algoIndex, imageList, radiusList, algorithmList);
+							}
+						};
+						task.execute();
+					}
+				}
 			}
+		} else {
+			Log.d(TAG,"ignore next test, was canceled");
 		}
 	}
 
-
-
 	private void testDone() {
-		Log.d(TAG, "done benchmark");
-		progressDialog.setProgress(progressDialog.getMax());
-		progressDialog.dismiss();
-		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		saveTest();
+		if(run) {
+			run=false;
+			if(isAdded() && isVisible()) {
+				Log.d(TAG, "done benchmark");
+				progressDialog.setProgress(progressDialog.getMax());
+				progressDialog.dismiss();
+				getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+				saveTest();
 
-		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+				getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
-		Intent i = new Intent(getActivity(), BenchmarkResultActivity.class);
-		i.putExtra(BenchmarkResultActivity.BENCHMARK_LIST_KEY,JsonUtil.toJsonString(benchmarkResultList));
-		startActivity(i);
+				Intent i = new Intent(getActivity(), BenchmarkResultActivity.class);
+				i.putExtra(BenchmarkResultActivity.BENCHMARK_LIST_KEY, JsonUtil.toJsonString(benchmarkResultList));
+				startActivity(i);
+			}
+		}
     }
 
 	private void saveTest() {
@@ -288,15 +305,26 @@ public class BlurBenchmarkSettingsFragment extends Fragment {
         }
     }
 
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
+	@Override
+	public void onPause() {
+		super.onPause();
+		cancelTests();
+	}
+
+	private void cancelTests() {
+		Log.d(TAG, "cancel benchmark");
+		run=false;
+		if(task != null) {
+			task.cancelBenchmark();
+		}
 		if(progressDialog != null) {
 			progressDialog.dismiss();
 		}
+		getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 	}
 
-    public static class Rounds {
+	public static class Rounds {
 		private int rounds;
 
 		public Rounds(int rounds) {

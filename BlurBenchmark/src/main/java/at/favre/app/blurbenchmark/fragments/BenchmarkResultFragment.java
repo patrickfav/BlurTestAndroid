@@ -29,8 +29,8 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 /**
  * Created by PatrickF on 14.04.2014.
  */
-public class BlurBenchmarkResultFragment extends Fragment {
-	private static final String TAG = BlurBenchmarkResultFragment.class.getSimpleName();
+public class BenchmarkResultFragment extends Fragment {
+	private static final String TAG = BenchmarkResultFragment.class.getSimpleName();
 
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
@@ -38,8 +38,8 @@ public class BlurBenchmarkResultFragment extends Fragment {
 	private ListView listView;
 	private View headerView;
 
-	public static BlurBenchmarkResultFragment createInstance(BenchmarkResultList resultList) {
-		BlurBenchmarkResultFragment fragment = new BlurBenchmarkResultFragment();
+	public static BenchmarkResultFragment createInstance(BenchmarkResultList resultList) {
+		BenchmarkResultFragment fragment = new BenchmarkResultFragment();
 		fragment.setBenchmarkResultList(resultList);
 		return fragment;
 	}

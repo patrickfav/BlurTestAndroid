@@ -26,14 +26,14 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 /**
  * Created by PatrickF on 16.04.2014.
  */
-public class BlurBenchmarkDetailsDialog extends DialogFragment {
+public class BenchmarkDetailsDialog extends DialogFragment {
 	private static final String WRAPPER_KEY = "wrapperKey";
 
 
 	private BenchmarkWrapper wrapper;
 
-	public static BlurBenchmarkDetailsDialog createInstance(BenchmarkWrapper wrapper) {
-		BlurBenchmarkDetailsDialog dialog = new BlurBenchmarkDetailsDialog();
+	public static BenchmarkDetailsDialog createInstance(BenchmarkWrapper wrapper) {
+		BenchmarkDetailsDialog dialog = new BenchmarkDetailsDialog();
 		dialog.setWrapper(wrapper);
 		return dialog;
 	}

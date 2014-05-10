@@ -24,8 +24,8 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 /**
  * Created by PatrickF on 16.04.2014.
  */
-public class BlurBenchmarkResultsBrowserFragment extends Fragment {
-	private static final String TAG = BlurBenchmarkResultsBrowserFragment.class.getSimpleName();
+public class ResultsBrowserFragment extends Fragment {
+	private static final String TAG = ResultsBrowserFragment.class.getSimpleName();
 
 	private TableFixHeaders table;
     private ResultTableModel.DataType dataType = ResultTableModel.DataType.AVG;
@@ -39,20 +39,35 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
+		final View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
 		table = (TableFixHeaders) v.findViewById(R.id.table);
+		table.setVisibility(View.GONE);
 
-		if(BenchmarkStorage.getInstance(getActivity()).loadResultsDB() == null) {
-			table.setVisibility(View.GONE);
-			v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
-		} else {
-			table.setAdapter(new ResultTableAdapter(getActivity(), BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
-			TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
-		}
+		v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+
+		new BenchmarkStorage.AsyncLoadResults() {
+			@Override
+			protected void onPostExecute(BenchmarkResultDatabase benchmarkResultDatabase) {
+				if(isAdded() && isVisible()) {
+					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+					if (benchmarkResultDatabase == null) {
+						table.setVisibility(View.GONE);
+						v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
+					} else {
+						table.setVisibility(View.VISIBLE);
+						table.setAdapter(new ResultTableAdapter(getActivity(), benchmarkResultDatabase, dataType));
+						TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
+					}
+				}
+			}
+		}.execute(getActivity());
+
 		return v;
 	}
 
-    @Override
+
+
+	@Override
     public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.results_menu, menu);
@@ -92,7 +107,4 @@ public class BlurBenchmarkResultsBrowserFragment extends Fragment {
         BenchmarkStorage.getInstance(getActivity()).deleteData();
         table.setAdapter(new ResultTableAdapter(getActivity(),BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
     }
-
-
-
 }

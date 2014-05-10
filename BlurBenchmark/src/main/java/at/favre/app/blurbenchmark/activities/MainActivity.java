@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import at.favre.app.blurbenchmark.R;
-import at.favre.app.blurbenchmark.fragments.BlurBenchmarkResultsBrowserFragment;
-import at.favre.app.blurbenchmark.fragments.BlurBenchmarkResultsDiagramFragment;
-import at.favre.app.blurbenchmark.fragments.BlurBenchmarkSettingsFragment;
+import at.favre.app.blurbenchmark.fragments.BlurBenchmarkFragment;
+import at.favre.app.blurbenchmark.fragments.ResultsBrowserFragment;
+import at.favre.app.blurbenchmark.fragments.ResultsDiagramFragment;
 import at.favre.app.blurbenchmark.fragments.IFragmentWithBlurSettings;
 import at.favre.app.blurbenchmark.fragments.LiveBlurFragment;
 import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
@@ -77,35 +77,35 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 
 		switch (i) {
 			case 0:
-				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new BlurBenchmarkSettingsFragment(), BlurBenchmarkSettingsFragment.class.getSimpleName());
+					t.add(android.R.id.content, new BlurBenchmarkFragment(), BlurBenchmarkFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkSettingsFragment.class.getSimpleName()));
+					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()));
 					t.commitAllowingStateLoss();
 				}
 				return true;
 			case 1:
-				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsBrowserFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new BlurBenchmarkResultsBrowserFragment(), BlurBenchmarkResultsBrowserFragment.class.getSimpleName());
+					t.add(android.R.id.content, new ResultsBrowserFragment(), ResultsBrowserFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsBrowserFragment.class.getSimpleName()));
+					t.attach(getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()));
 					t.commitAllowingStateLoss();
 				}
 				return true;
 			case 2:
-				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsDiagramFragment.class.getSimpleName()) == null) {
+				if (getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new BlurBenchmarkResultsDiagramFragment(), BlurBenchmarkResultsDiagramFragment.class.getSimpleName());
+					t.add(android.R.id.content, new ResultsDiagramFragment(), ResultsDiagramFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkResultsDiagramFragment.class.getSimpleName()));
+					t.attach(getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()));
 					t.commitAllowingStateLoss();
 				}
 				return true;

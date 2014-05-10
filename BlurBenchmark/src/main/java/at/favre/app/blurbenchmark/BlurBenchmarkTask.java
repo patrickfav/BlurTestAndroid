@@ -33,6 +33,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private EBlurAlgorithm algorithm;
 	private Context ctx;
 	private RenderScript rs;
+	private boolean run=false;
 
 	public BlurBenchmarkTask(int bitmapDrawableResId, int benchmarkRounds, int radius, EBlurAlgorithm algorithm, RenderScript rs, Context ctx) {
 		this.bitmapDrawableResId = bitmapDrawableResId;
@@ -53,6 +54,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	@Override
 	protected BenchmarkWrapper doInBackground(Void... voids) {
 		try {
+			run=true;
 			long startReadBitmap = BenchmarkUtil.elapsedRealTimeNanos();
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 			master = BitmapFactory.decodeResource(ctx.getResources(), bitmapDrawableResId, options);
@@ -65,17 +67,27 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
             Log.d(TAG,"Warmup");
             for (int i = 0; i < WARMUP_ROUNDS; i++) {
-                long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
+				if(!run) {
+					break;
+				}
+                BenchmarkUtil.elapsedRealTimeNanos();
                 blurredBitmap = master.copy(master.getConfig(), true);
                 blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
             }
 
             Log.d(TAG,"Start benchmark");
 			for (int i = 0; i < benchmarkRounds; i++) {
+				if(!run) {
+					break;
+				}
 				long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
 				blurredBitmap = master.copy(master.getConfig(), true);
 				blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
 				statInfo.getBenchmarkData().add((BenchmarkUtil.elapsedRealTimeNanos() - startBlur)/1000000d);
+			}
+
+			if(!run) {
+				return null;
 			}
 
 			statInfo.setBenchmarkDuration((BenchmarkUtil.elapsedRealTimeNanos() - startWholeProcess)/1000000l);
@@ -88,6 +100,11 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
             Log.e(TAG,"Could not complete benchmark",e);
 			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm));
 		}
+	}
+
+	public void cancelBenchmark() {
+		run =false;
+		Log.d(TAG,"canceled");
 	}
 
 	@Override

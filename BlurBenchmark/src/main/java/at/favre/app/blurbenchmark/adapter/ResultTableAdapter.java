@@ -11,7 +11,7 @@ import com.inqbarna.tablefixheaders.adapters.BaseTableAdapter;
 
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.activities.MainActivity;
-import at.favre.app.blurbenchmark.fragments.BlurBenchmarkDetailsDialog;
+import at.favre.app.blurbenchmark.fragments.BenchmarkDetailsDialog;
 import at.favre.app.blurbenchmark.models.BenchmarkResultDatabase;
 import at.favre.app.blurbenchmark.models.ResultTableModel;
 
@@ -82,7 +82,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 				convertView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
+						BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
 						dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
 
 					}

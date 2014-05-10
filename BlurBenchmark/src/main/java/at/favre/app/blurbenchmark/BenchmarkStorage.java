@@ -2,6 +2,7 @@ package at.favre.app.blurbenchmark;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import java.util.List;
@@ -86,5 +87,12 @@ public class BenchmarkStorage {
 			}
 		}
 		return db;
+	}
+
+	public static class AsyncLoadResults extends AsyncTask<Context,Void,BenchmarkResultDatabase> {
+		@Override
+		protected BenchmarkResultDatabase doInBackground(Context... ctx) {
+			return BenchmarkStorage.getInstance(ctx[0]).loadResultsDB();
+		}
 	}
 }

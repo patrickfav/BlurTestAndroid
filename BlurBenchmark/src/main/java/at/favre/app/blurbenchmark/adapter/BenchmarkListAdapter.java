@@ -21,7 +21,7 @@ import java.util.List;
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.activities.MainActivity;
 import at.favre.app.blurbenchmark.blur.IBlur;
-import at.favre.app.blurbenchmark.fragments.BlurBenchmarkDetailsDialog;
+import at.favre.app.blurbenchmark.fragments.BenchmarkDetailsDialog;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 
@@ -165,7 +165,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			convertView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					BlurBenchmarkDetailsDialog dialog = BlurBenchmarkDetailsDialog.createInstance(getItem(position));
+					BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(getItem(position));
 					dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
 				}
 			});
