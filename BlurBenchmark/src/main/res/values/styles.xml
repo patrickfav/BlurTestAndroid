@@ -31,7 +31,7 @@
 
     <style name="action_bar_text">
         <item name="android:textColor">@color/optionsTextColor</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="benchmarkSettingWidget">

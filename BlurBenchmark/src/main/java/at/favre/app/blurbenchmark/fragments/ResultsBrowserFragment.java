@@ -31,7 +31,10 @@ public class ResultsBrowserFragment extends Fragment {
     private ResultTableModel.DataType dataType = ResultTableModel.DataType.AVG;
 	private BenchmarkResultDatabase db;
 
-    @Override
+	public ResultsBrowserFragment() {
+	}
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);

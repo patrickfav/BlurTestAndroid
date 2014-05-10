@@ -16,6 +16,9 @@ public class BackgroundLoadingFragment extends Fragment {
 
 	private BlurBenchmarkTask task;
 
+	public BackgroundLoadingFragment() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

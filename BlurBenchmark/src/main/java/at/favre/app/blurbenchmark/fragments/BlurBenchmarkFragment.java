@@ -71,6 +71,9 @@ public class BlurBenchmarkFragment extends Fragment {
 
 	private ProgressDialog progressDialog;
 
+	public BlurBenchmarkFragment() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

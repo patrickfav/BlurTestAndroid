@@ -44,6 +44,9 @@ public class BenchmarkResultFragment extends Fragment {
 		return fragment;
 	}
 
+	public BenchmarkResultFragment() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,9 +60,10 @@ public class BenchmarkResultFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_benchmark_results,container,false);
-		headerView = inflater.inflate(R.layout.list_benchmark_header,null);
 
 		listView = (ListView) v.findViewById(R.id.listview);
+		headerView = inflater.inflate(R.layout.list_benchmark_header,listView,false);
+
 		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(), listView,false);
 		setUpListView();
 		return v;

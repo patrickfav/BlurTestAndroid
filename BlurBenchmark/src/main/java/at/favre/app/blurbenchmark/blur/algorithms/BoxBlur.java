@@ -71,9 +71,7 @@ public class BoxBlur implements IBlur {
                 }
             }
 
-            for (int x = 0; x < w; x++) {
-                pixels[index + x] = newColors[x];
-            }
+			System.arraycopy(newColors, 0, pixels, index + 0, w);
 
             index += w;
         }

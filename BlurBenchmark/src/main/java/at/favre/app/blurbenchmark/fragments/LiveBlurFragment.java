@@ -74,6 +74,9 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 		dest=null;
 	}
 
+	public LiveBlurFragment() {
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_liveblur,container,false);
@@ -304,7 +307,7 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object view) {
-			((ViewPager) container).removeView((View) view);
+			container.removeView((View) view);
 		}
 
 		public View createImageView(int drawableResId) {

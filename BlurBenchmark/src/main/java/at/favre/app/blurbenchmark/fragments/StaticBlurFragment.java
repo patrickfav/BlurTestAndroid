@@ -37,6 +37,9 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 	private Bitmap blurTemplate;
 	private SettingsController settingsController;
 
+	public StaticBlurFragment() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -177,10 +180,6 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				imageViewBlur.setImageBitmap(bitmap);
 				long duration = (SystemClock.elapsedRealtime() - startWholeProcess);
 				Log.d(TAG, "Bluring duration " + duration + "ms");
-
-				if(!onlyReBlur) {
-					//Toast.makeText(getActivity(), settingsController.getAlgorithm() + " /  insample " + settingsController.getInSampleSize() + " / radius " + settingsController.getRadius() + "px / " + duration + "ms" + " / " + (BitmapUtil.sizeOf(bitmap) / 1024) + "kB", Toast.LENGTH_SHORT).show();
-				}
 
 				if (settingsController.isShowCrossfade() && !onlyReBlur) {
 					final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadeout);

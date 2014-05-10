@@ -35,7 +35,7 @@ public class RenderScriptStackBlur implements IBlur {
 		blurScript.set_gIn(inAllocation);
 		blurScript.set_width(width);
 		blurScript.set_height(height);
-		blurScript.set_radius((int) radius);
+		blurScript.set_radius(radius);
 
 		int[] row_indices = new int[height];
 		for (int i = 0; i < height; i++) {

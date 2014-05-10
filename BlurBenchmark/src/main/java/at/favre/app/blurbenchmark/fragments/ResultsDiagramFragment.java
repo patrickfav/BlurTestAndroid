@@ -50,6 +50,9 @@ public class ResultsDiagramFragment extends Fragment {
 	private int radius=16;
 	private ResultTableModel.DataType dataType = ResultTableModel.DataType.AVG;
 
+	public ResultsDiagramFragment() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

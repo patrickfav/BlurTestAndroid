@@ -167,7 +167,7 @@ public class StatInfo {
 	@JsonIgnore
 	public Average<Double> getAsAvg() {
 		if (avg == null) {
-			avg = new Average<Double>((List<Double>) benchmarkData);
+			avg = new Average<Double>(benchmarkData);
 		}
 		return avg;
 	}

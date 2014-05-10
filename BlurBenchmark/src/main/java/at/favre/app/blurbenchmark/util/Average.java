@@ -88,8 +88,6 @@ public class Average<T extends Number> {
 		if(!cache.containsKey(confidenceLevel)) {
 			double stddev = Math.sqrt(getVariance());
 			double stdErr = confidenceLevel * stddev;
-			double lo = getAvg() - stdErr;
-			double hi = getAvg() + stdErr;
 			cache.put(confidenceLevel, new ConfidenceIntervall(getAvg(), stdErr));
 		}
 		return cache.get(confidenceLevel);

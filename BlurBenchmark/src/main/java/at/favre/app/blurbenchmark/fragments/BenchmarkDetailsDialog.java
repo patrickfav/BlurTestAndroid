@@ -38,6 +38,9 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 		return dialog;
 	}
 
+	public BenchmarkDetailsDialog() {
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

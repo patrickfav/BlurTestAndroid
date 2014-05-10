@@ -27,7 +27,7 @@ public class BenchmarkResultDatabase {
 	@JsonIgnore
 	public BenchmarkEntry getByName(String name) {
 		for (BenchmarkEntry benchmarkEntry : entryList) {
-			if(benchmarkEntry.equals(name)) {
+			if(benchmarkEntry.getName().equals(name)) {
 				return benchmarkEntry;
 			}
 		}
