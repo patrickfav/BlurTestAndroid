@@ -33,13 +33,13 @@ The time of each round will be saved and from this data certain simple statistic
 
 Here are the explanations of misc. values
 
-* __MPixel/s__ - the theoretical average performance without taking picture size into consideration, similar to the fillrate of a graphicscard (image width * height / average runtime in sec * 1000)
+* __MPixel/s__ - the theoretical average performance, similar to the fillrate of a graphicscard - how many megapixel per second can be blurred (image width * height / average runtime in sec * 1000)
 * __Over 16ms__ - percentage of rounds that were "too slow" for live blurring, eg. slower than 16ms
 * __95% [Confidence Intervall](https://en.wikipedia.org/wiki/Confidence_interval)__ - the average +/- the deviance that has 95% of the values
 * __[Median](https://en.wikipedia.org/wiki/Median)__ -  the numerical value separating the higher half of a data sample from the lower half
 
 
-### Explanation of Blur Algorithms (and credits)
+### Used Algorithms (and credits)
 
 * __RS_GAUSS_FAST__ is [ScriptIntrinsicBlur](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicBlur.html) from the Renderscript framework - the default and best/fastest blur algorithm on android
 * __RS_BOX_5x5__,__RS_GAUSS_5x5__ are convolve matrix based blur algorithms powerd by Renderscripts [ScriptIntrinsicConvolve](http://developer.android.com/reference/android/renderscript/ScriptIntrinsicConvolve5x5.html) class. The only difference are the used kernels (gaussian matrix and average matrix) of [convolve matrix](http://en.wikipedia.org/wiki/Kernel_(image_processing)). Instead of radius it uses passes, so a radius parameter of 16 makes the convolve algorithm applied 16 times onto the image.
