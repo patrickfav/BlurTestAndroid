@@ -21,8 +21,8 @@ public class RenderScriptBox3x3Blur implements IBlur {
 
     @Override
     public Bitmap blur(int radius, Bitmap bitmapOriginal) {
-        Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal);
+        final Allocation output = Allocation.createTyped(rs, input.getType());
         final ScriptIntrinsicConvolve3x3 script = ScriptIntrinsicConvolve3x3.create(rs, Element.U8_4(rs));
         script.setCoefficients(BlurKernels.BOX_3x3);
         for (int i = 0; i < radius; i++) {

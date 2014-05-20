@@ -30,7 +30,7 @@ public class RenderScriptStackBlur implements IBlur {
 
 		ScriptC_stackblur blurScript = new ScriptC_stackblur(_rs, ctx.getResources(), R.raw.stackblur);
 
-		Allocation inAllocation = Allocation.createFromBitmap(_rs, blurred, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+		Allocation inAllocation = Allocation.createFromBitmap(_rs, blurred);
 
 		blurScript.set_gIn(inAllocation);
 		blurScript.set_width(width);

@@ -21,8 +21,8 @@ public class RenderScriptGaussian5x5Blur implements IBlur {
 
     @Override
     public Bitmap blur(int radius, Bitmap bitmapOriginal) {
-        Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
-        Allocation output = Allocation.createTyped(rs, input.getType());
+        Allocation input = Allocation.createFromBitmap(rs, bitmapOriginal);
+        final Allocation output = Allocation.createTyped(rs, input.getType());
         final ScriptIntrinsicConvolve5x5 script = ScriptIntrinsicConvolve5x5.create(rs, Element.U8_4(rs));
         script.setCoefficients(BlurKernels.GAUSSIAN_5x5);
         for (int i = 0; i < radius; i++) {
