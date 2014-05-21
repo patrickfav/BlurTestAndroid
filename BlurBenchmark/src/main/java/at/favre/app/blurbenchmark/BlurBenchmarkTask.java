@@ -8,6 +8,7 @@ import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
+import at.favre.app.blurbenchmark.models.BenchmarkImage;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
 import at.favre.app.blurbenchmark.models.StatInfo;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
@@ -15,18 +16,22 @@ import at.favre.app.blurbenchmark.util.BitmapUtil;
 import at.favre.app.blurbenchmark.util.BlurUtil;
 
 /**
- * Created by PatrickF on 14.04.2014.
+ * This is the the task for completing a single Benchmark with
+ * the given image, blur radius, algorithm and rounds.
+ *
+ * @author pfavre
+ * @since 2014/04/14
  */
 public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private static final String TAG = BlurBenchmarkTask.class.getSimpleName();
-    private static final int WARMUP_ROUNDS = 3;
+    private static final int WARMUP_ROUNDS = 5;
 
 	private StatInfo statInfo;
 
 	private long startWholeProcess;
 
 	private int bitmapDrawableResId;
-
+	private String absolutePath;
 	private Bitmap master;
 	private int benchmarkRounds;
 	private int radius;
@@ -34,16 +39,21 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private Context ctx;
 	private RenderScript rs;
 	private boolean run=false;
+	private boolean customPic =false;
 
-	public BlurBenchmarkTask(int bitmapDrawableResId, int benchmarkRounds, int radius, EBlurAlgorithm algorithm, RenderScript rs, Context ctx) {
-		this.bitmapDrawableResId = bitmapDrawableResId;
+	public BlurBenchmarkTask(BenchmarkImage image, int benchmarkRounds, int radius, EBlurAlgorithm algorithm, RenderScript rs, Context ctx) {
+		if(image.isResId()) {
+			this.bitmapDrawableResId = image.getResId();
+		} else {
+			this.absolutePath = image.getAbsolutePath();
+			this.customPic = true;
+		}
 		this.benchmarkRounds = benchmarkRounds;
 		this.radius = radius;
 		this.algorithm = algorithm;
 		this.rs = rs;
 		this.ctx = ctx;
 	}
-
 
 	@Override
 	protected void onPreExecute() {
@@ -56,8 +66,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 		try {
 			run=true;
 			long startReadBitmap = BenchmarkUtil.elapsedRealTimeNanos();
-			final BitmapFactory.Options options = new BitmapFactory.Options();
-			master = BitmapFactory.decodeResource(ctx.getResources(), bitmapDrawableResId, options);
+			master = loadBitmap();
 			long readBitmapDuration = (BenchmarkUtil.elapsedRealTimeNanos() - startReadBitmap)/1000000l;
 
 			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm,benchmarkRounds);
@@ -95,10 +104,21 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			String fileName = master.getWidth()+"x"+master.getHeight()+"_" + radius + "px_" + algorithm + ".png";
 			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false),
 					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
-					statInfo);
+					statInfo,customPic);
 		} catch (Throwable e) {
             Log.e(TAG,"Could not complete benchmark",e);
-			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm));
+			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm),false);
+		}
+	}
+
+	private Bitmap loadBitmap() {
+		if(customPic && absolutePath != null) {
+			BitmapFactory.Options options = new BitmapFactory.Options();
+			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			return BitmapFactory.decodeFile(absolutePath, options);
+		} else {
+			final BitmapFactory.Options options = new BitmapFactory.Options();
+			return BitmapFactory.decodeResource(ctx.getResources(), bitmapDrawableResId, options);
 		}
 	}
 

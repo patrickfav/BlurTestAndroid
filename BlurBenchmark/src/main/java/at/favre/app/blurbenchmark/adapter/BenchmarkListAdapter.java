@@ -72,7 +72,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).placeholder(R.drawable.placeholder).into(viewHolder.imageView);
 			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
-			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapHeight() + " / " + getItem(position).getStatInfo().getMegaPixels());
+			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapWidth() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());
 			viewHolder.tvDeviation.setText("+/-" + BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getStdError()) + "ms");
 			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+

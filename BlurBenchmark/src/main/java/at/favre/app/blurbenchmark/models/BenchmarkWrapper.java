@@ -13,17 +13,18 @@ public class BenchmarkWrapper implements Comparable<BenchmarkWrapper> {
 	private String flippedBitmapPath;
 	private StatInfo statInfo;
 	private boolean additionalInfoVisibility = false;
+	private boolean customPic=false;
 
 	public BenchmarkWrapper() {
 	}
 
-	public BenchmarkWrapper(File bitmapFile, File flippedBitmapFile, StatInfo statInfo) {
+	public BenchmarkWrapper(File bitmapFile, File flippedBitmapFile, StatInfo statInfo, boolean customPic) {
 		if(bitmapFile != null && flippedBitmapFile != null) {
 			this.bitmapPath = bitmapFile.getAbsolutePath();
 			this.flippedBitmapPath = flippedBitmapFile.getAbsolutePath();
 		}
 		this.statInfo = statInfo;
-
+		this.customPic = customPic;
 		if(bitmapPath == null) {
 			statInfo.setError(true);
 		}
@@ -44,6 +45,14 @@ public class BenchmarkWrapper implements Comparable<BenchmarkWrapper> {
 
 	public void setStatInfo(StatInfo statInfo) {
 		this.statInfo = statInfo;
+	}
+
+	public boolean isCustomPic() {
+		return customPic;
+	}
+
+	public void setCustomPic(boolean customPic) {
+		this.customPic = customPic;
 	}
 
 	public boolean isAdditionalInfoVisibility() {

@@ -40,7 +40,7 @@
         <item name="android:textColor">@color/optionsTextColor</item>
         <item name="android:paddingBottom">@dimen/form_element_std_padding</item>
         <item name="android:paddingTop">@dimen/form_element_std_padding</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/optionsTextSize</item>
     </style>
 
     <style name="resultTableCell" parent="ellipsize">

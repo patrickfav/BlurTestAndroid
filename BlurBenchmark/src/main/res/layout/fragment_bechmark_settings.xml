@@ -88,6 +88,36 @@
                 android:checked="false"
                 android:text="600x600"/>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/tv_additionalPics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/btn_addpic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/default_selector"
+            android:weightSum="1">
+            <ImageView
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:weightSum="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:src="@drawable/ic_action_content_new_picture"/>
+            <TextView
+                style="@style/benchmarkSettingWidget"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Add custom picture"
+                android:gravity="center_vertical"
+                android:layout_weight="1"/>
+        </LinearLayout>
 
         <TextView
             style="@style/benchmarkSettingWidget"

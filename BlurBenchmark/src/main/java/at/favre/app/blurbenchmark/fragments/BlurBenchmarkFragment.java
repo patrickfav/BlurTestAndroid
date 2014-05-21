@@ -1,12 +1,17 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -19,9 +24,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +40,7 @@ import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.activities.BenchmarkResultActivity;
 import at.favre.app.blurbenchmark.activities.MainActivity;
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
+import at.favre.app.blurbenchmark.models.BenchmarkImage;
 import at.favre.app.blurbenchmark.models.BenchmarkResultList;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
 import at.favre.app.blurbenchmark.util.JsonUtil;
@@ -42,7 +51,7 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
  */
 public class BlurBenchmarkFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
-
+	private static final int IMAGE_PICK = 43762;
 	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
 	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
@@ -52,6 +61,7 @@ public class BlurBenchmarkFragment extends Fragment {
 	private boolean run =false;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 	private BlurBenchmarkTask task;
+	private List<File> customPicturePaths = new ArrayList<File>();
 
 	private Spinner roundsSpinner;
 
@@ -115,15 +125,24 @@ public class BlurBenchmarkFragment extends Fragment {
 
         algorithmGroup = (ViewGroup) v.findViewById(R.id.algorithm_wrapper);
         for (EBlurAlgorithm algorithm1 : algorithmList) {
-            algorithmGroup.addView(createAlgorithmChecbox(algorithm1));
+            algorithmGroup.addView(createAlgorithmCheckbox(algorithm1));
         }
         ((CheckBox) algorithmGroup.getChildAt(0)).setChecked(true);
+
+		v.findViewById(R.id.btn_addpic).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				Intent i = new Intent(
+						Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i, IMAGE_PICK);
+			}
+		});
 
 		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.rootScrollView));
         return v;
 	}
 
-    private CheckBox createAlgorithmChecbox(EBlurAlgorithm algorithm) {
+    private CheckBox createAlgorithmCheckbox(EBlurAlgorithm algorithm) {
         CheckBox cb = new CheckBox(getActivity());
         cb.setText(algorithm.toString());
         cb.setTag(algorithm);
@@ -144,25 +163,51 @@ public class BlurBenchmarkFragment extends Fragment {
 		outState.putInt(ROUNDS_KEY, rounds);
 	}
 
-	private List<Integer> getImagesFromSettings() {
-		List<Integer> images = new ArrayList<Integer>();
-		if(cbSize100.isChecked()) {
-			images.add(R.drawable.test_100x100_2);
+	private void benchmark() {
+		Log.d(TAG,"start benchmark");
+		run=true;
+		List<Integer> radius = getRadiusSizesFromSettings();
+		List<BenchmarkImage> images = getImagesFromSettings();
+		images.addAll(getCustomImages());
+        List<EBlurAlgorithm> algorithms = getAllSelectedAlgorithms();
+        int benchmarkCount = radius.size()*images.size()  * algorithms.size();
+		if(benchmarkCount <= 0) {
+			Toast.makeText(getActivity(),"Choose at least one radius and image size or custom image",Toast.LENGTH_SHORT).show();
+			return;
 		}
-		if(cbSize200.isChecked()) {
-			images.add(R.drawable.test_200x200_2);
+		showProgressDialog(benchmarkCount);
+		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		benchmarkResultList = new BenchmarkResultList();
+		nextTest(0,0,0,images,radius, algorithms);
+	}
+
+	private List<BenchmarkImage> getImagesFromSettings() {
+		List<BenchmarkImage> images = new ArrayList<BenchmarkImage>();
+		if (cbSize100.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_100x100_2));
 		}
-		if(cbSize300.isChecked()) {
-			images.add(R.drawable.test_300x300_2);
+		if (cbSize200.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_200x200_2));
 		}
-		if(cbSize400.isChecked()) {
-			images.add(R.drawable.test_400x400_2);
+		if (cbSize300.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_300x300_2));
 		}
-		if(cbSize500.isChecked()) {
-			images.add(R.drawable.test_500x500_2);
+		if (cbSize400.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_400x400_2));
 		}
-		if(cbSize600.isChecked()) {
-			images.add(R.drawable.test_600x600_2);
+		if (cbSize500.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_500x500_2));
+		}
+		if (cbSize600.isChecked()) {
+			images.add(new BenchmarkImage(R.drawable.test_600x600_2));
+		}
+		return images;
+	}
+
+	private List<BenchmarkImage> getCustomImages() {
+		List<BenchmarkImage> images = new ArrayList<BenchmarkImage>();
+		for (File customPicturePath : customPicturePaths) {
+			images.add(new BenchmarkImage(customPicturePath.getAbsolutePath()));
 		}
 		return images;
 	}
@@ -184,32 +229,15 @@ public class BlurBenchmarkFragment extends Fragment {
 		return radius;
 	}
 
-    private List<EBlurAlgorithm> getAllSelectedAlgorithms() {
-        List<EBlurAlgorithm> algorithms = new ArrayList<EBlurAlgorithm>();
-        for (int i = 0; i <algorithmGroup.getChildCount(); i++) {
-            CheckBox cb = (CheckBox) algorithmGroup.getChildAt(i);
-            if(cb.isChecked()) {
-                algorithms.add((EBlurAlgorithm) algorithmGroup.getChildAt(i).getTag());
-            }
-        }
-        return algorithms;
-    }
-
-	private void benchmark() {
-		Log.d(TAG,"start benchmark");
-		run=true;
-		List<Integer> radius = getRadiusSizesFromSettings();
-		List<Integer> images = getImagesFromSettings();
-        List<EBlurAlgorithm> algorithms = getAllSelectedAlgorithms();
-        int benchmarkCount = radius.size()*images.size()  * algorithms.size();
-		if(benchmarkCount <= 0) {
-			Toast.makeText(getActivity(),"Choose at least one radius and image size",Toast.LENGTH_SHORT).show();
-			return;
+	private List<EBlurAlgorithm> getAllSelectedAlgorithms() {
+		List<EBlurAlgorithm> algorithms = new ArrayList<EBlurAlgorithm>();
+		for (int i = 0; i <algorithmGroup.getChildCount(); i++) {
+			CheckBox cb = (CheckBox) algorithmGroup.getChildAt(i);
+			if(cb.isChecked()) {
+				algorithms.add((EBlurAlgorithm) algorithmGroup.getChildAt(i).getTag());
+			}
 		}
-		showProgressDialog(benchmarkCount);
-		getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		benchmarkResultList = new BenchmarkResultList();
-		nextTest(0,0,0,images,radius, algorithms);
+		return algorithms;
 	}
 
 	private void showProgressDialog(int max) {
@@ -222,6 +250,7 @@ public class BlurBenchmarkFragment extends Fragment {
 		progressDialog.setProgress(0);
 		progressDialog.setCancelable(true);
 		progressDialog.show();
+		progressDialog.setCanceledOnTouchOutside(false);
 		progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 			@Override
 			public void onCancel(DialogInterface dialogInterface) {
@@ -239,7 +268,7 @@ public class BlurBenchmarkFragment extends Fragment {
 		}
 	}
 
-	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<Integer> imageList , final List<Integer> radiusList, final List<EBlurAlgorithm> algorithmList) {
+	private void nextTest(final int photoIndex, final int radiusIndex,final int algoIndex, final List<BenchmarkImage> imageList , final List<Integer> radiusList, final List<EBlurAlgorithm> algorithmList) {
         if(run) {
 			if (radiusIndex >= radiusList.size()) {
 				nextTest(photoIndex + 1, 0, algoIndex, imageList, radiusList, algorithmList);
@@ -288,6 +317,12 @@ public class BlurBenchmarkFragment extends Fragment {
     }
 
 	private void saveTest() {
+//		BenchmarkResultList filteredWrapper = new BenchmarkResultList();
+//		for (BenchmarkWrapper benchmarkWrapper : benchmarkResultList.getBenchmarkWrappers()) {
+//			if(!benchmarkWrapper.isCustomPic()) {
+//				filteredWrapper.getBenchmarkWrappers().add(benchmarkWrapper);
+//			}
+//		}
 		BenchmarkStorage.getInstance(getActivity()).saveTest(benchmarkResultList.getBenchmarkWrappers());
 	}
 
@@ -312,6 +347,44 @@ public class BlurBenchmarkFragment extends Fragment {
 	public void onPause() {
 		super.onPause();
 		cancelTests();
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == IMAGE_PICK && resultCode == Activity.RESULT_OK && null != data) {
+			try {
+				Uri selectedImage = data.getData();
+				String[] filePathColumn = {MediaStore.Images.Media.DATA};
+				Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				String picturePath = cursor.getString(columnIndex);
+				cursor.close();
+				if(picturePath != null && !picturePath.isEmpty()) {
+					customPicturePaths.add(new File(picturePath));
+					updateCustomPictures();
+				}
+			}catch (Exception e) {
+				Log.e(TAG,"Could not get requested picture",e);
+			}
+		}
+	}
+
+	private void updateCustomPictures() {
+		LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
+		tvCustomViews.removeAllViews();
+		for (File customPicturePath : customPicturePaths) {
+			TextView tv = new TextView(getActivity());
+			tv.setTextColor(getResources().getColor(R.color.optionsTextColor));
+			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimension(R.dimen.optionsTextSize));
+			tv.setPadding(0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding),0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding));
+			tv.setText(customPicturePath.getName());
+			tv.setSingleLine();
+			tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+			tvCustomViews.addView(tv);
+		}
 	}
 
 	private void cancelTests() {

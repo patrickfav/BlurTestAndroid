@@ -4,8 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
@@ -58,9 +61,10 @@ public class BenchmarkResultDatabase {
 
 	@JsonIgnore
 	public TreeSet<String> getAllImageSizes() {
-		TreeSet<String> list = new TreeSet<String>();
+		List<Map<Integer,String>> list = new ArrayList<Map<Integer, String>>();
+		TreeMap<String,Integer> map = new TreeMap<String, Integer>();
 		for (BenchmarkEntry benchmarkEntry : entryList) {
-			list.add(benchmarkEntry.getImageSizeString());
+			map.put(benchmarkEntry.getImageSizeString(), benchmarkEntry.getResolution());
 		}
 		return list;
 	}
@@ -108,7 +112,7 @@ public class BenchmarkResultDatabase {
 		}
 	}
 
-	public static class BenchmarkEntry {
+	public static class BenchmarkEntry implements Comparable<BenchmarkEntry> {
 		private String name;
 		private String category;
 		private int radius;
@@ -181,6 +185,10 @@ public class BenchmarkResultDatabase {
 			this.width = width;
 		}
 
+		public Integer getResolution() {
+			return new Integer(height*width);
+		}
+
 		@JsonIgnore
 		public String getImageSizeString() {
 			return height+"x"+width;
@@ -201,6 +209,11 @@ public class BenchmarkResultDatabase {
 		@Override
 		public int hashCode() {
 			return name != null ? name.hashCode() : 0;
+		}
+
+		@Override
+		public int compareTo(BenchmarkEntry benchmarkEntry) {
+			return getResolution().compareTo(benchmarkEntry.getResolution());
 		}
 	}
 }
