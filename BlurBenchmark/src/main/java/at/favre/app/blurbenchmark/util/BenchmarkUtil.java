@@ -53,7 +53,10 @@ public class BenchmarkUtil {
 		String[] files = filestring.split(fileSeperator);
 		List<File> fileArrayList = new ArrayList<File>();
 		for (String absPath : files) {
-			fileArrayList.add(new File(absPath));
+			File f = new File(absPath);
+			if(f.isFile() && !f.getAbsolutePath().isEmpty()) {
+				fileArrayList.add(f);
+			}
 		}
 		return fileArrayList;
 	}

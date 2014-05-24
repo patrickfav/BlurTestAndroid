@@ -20,7 +20,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 19
         versionCode 10
-        versionName "1.05"
+        versionName "1.04a"
         renderscriptTargetApi 19
         renderscriptSupportMode true
     }
