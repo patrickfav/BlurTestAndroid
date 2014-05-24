@@ -24,10 +24,17 @@ import android.widget.Toast;
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.SettingsController;
 import at.favre.app.blurbenchmark.activities.MainActivity;
+import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 import at.favre.app.blurbenchmark.util.BitmapUtil;
 import at.favre.app.blurbenchmark.util.BlurUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
+/**
+ * Simple canvas with an image that can be blurred with parameters that
+ * are set by the user. It also features a simple alpha fade.
+ *
+ * @author pfavre
+ */
 public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSettings {
 	private static final String TAG = StaticBlurFragment.class.getSimpleName();
 
@@ -90,8 +97,8 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 			}
 		});
 
-		Bitmap normalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
-		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+normalBitmap.getWidth()+"x"+normalBitmap.getHeight()+" / "+(BitmapUtil.sizeOf(normalBitmap)/1024)+"kB");
+		Bitmap originalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
+		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+originalBitmap.getWidth()+"x"+originalBitmap.getHeight()+" / "+BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(originalBitmap)));
 
 		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
 		return v;
@@ -194,7 +201,7 @@ public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSet
 				}
 
 				Bitmap blurBitmap = ((BitmapDrawable) imageViewBlur.getDrawable()).getBitmap();
-				((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + (BitmapUtil.sizeOf(blurBitmap) / 1024) + "kB / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
+				((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(blurBitmap))+" / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
 			}
 		}
 	}

@@ -14,7 +14,10 @@ import at.favre.app.blurbenchmark.blur.IBlur;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 
 /**
- * Created by PatrickF on 18.04.2014.
+ * Helper class that is used to gather the data
+ * needed for the table adapter
+ *
+ * @author pfavre
  */
 public class ResultTableModel {
 	public static final String TAG = ResultTableModel.class.getSimpleName();

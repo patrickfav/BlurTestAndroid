@@ -1,6 +1,7 @@
 package at.favre.app.blurbenchmark.fragments;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -27,7 +28,10 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
- * Created by PatrickF on 14.04.2014.
+ * This will show the result of a benchmark in a ListView
+ * with some statistics.
+ *
+ * @author pfavre
  */
 public class BenchmarkResultFragment extends Fragment {
 	private static final String TAG = BenchmarkResultFragment.class.getSimpleName();
@@ -88,7 +92,9 @@ public class BenchmarkResultFragment extends Fragment {
 				@Override
 				protected Bitmap doInBackground(Void... voids) {
 					try {
-						return Picasso.with(getActivity()).load(benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getBitmapAsFile()).get();
+						Point size=new Point();
+						getActivity().getWindowManager().getDefaultDisplay().getSize(size);
+						return Picasso.with(getActivity()).load(benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getBitmapAsFile()).noFade().resize(size.x, size.y).centerCrop().get();
 					} catch (IOException e) {
 						Log.w(TAG, "Could not set background", e);
 						return null;
@@ -97,7 +103,8 @@ public class BenchmarkResultFragment extends Fragment {
 				@Override
 				protected void onPostExecute(Bitmap bitmap) {
 					if(getView() != null) {
-						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {new BitmapDrawable(getActivity().getResources(), bitmap),new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
+						BitmapDrawable bitmapDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
+						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {bitmapDrawable,new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
 					}
 				}
 			}.execute();

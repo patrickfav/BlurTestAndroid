@@ -14,7 +14,13 @@ import at.favre.app.blurbenchmark.util.BitmapUtil;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 
 /**
- * Created by PatrickF on 23.04.2014.
+ * This is responsible for storeing and retrieving the benchmark data.
+ * As of now, this is a hack, since it stores the data in json format in
+ * the shared preference and loads it as a whole in memory. This
+ * appoach was used because it is easier to implement than a sophisticated
+ * DB solution.
+ *
+ * @author pfavre
  */
 public class BenchmarkStorage {
 	private static final String TAG = BenchmarkStorage.class.getSimpleName();

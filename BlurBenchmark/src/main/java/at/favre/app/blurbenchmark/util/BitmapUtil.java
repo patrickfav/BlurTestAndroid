@@ -45,7 +45,6 @@ public class BitmapUtil {
 		if(heightScaleFactor < 1 || widthScaleFactor < 1) {
 			scaleFactor = Math.min(heightScaleFactor,widthScaleFactor);
 		}
-
 		bitmap = Bitmap.createScaledBitmap(bitmap,(int) (bitmap.getWidth()*scaleFactor),(int) (bitmap.getHeight()*scaleFactor) ,true);
 		return saveBitmap(bitmap,filename,path,recycle);
 	}

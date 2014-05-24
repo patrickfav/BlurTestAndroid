@@ -8,7 +8,11 @@ import java.util.Map;
 import java.util.TreeSet;
 
 /**
- * Created by PatrickF on 14.04.2014.
+ * Helper class for calculating some simple statistics
+ * data. It uses a cache for better performance, but sacrificeing
+ * a little memory efficiency.
+ *
+ * @author pfavre
  */
 public class Average<T extends Number> {
 

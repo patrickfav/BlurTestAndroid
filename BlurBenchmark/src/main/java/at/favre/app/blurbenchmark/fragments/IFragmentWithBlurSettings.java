@@ -1,7 +1,9 @@
 package at.favre.app.blurbenchmark.fragments;
 
 /**
- * Created by PatrickF on 10.04.2014.
+ * Used by the to mark fragments that can use SettingsController
+ *
+ * @author pfavre
  */
 public interface IFragmentWithBlurSettings {
 	public void switchShowSettings();

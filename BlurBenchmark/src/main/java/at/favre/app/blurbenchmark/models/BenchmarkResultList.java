@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* Created by PatrickF on 16.04.2014.
-*/
+* Simple wrapper for easier json serialization.
+ *
+ * @author pfavre
+ */
 public class BenchmarkResultList {
 	private List<BenchmarkWrapper> benchmarkWrappers = new ArrayList<BenchmarkWrapper>();
 

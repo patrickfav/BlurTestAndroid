@@ -11,8 +11,10 @@ import at.favre.app.blurbenchmark.util.Average;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 
 /**
-* Created by PatrickF on 16.04.2014.
-*/
+* Wrapper for all statistic info on a benchmark
+ *
+ * @author pfavre
+ */
 public class StatInfo {
 	private List<Double> benchmarkData;
 	private long benchmarkDuration;
@@ -25,13 +27,14 @@ public class StatInfo {
 	private boolean error=false;
 	private String errorDescription;
     private long date;
+	private Integer byteAllocation;
 
 	private Average<Double> avg;
 
 	public StatInfo() {
 	}
 
-	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, EBlurAlgorithm algorithm, int rounds) {
+	public StatInfo(int bitmapHeight, int bitmapWidth, int blurRadius, EBlurAlgorithm algorithm, int rounds, Integer byteAllocation) {
 		this.bitmapHeight = bitmapHeight;
 		this.bitmapWidth = bitmapWidth;
 		this.blurRadius = blurRadius;
@@ -39,6 +42,7 @@ public class StatInfo {
 		this.rounds = rounds;
 		benchmarkData = new ArrayList<Double>();
         date = new Date().getTime();
+		this.byteAllocation = byteAllocation;
 	}
 
 	public StatInfo(String errorDescription, EBlurAlgorithm algorithm) {
@@ -137,6 +141,25 @@ public class StatInfo {
         this.date = date;
     }
 
+	public long getByteAllocation() {
+		if(byteAllocation == null) {
+			return byteAllocation = bitmapWidth *bitmapHeight;
+		}
+		return byteAllocation;
+	}
+
+	public void setByteAllocation(int byteAllocation) {
+		this.byteAllocation = byteAllocation;
+	}
+
+	public Average<Double> getAvg() {
+		return avg;
+	}
+
+	public void setAvg(Average<Double> avg) {
+		this.avg = avg;
+	}
+
 	@JsonIgnore
 	public double getThroughputMPixelsPerSec() {
 		return (double) bitmapWidth * (double) bitmapHeight / getAsAvg().getAvg() * 1000d / 1000000d;
@@ -155,9 +178,14 @@ public class StatInfo {
 	public String getImageSizeCategoryString() {
 		return bitmapHeight+"x"+bitmapWidth;
 	}
+
 	@JsonIgnore
-	public String getBitmapKBSize() {
-		return String.valueOf((double)Math.round((double) (bitmapHeight * bitmapWidth) / 1024d * 100d) / 100d)+"kB";
+	public String getBitmapByteSize() {
+		if(byteAllocation == null) {
+			return BenchmarkUtil.getScalingUnitByteSize(bitmapHeight * bitmapWidth);
+		} else {
+			return BenchmarkUtil.getScalingUnitByteSize(byteAllocation);
+		}
 	}
 
 	@JsonIgnore

@@ -24,7 +24,10 @@ import at.favre.app.blurbenchmark.util.GraphUtil;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 
 /**
- * Created by PatrickF on 16.04.2014.
+ * A dialog showing the blurred image and a graph
+ * representing it's performance
+ *
+ * @author pfavre
  */
 public class BenchmarkDetailsDialog extends DialogFragment {
 	private static final String WRAPPER_KEY = "wrapperKey";

@@ -22,7 +22,9 @@ import at.favre.app.blurbenchmark.models.ResultTableModel;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
- * Created by PatrickF on 16.04.2014.
+ * A table view that shows misc. statistics for the benchmark categories (size& blur radius)
+ *
+ * @author pfavre
  */
 public class ResultsBrowserFragment extends Fragment {
 	private static final String TAG = ResultsBrowserFragment.class.getSimpleName();

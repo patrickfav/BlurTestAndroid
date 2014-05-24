@@ -60,4 +60,31 @@ public class BenchmarkUtil {
 		}
 		return fileArrayList;
 	}
+
+	public static String getScalingUnitByteSize(int byteSize) {
+		double scaledByteSize = (double) byteSize;
+		String unit = "byte";
+
+		if(scaledByteSize < 1024) {
+			return formatNum(scaledByteSize,"0.##")+unit;
+		} else {
+			unit = "KiB";
+			scaledByteSize /= 1024d;
+
+			if(scaledByteSize < 1024) {
+				return formatNum(scaledByteSize,"0.##")+unit;
+			} else {
+				unit = "MiB";
+				scaledByteSize /= 1024d;
+				if(scaledByteSize < 1024) {
+					return formatNum(scaledByteSize,"0.##")+unit;
+				} else {
+					unit = "GiB";
+					scaledByteSize /= 1024d;
+					return formatNum(scaledByteSize,"0.##")+unit;
+				}
+			}
+		}
+
+	}
 }

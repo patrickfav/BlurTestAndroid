@@ -6,7 +6,9 @@ import java.util.List;
 import at.favre.app.blurbenchmark.R;
 
 /**
- * Created by PatrickF on 20.04.2014.
+ * Enum of all supported algorithms
+ *
+ * @author pfavre
  */
 public enum EBlurAlgorithm {
     RS_GAUSS_FAST(R.color.graphBgGreen), RS_BOX_5x5(R.color.graphBlue),

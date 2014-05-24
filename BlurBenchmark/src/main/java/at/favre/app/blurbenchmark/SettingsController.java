@@ -18,7 +18,9 @@ import java.util.List;
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 
 /**
- * Created by PatrickF on 10.04.2014.
+ * Logic of the top-settings in some fragments
+ *
+ * @author pfavre
  */
 public class SettingsController {
 	private View settingsWrapper;

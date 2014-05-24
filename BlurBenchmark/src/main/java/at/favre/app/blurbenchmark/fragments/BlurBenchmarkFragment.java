@@ -47,13 +47,15 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
- * Created by PatrickF on 14.04.2014.
+ * The main view, where you may start a benchmark with custom settings
+ *
+ * @author pfavre
  */
 public class BlurBenchmarkFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
 	private static final int IMAGE_PICK = 43762;
 	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
-	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
+	private static Rounds[] roundArray = new Rounds[] {new Rounds(2),new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
 	private static final String ROUNDS_KEY = "ROUNDS_KEY";
 	private static final String CUSTOM_IMAGES = "CUSTOM_IMAGES";

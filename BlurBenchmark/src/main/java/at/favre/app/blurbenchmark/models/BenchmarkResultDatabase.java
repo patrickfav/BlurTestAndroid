@@ -11,7 +11,9 @@ import java.util.TreeSet;
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 
 /**
- * Created by PatrickF on 16.04.2014.
+ * This is the main logic on retrieving specific data from the benchmark database
+ *
+ * @author pfavre
  */
 public class BenchmarkResultDatabase {
 	private List<BenchmarkEntry> entryList = new ArrayList<BenchmarkEntry>();

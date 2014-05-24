@@ -19,13 +19,16 @@ import at.favre.app.blurbenchmark.util.BlurUtil;
  * This is the the task for completing a single Benchmark with
  * the given image, blur radius, algorithm and rounds.
  *
+ * It uses warmup rounds to warmup the VM. After the benchmark
+ * the statistics and downscaled versions of the blurred images
+ * are store to disk.
+ *
  * @author pfavre
  * @since 2014/04/14
  */
 public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private static final String TAG = BlurBenchmarkTask.class.getSimpleName();
     private static final int WARMUP_ROUNDS = 5;
-	private static final boolean SAVE_SCALED_DOWN_IF_TOO_BIG = true;
 
 	private StatInfo statInfo;
 
@@ -40,14 +43,14 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private Context ctx;
 	private RenderScript rs;
 	private boolean run=false;
-	private boolean customPic =false;
+	private boolean isCustomPic =false;
 
 	public BlurBenchmarkTask(BenchmarkImage image, int benchmarkRounds, int radius, EBlurAlgorithm algorithm, RenderScript rs, Context ctx) {
 		if(image.isResId()) {
 			this.bitmapDrawableResId = image.getResId();
 		} else {
 			this.absolutePath = image.getAbsolutePath();
-			this.customPic = true;
+			this.isCustomPic = true;
 		}
 		this.benchmarkRounds = benchmarkRounds;
 		this.radius = radius;
@@ -68,9 +71,10 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			run=true;
 			long startReadBitmap = BenchmarkUtil.elapsedRealTimeNanos();
 			master = loadBitmap();
+			master.setHasMipMap(false);
 			long readBitmapDuration = (BenchmarkUtil.elapsedRealTimeNanos() - startReadBitmap)/1000000l;
 
-			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm,benchmarkRounds);
+			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm,benchmarkRounds,BitmapUtil.sizeOf(master));
 			statInfo.setLoadBitmap(readBitmapDuration);
 
 			Bitmap blurredBitmap = null;
@@ -81,7 +85,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 					break;
 				}
                 BenchmarkUtil.elapsedRealTimeNanos();
-                blurredBitmap = master.copy(master.getConfig(), true);
+                blurredBitmap = master.copy(master.getConfig(), false);
                 blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
             }
 
@@ -91,7 +95,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 					break;
 				}
 				long startBlur = BenchmarkUtil.elapsedRealTimeNanos();
-				blurredBitmap = master.copy(master.getConfig(), true);
+				blurredBitmap = master.copy(master.getConfig(), false);
 				blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
 				statInfo.getBenchmarkData().add((BenchmarkUtil.elapsedRealTimeNanos() - startBlur)/1000000d);
 			}
@@ -105,7 +109,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			String fileName = master.getWidth()+"x"+master.getHeight()+"_" + radius + "px_" + algorithm + ".png";
 			return new BenchmarkWrapper(BitmapUtil.saveBitmapDownscaled(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false,800,800),
 					BitmapUtil.saveBitmapDownscaled(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true,300,300),
-					statInfo,customPic);
+					statInfo, isCustomPic);
 		} catch (Throwable e) {
             Log.e(TAG,"Could not complete benchmark",e);
 			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm),false);
@@ -113,9 +117,10 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	}
 
 	private Bitmap loadBitmap() {
-		if(customPic && absolutePath != null) {
+		if(isCustomPic && absolutePath != null) {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 			options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			options.inMutable=true;
 			return BitmapFactory.decodeFile(absolutePath, options);
 		} else {
 			final BitmapFactory.Options options = new BitmapFactory.Options();

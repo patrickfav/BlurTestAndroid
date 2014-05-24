@@ -1,8 +1,10 @@
 package at.favre.app.blurbenchmark.models;
 
 /**
-* Created by PatrickF on 21.05.2014.
-*/
+* Wrapper for an image, that either holds a file path or resource id
+ *
+ * @author pfavre
+ */
 public class BenchmarkImage {
 	private int resId;
 	private String absolutePath;

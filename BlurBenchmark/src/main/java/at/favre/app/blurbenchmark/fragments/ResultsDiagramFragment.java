@@ -35,7 +35,10 @@ import at.favre.app.blurbenchmark.util.GraphUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
- * Created by PatrickF on 22.04.2014.
+ * Shows the results of past benchmarks in a Diagram, where misc. statistics can be
+ * choosen.
+ *
+ * @author pfavre
  */
 public class ResultsDiagramFragment extends Fragment {
 	private static final String TAG = ResultsDiagramFragment.class.getSimpleName();

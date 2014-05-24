@@ -10,7 +10,8 @@ import at.favre.app.blurbenchmark.blur.BlurKernels;
 import at.favre.app.blurbenchmark.blur.IBlur;
 
 /**
- * Created by PatrickF on 20.04.2014.
+ * This is a convolve matrix based blur algorithms powered by Renderscript's ScriptIntrinsicConvolve class. This uses a box kernel.
+ * Instead of radius it uses passes, so a radius parameter of 16 makes the convolve algorithm applied 16 times onto the image.
  */
 public class RenderScriptBox5x5Blur implements IBlur {
     private RenderScript rs;

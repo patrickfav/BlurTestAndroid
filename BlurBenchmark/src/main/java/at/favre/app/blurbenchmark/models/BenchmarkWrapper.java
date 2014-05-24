@@ -6,8 +6,10 @@ import java.io.File;
 import java.util.Date;
 
 /**
-* Created by PatrickF on 16.04.2014.
-*/
+* Info assembled after one benchmark
+ *
+ * @author pfavre
+ */
 public class BenchmarkWrapper implements Comparable<BenchmarkWrapper> {
 	private String bitmapPath;
 	private String flippedBitmapPath;

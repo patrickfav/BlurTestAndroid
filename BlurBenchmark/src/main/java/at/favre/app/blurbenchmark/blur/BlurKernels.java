@@ -1,7 +1,9 @@
 package at.favre.app.blurbenchmark.blur;
 
 /**
- * Created by PatrickF on 23.04.2014.
+ * Blur kernels for convolve matrix algorithms
+ *
+ * @author pfavre
  */
 public interface BlurKernels {
 	public static float[] GAUSSIAN_5x5 = new float[] {

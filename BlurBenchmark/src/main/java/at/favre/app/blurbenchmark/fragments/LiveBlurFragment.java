@@ -40,7 +40,12 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 import at.favre.app.blurbenchmark.view.ObservableScrollView;
 
 /**
- * Created by PatrickF on 08.04.2014.
+ * A view with a live blur under the actionbar and
+ * on the bottom of the screen. This wil draw a blurred
+ * version of the content under the blur-areas live when
+ * the user manipulates the ui (by eg. scrolling)
+ *
+ * @author pfavre
  */
 public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSettings{
 	private static final String TAG = LiveBlurFragment.class.getSimpleName();
