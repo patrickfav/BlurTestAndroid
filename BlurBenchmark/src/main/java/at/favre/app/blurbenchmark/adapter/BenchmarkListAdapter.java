@@ -70,7 +70,7 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 
 			viewHolder.tvAvg.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg()) + "ms");
 			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).placeholder(R.drawable.placeholder).into(viewHolder.imageView);
-			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
+//			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
 			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
 			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapWidth() + " / " + getItem(position).getStatInfo().getMegaPixels());
 			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapKBSize());

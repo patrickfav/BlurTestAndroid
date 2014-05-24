@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.blur.IBlur;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
-import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 
 /**
  * Created by PatrickF on 18.04.2014.
@@ -57,13 +57,17 @@ public class ResultTableModel {
         }
         Collections.sort(columns);
 
-        TreeSet<String> rowHeaders = new TreeSet<String>();
+        TreeSet<BenchmarkResultDatabase.Category> rowHeaders = new TreeSet<BenchmarkResultDatabase.Category>();
 		if(db != null) {
 			for (BenchmarkResultDatabase.BenchmarkEntry benchmarkEntry : db.getEntryList()) {
-				rowHeaders.add(benchmarkEntry.getCategory());
+				rowHeaders.add(benchmarkEntry.getCategoryObj());
 			}
 		}
-        rows = new ArrayList<String>(rowHeaders);
+
+		rows = new ArrayList<String>();
+		for (BenchmarkResultDatabase.Category rowHeader : rowHeaders) {
+			rows.add(rowHeader.getCategory());
+		}
 
         tableModel = new HashMap<String, Map<String, BenchmarkResultDatabase.BenchmarkEntry>>();
         for (String column : columns) {

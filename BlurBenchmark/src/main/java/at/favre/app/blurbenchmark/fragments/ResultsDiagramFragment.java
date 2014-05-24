@@ -139,12 +139,12 @@ public class ResultsDiagramFragment extends Fragment {
 		int lineThicknessPx = (int) Math.ceil(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, res.getDisplayMetrics()));
 
 		Map<EBlurAlgorithm,List<GraphView.GraphViewData>> dataMap = new HashMap<EBlurAlgorithm, List<GraphView.GraphViewData>>();
-		final List<String> imageSizes = new ArrayList<String>(database.getAllImageSizes());
+		final List<BenchmarkResultDatabase.ImageSize> imageSizes = new ArrayList<BenchmarkResultDatabase.ImageSize>(database.getAllImageSizes());
 		for (EBlurAlgorithm eBlurAlgorithm : EBlurAlgorithm.getAllAlgorithms()) {
 			dataMap.put(eBlurAlgorithm,new ArrayList<GraphView.GraphViewData>());
 			int i = 0;
-			for (String imageSize : imageSizes) {
-				ResultTableModel.StatValue val = ResultTableModel.getValueForType(BenchmarkResultDatabase.getRecentWrapper(database.getByImageSizeAndRadiusAndAlgorithm(imageSize, blurRadius, eBlurAlgorithm)), dataType);
+			for (BenchmarkResultDatabase.ImageSize imageSize : imageSizes) {
+				ResultTableModel.StatValue val = ResultTableModel.getValueForType(BenchmarkResultDatabase.getRecentWrapper(database.getByImageSizeAndRadiusAndAlgorithm(imageSize.getImageSizeString(), blurRadius, eBlurAlgorithm)), dataType);
 				if(val.getValue() != Double.NEGATIVE_INFINITY) {
 					dataMap.get(eBlurAlgorithm).add(i, new GraphView.GraphViewData(i, val.getValue()));
 					i++;
@@ -173,7 +173,7 @@ public class ResultsDiagramFragment extends Fragment {
 					return BenchmarkUtil.formatNum(value,"0.0") + dataType.getUnit();
 				} else {
 					if(!imageSizes.isEmpty()) {
-						return imageSizes.get((int) Math.round(value));
+						return imageSizes.get((int) Math.round(value)).getImageSizeString();
 					}
 					return "";
 				}

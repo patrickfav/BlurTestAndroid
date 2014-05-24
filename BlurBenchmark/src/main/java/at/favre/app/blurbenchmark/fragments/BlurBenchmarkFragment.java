@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -43,6 +42,7 @@ import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.models.BenchmarkImage;
 import at.favre.app.blurbenchmark.models.BenchmarkResultList;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
+import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
@@ -56,6 +56,7 @@ public class BlurBenchmarkFragment extends Fragment {
 	private static Rounds[] roundArray = new Rounds[] {new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
 	private static final String ROUNDS_KEY = "ROUNDS_KEY";
+	private static final String CUSTOM_IMAGES = "CUSTOM_IMAGES";
 
 	private int rounds=100;
 	private boolean run =false;
@@ -90,6 +91,7 @@ public class BlurBenchmarkFragment extends Fragment {
         setHasOptionsMenu(true);
 		if(savedInstanceState !=  null) {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);
+			customPicturePaths = BenchmarkUtil.getAsFiles(savedInstanceState.getString(CUSTOM_IMAGES));
 		}
 	}
 
@@ -155,12 +157,14 @@ public class BlurBenchmarkFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		updateCustomPictures();
 	}
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putInt(ROUNDS_KEY, rounds);
+		outState.putString(CUSTOM_IMAGES, BenchmarkUtil.saveFiles(customPicturePaths));
 	}
 
 	private void benchmark() {
@@ -317,12 +321,6 @@ public class BlurBenchmarkFragment extends Fragment {
     }
 
 	private void saveTest() {
-//		BenchmarkResultList filteredWrapper = new BenchmarkResultList();
-//		for (BenchmarkWrapper benchmarkWrapper : benchmarkResultList.getBenchmarkWrappers()) {
-//			if(!benchmarkWrapper.isCustomPic()) {
-//				filteredWrapper.getBenchmarkWrappers().add(benchmarkWrapper);
-//			}
-//		}
 		BenchmarkStorage.getInstance(getActivity()).saveTest(benchmarkResultList.getBenchmarkWrappers());
 	}
 
@@ -375,15 +373,39 @@ public class BlurBenchmarkFragment extends Fragment {
 	private void updateCustomPictures() {
 		LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
 		tvCustomViews.removeAllViews();
-		for (File customPicturePath : customPicturePaths) {
-			TextView tv = new TextView(getActivity());
-			tv.setTextColor(getResources().getColor(R.color.optionsTextColor));
-			tv.setTextSize(TypedValue.COMPLEX_UNIT_PX,getResources().getDimension(R.dimen.optionsTextSize));
-			tv.setPadding(0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding),0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding));
+		for (final File customPicturePath : customPicturePaths) {
+			LayoutInflater inflater = LayoutInflater.from(getActivity());
+			ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.inc_custom_img,tvCustomViews,false);
+
+			TextView tv = (TextView) vg.findViewById(R.id.tv_pic_name);
 			tv.setText(customPicturePath.getName());
-			tv.setSingleLine();
-			tv.setEllipsize(TextUtils.TruncateAt.MIDDLE);
-			tvCustomViews.addView(tv);
+
+			vg.findViewById(R.id.btn_remove).setTag(customPicturePath);
+			vg.findViewById(R.id.btn_remove).setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					customPicturePaths.remove(view.getTag());
+					LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
+					for (int i=0;i<tvCustomViews.getChildCount();i++) {
+						if(view.getTag().equals(tvCustomViews.getChildAt(i).findViewById(R.id.btn_remove).getTag())) {
+							tvCustomViews.removeViewAt(i);
+							break;
+						}
+					}
+					if(customPicturePaths.size() > 5) {
+						getView().findViewById(R.id.btn_addpic).setVisibility(View.GONE);
+					} else {
+						getView().findViewById(R.id.btn_addpic).setVisibility(View.VISIBLE);
+					}
+				}
+			});
+			tvCustomViews.addView(vg);
+		}
+
+		if(customPicturePaths.size() > 5) {
+			getView().findViewById(R.id.btn_addpic).setVisibility(View.GONE);
+		} else {
+			getView().findViewById(R.id.btn_addpic).setVisibility(View.VISIBLE);
 		}
 	}
 

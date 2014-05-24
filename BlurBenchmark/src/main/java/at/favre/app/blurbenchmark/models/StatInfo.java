@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.util.Average;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
-import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 
 /**
 * Created by PatrickF on 16.04.2014.
@@ -149,7 +149,7 @@ public class StatInfo {
 
 	@JsonIgnore
 	public String getCategoryString() {
-		return getImageSizeCategoryString()+" / "+ BenchmarkUtil.formatNum(blurRadius,"00")+"px";
+		return getImageSizeCategoryString()+" / "+ BenchmarkUtil.formatNum(blurRadius, "00")+"px";
 	}
 	@JsonIgnore
 	public String getImageSizeCategoryString() {

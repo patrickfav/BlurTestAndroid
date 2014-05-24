@@ -10,7 +10,7 @@
         android:textSize="12sp"
         android:gravity="center"
         android:textColor="#fff"
-        android:layout_width="100dp"
+        android:layout_width="@dimen/table_row_header_width"
         android:textStyle="bold"
         android:ellipsize="end"/>
 </FrameLayout>

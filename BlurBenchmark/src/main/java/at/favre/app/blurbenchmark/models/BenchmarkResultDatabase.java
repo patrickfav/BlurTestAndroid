@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
@@ -60,13 +57,12 @@ public class BenchmarkResultDatabase {
 	}
 
 	@JsonIgnore
-	public TreeSet<String> getAllImageSizes() {
-		List<Map<Integer,String>> list = new ArrayList<Map<Integer, String>>();
-		TreeMap<String,Integer> map = new TreeMap<String, Integer>();
+	public TreeSet<ImageSize> getAllImageSizes() {
+		TreeSet<ImageSize> set = new TreeSet<ImageSize>();
 		for (BenchmarkEntry benchmarkEntry : entryList) {
-			map.put(benchmarkEntry.getImageSizeString(), benchmarkEntry.getResolution());
+			set.add(benchmarkEntry.getAsImageSize());
 		}
-		return list;
+		return set;
 	}
 
 	@JsonIgnore
@@ -185,6 +181,12 @@ public class BenchmarkResultDatabase {
 			this.width = width;
 		}
 
+		@JsonIgnore
+		public Category getCategoryObj() {
+			return new Category(getAsImageSize(),radius, category);
+		}
+
+		@JsonIgnore
 		public Integer getResolution() {
 			return new Integer(height*width);
 		}
@@ -192,6 +194,11 @@ public class BenchmarkResultDatabase {
 		@JsonIgnore
 		public String getImageSizeString() {
 			return height+"x"+width;
+		}
+
+		@JsonIgnore
+		public ImageSize getAsImageSize() {
+			return new ImageSize(height,width, getImageSizeString());
 		}
 
 		@Override
@@ -214,6 +221,114 @@ public class BenchmarkResultDatabase {
 		@Override
 		public int compareTo(BenchmarkEntry benchmarkEntry) {
 			return getResolution().compareTo(benchmarkEntry.getResolution());
+		}
+	}
+
+	public static class Category implements Comparable<Category> {
+		public final ImageSize imageSize;
+		public final int radius;
+		public final String category;
+
+		public Category(ImageSize imageSize, int radius, String category) {
+			this.imageSize = imageSize;
+			this.radius = radius;
+			this.category = category;
+		}
+
+		public ImageSize getImageSize() {
+			return imageSize;
+		}
+
+		public Integer getRadius() {
+			return radius;
+		}
+
+		public String getCategory() {
+			return category;
+		}
+
+		@Override
+		public int compareTo(Category category) {
+			int resultResolution = imageSize.getResolution().compareTo(category.getImageSize().getResolution());
+
+			if(resultResolution == 0) {
+				return getRadius().compareTo(category.getRadius());
+			} else {
+				return resultResolution;
+			}
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Category category = (Category) o;
+
+			if (radius != category.radius) return false;
+			if (!imageSize.equals(category.imageSize)) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = imageSize.hashCode();
+			result = 31 * result + radius;
+			return result;
+		}
+	}
+
+	public static class ImageSize implements Comparable<ImageSize> {
+		private final int height;
+		private final int width;
+		private final String imageSizeString;
+
+		public ImageSize(int height, int width, String imageSizeString) {
+			this.height = height;
+			this.width = width;
+			this.imageSizeString = imageSizeString;
+		}
+
+		public int getHeight() {
+			return height;
+		}
+
+		public int getWidth() {
+			return width;
+		}
+
+		public String getImageSizeString() {
+			return imageSizeString;
+		}
+
+		public Integer getResolution() {
+			return height*width;
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			ImageSize imageSize = (ImageSize) o;
+
+			if (height != imageSize.height) return false;
+			if (width != imageSize.width) return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = height;
+			result = 31 * result + width;
+			return result;
+		}
+
+		@Override
+		public int compareTo(ImageSize imageSize) {
+			return getResolution().compareTo(imageSize.getResolution());
 		}
 	}
 }

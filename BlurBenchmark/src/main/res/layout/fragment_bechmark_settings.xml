@@ -88,12 +88,14 @@
                 android:checked="false"
                 android:text="600x600"/>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/tv_additionalPics"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/btn_addpic"
             android:layout_width="match_parent"

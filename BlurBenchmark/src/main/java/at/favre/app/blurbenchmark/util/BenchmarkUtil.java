@@ -3,9 +3,12 @@ package at.favre.app.blurbenchmark.util;
 import android.os.Build;
 import android.os.SystemClock;
 
+import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -13,6 +16,7 @@ import java.util.Locale;
  */
 public class BenchmarkUtil {
 	private static final DecimalFormat format = new DecimalFormat("#.0");
+	private static final String fileSeperator = ";";
 
 	static {
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
@@ -35,5 +39,22 @@ public class BenchmarkUtil {
 		format.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.ENGLISH));
 		format.setRoundingMode(RoundingMode.HALF_UP);
 		return format.format(number);
+	}
+
+	public static String saveFiles(List<File> files) {
+		StringJoiner joiner = new StringJoiner(fileSeperator);
+		for (File file : files) {
+			joiner.add(file.getAbsolutePath());
+		}
+		return joiner.toString();
+	}
+
+	public static List<File> getAsFiles(String filestring) {
+		String[] files = filestring.split(fileSeperator);
+		List<File> fileArrayList = new ArrayList<File>();
+		for (String absPath : files) {
+			fileArrayList.add(new File(absPath));
+		}
+		return fileArrayList;
 	}
 }
