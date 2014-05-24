@@ -104,7 +104,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
 			String fileName = master.getWidth()+"x"+master.getHeight()+"_" + radius + "px_" + algorithm + ".png";
 			return new BenchmarkWrapper(BitmapUtil.saveBitmapDownscaled(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false,800,800),
-					BitmapUtil.saveBitmapDownscaled(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true,400,400),
+					BitmapUtil.saveBitmapDownscaled(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true,300,300),
 					statInfo,customPic);
 		} catch (Throwable e) {
             Log.e(TAG,"Could not complete benchmark",e);
