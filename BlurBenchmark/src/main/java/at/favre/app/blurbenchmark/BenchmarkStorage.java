@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.File;
 import java.util.List;
 
 import at.favre.app.blurbenchmark.models.BenchmarkResultDatabase;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
+import at.favre.app.blurbenchmark.util.BitmapUtil;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 
 /**
@@ -18,6 +20,7 @@ public class BenchmarkStorage {
 	private static final String TAG = BenchmarkStorage.class.getSimpleName();
 	private static final String PREF_NAME = "at.favre.app.blurbenchmark.sharedpref";
 	private static final String PREF_RESULTS = "results";
+	private static final int MAX_SAVED_BENCHMARKS = 3;
 
 	private static BenchmarkStorage ourInstance;
 
@@ -39,38 +42,50 @@ public class BenchmarkStorage {
 		db = null;
 	}
 
-	public void saveTest(List<BenchmarkWrapper> wrapperList) {
-		// Restore preferences
-		SharedPreferences settings = ctx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-		String resultsString = settings.getString(PREF_RESULTS,null);
-		BenchmarkResultDatabase db;
+	public void saveTest(final List<BenchmarkWrapper> wrapperList) {
+		new AsyncTask<Void,Void,Void>() {
+			@Override
+			protected Void doInBackground(Void... voids) {
+				// Restore preferences
+				SharedPreferences settings = ctx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+				String resultsString = settings.getString(PREF_RESULTS,null);
+				BenchmarkResultDatabase db;
 
-		if(resultsString == null) {
-			db = new BenchmarkResultDatabase();
-		} else {
-			db = JsonUtil.fromJsonString(resultsString,BenchmarkResultDatabase.class);
-		}
-
-
-		for (BenchmarkWrapper benchmarkWrapper : wrapperList) {
-			if(!benchmarkWrapper.getStatInfo().isError()) {
-				BenchmarkResultDatabase.BenchmarkEntry template = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper);
-				if(db.getEntryList().contains(template)) {
-					db.getEntryList().get(db.getEntryList().indexOf(template)).getWrapper().add(benchmarkWrapper);
+				if(resultsString == null) {
+					db = new BenchmarkResultDatabase();
 				} else {
-					template.getWrapper().add(benchmarkWrapper);
-					db.getEntryList().add(template);
+					db = JsonUtil.fromJsonString(resultsString,BenchmarkResultDatabase.class);
 				}
-			}
-		}
 
-		settings.edit().putString(PREF_RESULTS,JsonUtil.toJsonString(db)).commit();
-		resetCache();
+
+				for (BenchmarkWrapper benchmarkWrapper : wrapperList) {
+					if(!benchmarkWrapper.getStatInfo().isError()) {
+						BenchmarkResultDatabase.BenchmarkEntry benchmarkEntry = new BenchmarkResultDatabase.BenchmarkEntry(benchmarkWrapper);
+						if(db.getEntryList().contains(benchmarkEntry)) {
+							db.getEntryList().get(db.getEntryList().indexOf(benchmarkEntry)).getWrapper().add(benchmarkWrapper);
+						} else {
+							while(benchmarkEntry.getWrapper().size() > MAX_SAVED_BENCHMARKS) {
+								benchmarkEntry.getWrapper().remove(0);
+							}
+
+							benchmarkEntry.getWrapper().add(benchmarkWrapper);
+							db.getEntryList().add(benchmarkEntry);
+						}
+					}
+				}
+
+				settings.edit().putString(PREF_RESULTS,JsonUtil.toJsonString(db)).commit();
+				resetCache();
+				return null;
+			}
+		}.execute();
+
 	}
 
 	public void deleteData() {
 		SharedPreferences settings = ctx.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
 		settings.edit().putString(PREF_RESULTS,JsonUtil.toJsonString(new BenchmarkResultDatabase())).commit();
+		BitmapUtil.clearCacheDir(new File(BitmapUtil.getCacheDir(ctx)));
 		resetCache();
 	}
 

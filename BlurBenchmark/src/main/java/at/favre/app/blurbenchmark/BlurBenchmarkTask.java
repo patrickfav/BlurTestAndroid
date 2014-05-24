@@ -25,6 +25,7 @@ import at.favre.app.blurbenchmark.util.BlurUtil;
 public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	private static final String TAG = BlurBenchmarkTask.class.getSimpleName();
     private static final int WARMUP_ROUNDS = 5;
+	private static final boolean SAVE_SCALED_DOWN_IF_TOO_BIG = true;
 
 	private StatInfo statInfo;
 
@@ -102,8 +103,8 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			statInfo.setBenchmarkDuration((BenchmarkUtil.elapsedRealTimeNanos() - startWholeProcess)/1000000l);
 
 			String fileName = master.getWidth()+"x"+master.getHeight()+"_" + radius + "px_" + algorithm + ".png";
-			return new BenchmarkWrapper(BitmapUtil.saveBitmap(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false),
-					BitmapUtil.saveBitmap(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true),
+			return new BenchmarkWrapper(BitmapUtil.saveBitmapDownscaled(blurredBitmap, fileName, BitmapUtil.getCacheDir(ctx), false,800,800),
+					BitmapUtil.saveBitmapDownscaled(BitmapUtil.flip(blurredBitmap),"mirror_"+fileName,BitmapUtil.getCacheDir(ctx),true,400,400),
 					statInfo,customPic);
 		} catch (Throwable e) {
             Log.e(TAG,"Could not complete benchmark",e);

@@ -30,6 +30,26 @@ public class BitmapUtil {
 		}
 	}
 
+	public static File saveBitmapDownscaled(Bitmap bitmap, String filename, String path, boolean recycle, int maxWidth, int maxHeight) {
+		float heightScaleFactor = 1;
+		float widthScaleFactor = 1;
+		float scaleFactor = 1;
+
+		if(bitmap.getHeight() > maxHeight) {
+			heightScaleFactor = (float) maxHeight / (float) bitmap.getHeight();
+		}
+
+		if(bitmap.getWidth() > maxWidth) {
+			widthScaleFactor = (float) maxWidth / (float) bitmap.getWidth();
+		}
+		if(heightScaleFactor < 1 || widthScaleFactor < 1) {
+			scaleFactor = Math.min(heightScaleFactor,widthScaleFactor);
+		}
+
+		bitmap = Bitmap.createScaledBitmap(bitmap,(int) (bitmap.getWidth()*scaleFactor),(int) (bitmap.getHeight()*scaleFactor) ,true);
+		return saveBitmap(bitmap,filename,path,recycle);
+	}
+
 	public static File saveBitmap(Bitmap bitmap, String filename, String path, boolean recycle) {
 		FileOutputStream out=null;
 		try {
@@ -64,6 +84,7 @@ public class BitmapUtil {
 		m.preScale(-1, 1);
 		return Bitmap.createBitmap(src, 0, 0, src.getWidth(), src.getHeight(), m, false);
 	}
+
 	@TargetApi(Build.VERSION_CODES.KITKAT)
 	public static int sizeOf(Bitmap data) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {

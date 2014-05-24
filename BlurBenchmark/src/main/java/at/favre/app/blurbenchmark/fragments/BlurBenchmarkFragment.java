@@ -374,33 +374,35 @@ public class BlurBenchmarkFragment extends Fragment {
 		LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
 		tvCustomViews.removeAllViews();
 		for (final File customPicturePath : customPicturePaths) {
-			LayoutInflater inflater = LayoutInflater.from(getActivity());
-			ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.inc_custom_img,tvCustomViews,false);
+			if(customPicturePath != null && customPicturePath.isFile() && !customPicturePath.getAbsolutePath().isEmpty()) {
+				LayoutInflater inflater = LayoutInflater.from(getActivity());
+				ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.inc_custom_img, tvCustomViews, false);
 
-			TextView tv = (TextView) vg.findViewById(R.id.tv_pic_name);
-			tv.setText(customPicturePath.getName());
+				TextView tv = (TextView) vg.findViewById(R.id.tv_pic_name);
+				tv.setText(customPicturePath.getName());
 
-			vg.findViewById(R.id.btn_remove).setTag(customPicturePath);
-			vg.findViewById(R.id.btn_remove).setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View view) {
-					customPicturePaths.remove(view.getTag());
-					LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
-					for (int i=0;i<tvCustomViews.getChildCount();i++) {
-						if(view.getTag().equals(tvCustomViews.getChildAt(i).findViewById(R.id.btn_remove).getTag())) {
-							tvCustomViews.removeViewAt(i);
-							break;
+				vg.findViewById(R.id.btn_remove).setTag(customPicturePath);
+				vg.findViewById(R.id.btn_remove).setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View view) {
+						customPicturePaths.remove(view.getTag());
+						LinearLayout tvCustomViews = (LinearLayout) getView().findViewById(R.id.tv_additionalPics);
+						for (int i = 0; i < tvCustomViews.getChildCount(); i++) {
+							if (view.getTag().equals(tvCustomViews.getChildAt(i).findViewById(R.id.btn_remove).getTag())) {
+								tvCustomViews.removeViewAt(i);
+								break;
+							}
 						}
+						checkIfCustomImgBtnShouldBeShown();
 					}
-					if(customPicturePaths.size() > 5) {
-						getView().findViewById(R.id.btn_addpic).setVisibility(View.GONE);
-					} else {
-						getView().findViewById(R.id.btn_addpic).setVisibility(View.VISIBLE);
-					}
-				}
-			});
-			tvCustomViews.addView(vg);
+				});
+				tvCustomViews.addView(vg);
+			}
 		}
+		checkIfCustomImgBtnShouldBeShown();
+	}
+
+	private void checkIfCustomImgBtnShouldBeShown() {
 
 		if(customPicturePaths.size() > 5) {
 			getView().findViewById(R.id.btn_addpic).setVisibility(View.GONE);
