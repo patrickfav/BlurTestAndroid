@@ -5,7 +5,7 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.3"
+    buildToolsVersion "19.1.0"
 
     signingConfigs {
         release {
@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         debug {
-            packageNameSuffix '.debug'
+            applicationIdSuffix '.debug'
             runProguard false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt");
             proguardFiles 'proguard-rules.txt'
