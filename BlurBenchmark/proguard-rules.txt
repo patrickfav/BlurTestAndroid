@@ -39,6 +39,11 @@
 -keep interface com.squareup.** { *; }
 -dontwarn com.squareup.okhttp.**
 
+#keep renderscript
+-keepclasseswithmembers class android.support.v8.renderscript.** {
+    native <methods>;
+}
+
 #keep systembartint
 -keep class com.readystatesoftware.** { *; }
 -keep interface com.readystatesoftware.** { *; }
