@@ -23,6 +23,12 @@ android {
         versionName "1.04b"
         renderscriptTargetApi 19
         renderscriptSupportMode true
+
+        ndk {
+            moduleName "libblur"
+            cFlags "-fvisibility=hidden -W -Wall -ffast-math -O3 -funroll-loops"
+            ldLibs "log", "jnigraphics"
+        }
     }
 
     buildTypes {
@@ -31,6 +37,7 @@ android {
             runProguard false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt");
             proguardFiles 'proguard-rules.txt'
+            jniDebugBuild true
         }
         release {
             runProguard true

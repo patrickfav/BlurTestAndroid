@@ -12,8 +12,10 @@ import at.favre.app.blurbenchmark.R;
  */
 public enum EBlurAlgorithm {
     RS_GAUSS_FAST(R.color.graphBgGreen), RS_BOX_5x5(R.color.graphBlue),
-	RS_GAUSS_5x5(R.color.graphBgWhite), RS_STACKBLUR(R.color.graphBgViolet),STACKBLUR(R.color.graphBgYellow),
-	GAUSS_FAST(R.color.graphBgRed), BOX_BLUR(R.color.graphBgTurquoise), NONE(R.color.graphBgBlack);
+	RS_GAUSS_5x5(R.color.graphBgWhite), RS_STACKBLUR(R.color.graphBgViolet),
+    NDK_STACKBLUR(R.color.graphBgOrange), STACKBLUR(R.color.graphBgYellow),
+	GAUSS_FAST(R.color.graphBgRed), BOX_BLUR(R.color.graphBgTurquoise), NONE(R.color.graphBgBlack)
+    ;
 
 	private final int colorResId;
 
