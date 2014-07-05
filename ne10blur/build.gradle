@@ -1,0 +1,42 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+apply plugin: 'android-library'
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 19
+        versionCode 1
+        versionName "1.0.1"
+    }
+
+    sourceSets.main {
+        jniLibs.srcDir 'src/main/libs'
+        jni.srcDirs = [] //disable automatic ndk-build call
+    }
+}
+
+// call regular ndk-build(.cmd) script from app directory
+task ndkBuild(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'ndk-build.cmd', '-C', file('src/main').absolutePath
+    } else {
+        commandLine '/bin/bash', '-l', '-c', "ndk-build -C ${file('src/main').absolutePath}"
+    }
+}
+
+task ndkClean(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        commandLine 'ndk-build.cmd', '-C', file('src/main').absolutePath, "clean"
+    } else {
+        commandLine '/bin/bash', '-l', '-c', "ndk-build -C ${file('src/main').absolutePath} clean"
+    }
+}
+
+tasks.withType(JavaCompile) {
+    compileTask -> compileTask.dependsOn ndkBuild
+}
+
+clean.dependsOn ndkClean
