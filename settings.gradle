@@ -1,1 +1,1 @@
-include ':BlurBenchmark', ':tablefixedheader', ':paralloid'
+include ':BlurBenchmark', ':tablefixedheader', ':paralloid', ':ne10blur'
