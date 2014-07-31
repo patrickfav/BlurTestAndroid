@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 
@@ -71,7 +72,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			run=true;
 			long startReadBitmap = BenchmarkUtil.elapsedRealTimeNanos();
 			master = loadBitmap();
-			master.setHasMipMap(false);
+			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) master.setHasMipMap(false);
 			long readBitmapDuration = (BenchmarkUtil.elapsedRealTimeNanos() - startReadBitmap)/1000000l;
 
 			statInfo = new StatInfo(master.getHeight(), master.getWidth(),radius,algorithm,benchmarkRounds,BitmapUtil.sizeOf(master));
