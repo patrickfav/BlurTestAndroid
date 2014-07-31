@@ -1,5 +1,6 @@
 package at.favre.app.blurbenchmark.util;
 
+import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.SystemClock;
 
@@ -23,6 +24,7 @@ public class BenchmarkUtil {
 		format.setRoundingMode(RoundingMode.HALF_UP);
 	}
 
+    @TargetApi(17)
 	public static long elapsedRealTimeNanos() {
 		if (Build.VERSION.SDK_INT >= 17) {
 			return SystemClock.elapsedRealtimeNanos();

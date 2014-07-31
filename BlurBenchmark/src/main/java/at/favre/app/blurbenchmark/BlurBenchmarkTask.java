@@ -1,5 +1,6 @@
 package at.favre.app.blurbenchmark;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -67,6 +68,7 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	}
 
 	@Override
+    @TargetApi(17)
 	protected BenchmarkWrapper doInBackground(Void... voids) {
 		try {
 			run=true;
