@@ -21,14 +21,14 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 12
         versionName "1.05"
-        renderscriptTargetApi 19
+        renderscriptTargetApi 20
         renderscriptSupportMode true
 
-        ndk {
-            moduleName "libblur"
-            cFlags "-fvisibility=hidden -W -Wall -ffast-math -O3 -funroll-loops"
-            ldLibs "log", "jnigraphics"
-        }
+//        ndk {
+//            moduleName "libblur"
+//            cFlags "-fvisibility=hidden -W -Wall -ffast-math -O3 -funroll-loops"
+//            ldLibs "log", "jnigraphics"
+//        }
     }
 
     buildTypes {
@@ -37,7 +37,7 @@ android {
             runProguard false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt");
             proguardFiles 'proguard-rules.txt'
-            jniDebugBuild true
+//            jniDebugBuild true
         }
         release {
             runProguard true
@@ -61,6 +61,7 @@ dependencies {
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile project(':tablefixedheader')
 //    compile project(':paralloid')
+//    compile project(':ne10blur')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
