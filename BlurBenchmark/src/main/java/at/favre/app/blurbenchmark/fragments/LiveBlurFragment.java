@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -67,7 +66,6 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	private long avgCount =0;
 	private long last=0;
 
-	private ViewTreeObserver.OnGlobalLayoutListener ogl;
 	private SettingsController settingsController;
 
 	private Bitmap prevFrame;
@@ -110,16 +108,6 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 			public void onPageScrollStateChanged(int state) {
 			}
 		});
-		ogl = new ViewTreeObserver.OnGlobalLayoutListener() {
-			@Override
-			public void onGlobalLayout() {
-				if(updateBlurView()) {
-					disableLayoutListener();
-				}
-			}
-		};
-		//mPager.getViewTreeObserver().addOnGlobalLayoutListener(ogl);
-
 
 		settingsController = new SettingsController(v,new SeekBar.OnSeekBarChangeListener() {
 			@Override
@@ -188,10 +176,6 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.main_menu, menu);
-	}
-
-	private void disableLayoutListener() {
-		mPager.getViewTreeObserver().removeGlobalOnLayoutListener(ogl);
 	}
 
 	private boolean updateBlurView() {

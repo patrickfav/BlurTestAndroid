@@ -4,8 +4,8 @@ def Properties localProps = getSigningProperties()
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 19
-    buildToolsVersion "19.1.0"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     signingConfigs {
         release {
@@ -18,9 +18,9 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 19
-        versionCode 11
-        versionName "1.04b"
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 12
+        versionName "1.05"
         renderscriptTargetApi 19
         renderscriptSupportMode true
     }
@@ -53,6 +53,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.3.+'
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile project(':tablefixedheader')
+//    compile project(':paralloid')
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 

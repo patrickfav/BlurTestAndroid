@@ -105,6 +105,10 @@ public class BenchmarkResultFragment extends Fragment {
 					if(getView() != null) {
 						BitmapDrawable bitmapDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
 						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {bitmapDrawable,new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
+
+//						if (listView instanceof Parallaxor) {
+//							((Parallaxor) listView).parallaxViewBackgroundBy(listView, bitmapDrawable, .1f);
+//						}
 					}
 				}
 			}.execute();

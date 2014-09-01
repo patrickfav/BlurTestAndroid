@@ -5,7 +5,8 @@ import android.util.AttributeSet;
 import android.widget.ScrollView;
 
 /**
- * Created by PatrickF on 15.04.2014.
+ * This is a simple extension to the scrollView that
+ * allows to set a scrollListener
  */
 public class ObservableScrollView extends ScrollView {
 	private ScrollViewListener scrollViewListener = null;

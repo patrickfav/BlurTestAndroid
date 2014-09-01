@@ -52,6 +52,7 @@ public class BlurUtil {
 			blendScript.forEachAdd(input1,input2);
 			input2.copyTo(bitmap1);
 			return bitmap1;
+
 		} else {
 			throw new IllegalStateException("Renderscript needs sdk >= 17");
 		}

@@ -152,10 +152,11 @@ public class StatInfo {
 		this.byteAllocation = byteAllocation;
 	}
 
+	@JsonIgnore
 	public Average<Double> getAvg() {
 		return avg;
 	}
-
+	@JsonIgnore
 	public void setAvg(Average<Double> avg) {
 		this.avg = avg;
 	}

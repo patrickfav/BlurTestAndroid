@@ -1,6 +1,5 @@
 package at.favre.app.blurbenchmark;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -68,7 +67,6 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 	}
 
 	@Override
-    @TargetApi(17)
 	protected BenchmarkWrapper doInBackground(Void... voids) {
 		try {
 			run=true;
@@ -82,15 +80,20 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 
 			Bitmap blurredBitmap = null;
 
-            Log.d(TAG,"Warmup");
-            for (int i = 0; i < WARMUP_ROUNDS; i++) {
-				if(!run) {
-					break;
+			//if just quick round, skip warmup
+			if(benchmarkRounds > WARMUP_ROUNDS) {
+				Log.d(TAG, "Warmup");
+				for (int i = 0; i < WARMUP_ROUNDS; i++) {
+					if (!run) {
+						break;
+					}
+					BenchmarkUtil.elapsedRealTimeNanos();
+					blurredBitmap = master.copy(master.getConfig(), false);
+					blurredBitmap = BlurUtil.blur(rs, ctx, blurredBitmap, radius, algorithm);
 				}
-                BenchmarkUtil.elapsedRealTimeNanos();
-                blurredBitmap = master.copy(master.getConfig(), true);
-                blurredBitmap = BlurUtil.blur(rs,ctx, blurredBitmap, radius, algorithm);
-            }
+			} else {
+				Log.d(TAG,"Skip warmup");
+			}
 
             Log.d(TAG,"Start benchmark");
 			for (int i = 0; i < benchmarkRounds; i++) {

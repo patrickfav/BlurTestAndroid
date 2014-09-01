@@ -55,12 +55,12 @@ public class BlurBenchmarkFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
 	private static final int IMAGE_PICK = 43762;
 	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
-	private static Rounds[] roundArray = new Rounds[] {new Rounds(2),new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
+	private static Rounds[] roundArray = new Rounds[] {new Rounds(3),new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
 	private static final String ROUNDS_KEY = "ROUNDS_KEY";
 	private static final String CUSTOM_IMAGES = "CUSTOM_IMAGES";
 
-	private int rounds=100;
+	private int rounds;
 	private boolean run =false;
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 	private BlurBenchmarkTask task;
@@ -91,6 +91,9 @@ public class BlurBenchmarkFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+		rounds = getResources().getBoolean(R.bool.debugBuild) ? 3 : 100;
+
 		if(savedInstanceState !=  null) {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);
 			customPicturePaths = BenchmarkUtil.getAsFiles(savedInstanceState.getString(CUSTOM_IMAGES));
