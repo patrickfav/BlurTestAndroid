@@ -19,9 +19,9 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 12
-        versionName "1.05"
-        renderscriptTargetApi 20
+        versionCode 13
+        versionName "1.05a"
+        renderscriptTargetApi 19
         renderscriptSupportMode true
 
 //        ndk {
