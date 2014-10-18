@@ -16,7 +16,8 @@ public enum EBlurAlgorithm {
 //    NDK_STACKBLUR(R.color.graphBgOrange),
 //    NDK_NE10_BOX_BLUR(R.color.graphBgSkyBlue),
     STACKBLUR(R.color.graphBgYellow),
-	GAUSS_FAST(R.color.graphBgRed), BOX_BLUR(R.color.graphBgTurquoise), NONE(R.color.graphBgBlack)
+	GAUSS_FAST(R.color.graphBgRed), BOX_BLUR(R.color.graphBgTurquoise),
+    SUPER_FAST_BLUR(R.color.graphBgSandyBrown), NONE(R.color.graphBgBlack)
     ;
 
 	/**
