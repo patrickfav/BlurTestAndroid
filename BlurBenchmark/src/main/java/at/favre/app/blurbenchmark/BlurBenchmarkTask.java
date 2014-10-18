@@ -118,7 +118,8 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 					statInfo, isCustomPic);
 		} catch (Throwable e) {
             Log.e(TAG,"Could not complete benchmark",e);
-			return new BenchmarkWrapper(null,null, new StatInfo(e.toString(),algorithm),false);
+            statInfo.setException(e);
+			return new BenchmarkWrapper(null,null, statInfo,false);
 		}
 	}
 
