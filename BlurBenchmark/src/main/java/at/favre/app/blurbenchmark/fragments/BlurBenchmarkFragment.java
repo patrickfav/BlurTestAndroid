@@ -288,7 +288,7 @@ public class BlurBenchmarkFragment extends Fragment {
 					if (algoIndex >= algorithmList.size()) {
 						testDone();
 					} else {
-						task = new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithmList.get(algoIndex), ((MainActivity) getActivity()).getRs(), getActivity()) {
+						task = new BlurBenchmarkTask(imageList.get(photoIndex), rounds, radiusList.get(radiusIndex), algorithmList.get(algoIndex), ((MainActivity) getActivity()).getRs(), getActivity().getApplicationContext()) {
 							@Override
 							protected void onPostExecute(BenchmarkWrapper wrapper) {
 								progressDialog.setProgress(progressDialog.getProgress() + 1);
