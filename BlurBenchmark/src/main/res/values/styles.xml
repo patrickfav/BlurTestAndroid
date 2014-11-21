@@ -1,24 +1,27 @@
 <resources>
 
-    <style name="AppThemeRaw" parent="Theme.AppCompat">
+    <style name="AppThemeRaw" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowActionBarOverlay">true</item>
         <item name="android:actionBarStyle">@style/action_bar_theme</item>
         <item name="android:actionMenuTextColor">@color/optionsTextColor</item>
 
         <!-- Support library compatibility -->
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">false</item>
         <item name="actionBarStyle">@style/action_bar_theme</item>
         <item name="actionMenuTextColor">@color/optionsTextColor</item>
+
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="AppTheme" parent="AppThemeRaw">
     </style>
+
     <style name="AppThemeFullTranslucent" parent="AppTheme">
     </style>
 
-    <style name="action_bar_theme" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/quartertransparent</item>
-        <item name="android:titleTextStyle">@style/action_bar_text</item>
+    <style name="action_bar_theme" >
     </style>
 
     <style name="ellipsize">

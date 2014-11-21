@@ -5,16 +5,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.support.v8.renderscript.RenderScript;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.fragments.BlurBenchmarkFragment;
-import at.favre.app.blurbenchmark.fragments.ResultsBrowserFragment;
-import at.favre.app.blurbenchmark.fragments.ResultsDiagramFragment;
 import at.favre.app.blurbenchmark.fragments.IFragmentWithBlurSettings;
 import at.favre.app.blurbenchmark.fragments.LiveBlurFragment;
+import at.favre.app.blurbenchmark.fragments.ResultsBrowserFragment;
+import at.favre.app.blurbenchmark.fragments.ResultsDiagramFragment;
 import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
 
 /**
@@ -28,11 +29,15 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
 		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"Benchmark", "Resultstable","Resultschart", "Static", "Live"});
 		getSupportActionBar().setListNavigationCallbacks(adapter, this);
 
-		setContentView(R.layout.activity_main);
 		if (savedInstanceState == null) {
 			onNavigationItemSelected(0, 0);
 		}

@@ -1,7 +1,6 @@
 def Properties localProps = getSigningProperties()
 
-
-apply plugin: 'android'
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -19,10 +18,10 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 13
-        versionName "1.05a"
+        versionCode 14
+        versionName "1.1"
         renderscriptTargetApi 19
-        renderscriptSupportMode true
+        renderscriptSupportModeEnabled  true
 
 //        ndk {
 //            moduleName "libblur"
@@ -34,13 +33,13 @@ android {
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
-            runProguard false
+            minifyEnabled false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt");
             proguardFiles 'proguard-rules.txt'
-//            jniDebugBuild true
+            //jniDebuggable true
         }
         release {
-            runProguard true
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt");
             proguardFiles 'proguard-rules.txt'
             signingConfig signingConfigs.release
@@ -52,8 +51,8 @@ android {
     }
 }
 dependencies {
-    compile 'com.android.support:support-v4:19.1.0'
-    compile 'com.android.support:appcompat-v7:19.1.0'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile "com.android.support:appcompat-v7:21.0.+"
     compile 'com.squareup.picasso:picasso:2.2.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.3.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.3.+'

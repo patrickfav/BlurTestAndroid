@@ -44,7 +44,6 @@ import at.favre.app.blurbenchmark.models.BenchmarkResultList;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
 import at.favre.app.blurbenchmark.util.BenchmarkUtil;
 import at.favre.app.blurbenchmark.util.JsonUtil;
-import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
  * The main view, where you may start a benchmark with custom settings
@@ -145,7 +144,7 @@ public class BlurBenchmarkFragment extends Fragment {
 			}
 		});
 
-		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.rootScrollView));
+		//TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.rootScrollView));
         return v;
 	}
 

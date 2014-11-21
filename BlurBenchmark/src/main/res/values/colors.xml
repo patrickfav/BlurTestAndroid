@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="color_primary">#00BCD4</color>
+    <color name="color_primary_dark">#0097A7</color>
+    <color name="accent">#FF9800</color>
+
     <color name="halftransparent">#99000000</color>
     <color name="quartertransparent">#44000000</color>
     <color name="transparent">#00000000</color>
@@ -24,4 +28,6 @@
     <color name="tableCellTextColor">#333</color>
     <color name="redImageViewOverly">#44e74c3c</color>
     <color name="redImageViewOverlyText">#e74c3c</color>
+
+
 </resources>

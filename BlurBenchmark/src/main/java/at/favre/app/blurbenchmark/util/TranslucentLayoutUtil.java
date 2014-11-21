@@ -6,8 +6,6 @@ import android.view.View;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import at.favre.app.blurbenchmark.R;
-
 /**
  * Created by PatrickF on 22.04.2014.
  */
@@ -20,7 +18,7 @@ public class TranslucentLayoutUtil {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			view.setPadding(0, config.getPixelInsetTop(true) + config.getStatusBarHeight(), config.getPixelInsetRight(), config.getPixelInsetBottom());
 		} else {
-			view.setPadding(0, context.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height), 0, 0);
+			//view.setPadding(0, context.getResources().getDimensionPixelSize(R.dimen.abc_action_bar_default_height), 0, 0);
 		}
 	}
 
