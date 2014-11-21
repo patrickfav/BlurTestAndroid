@@ -16,6 +16,7 @@
     <color name="graphBgBlack">#99000000</color>
     <color name="graphBgRed">#99e74c3c</color>
     <color name="graphBgSkyBlue">#B2FFFF</color>
+    <color name="graphBgSandyBrown">#F4A460</color>
     <color name="graphBlue">#993498db</color>
     <color name="graphMidnightBlue">#2c3e50</color>
     <color name="tableHeaderBg">#d35400</color>

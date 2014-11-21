@@ -45,12 +45,6 @@ public class StatInfo {
 		this.byteAllocation = byteAllocation;
 	}
 
-	public StatInfo(String errorDescription, EBlurAlgorithm algorithm) {
-		this.errorDescription = errorDescription;
-		this.error = true;
-		this.algorithm =algorithm;
-	}
-
 	public long getLoadBitmap() {
 		return loadBitmap;
 	}
@@ -84,6 +78,11 @@ public class StatInfo {
 	public void setBenchmarkDuration(long benchmarkDuration) {
 		this.benchmarkDuration = benchmarkDuration;
 	}
+
+    public void setException(Throwable throwable) {
+        setError(true);
+        setErrorDescription(throwable.toString());
+    }
 
 	public boolean isError() {
 		return error;

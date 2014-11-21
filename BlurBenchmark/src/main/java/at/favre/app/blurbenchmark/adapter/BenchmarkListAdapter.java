@@ -68,12 +68,10 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 			viewHolder.tvImageInfo.setVisibility(View.VISIBLE);
 			viewHolder.tvBlurRadius.setVisibility(View.VISIBLE);
 
+            viewHolder.tvAdditionalInfo.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getThroughputMPixelsPerSec()) + " MPixS / " + getItem(position).getStatInfo().getAlgorithm().toString());
 			viewHolder.tvAvg.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg()) + "ms");
 			Picasso.with(getContext()).load(getItem(position).getBitmapAsFile()).placeholder(R.drawable.placeholder).into(viewHolder.imageView);
 			Picasso.with(getContext()).load(getItem(position).getFlippedBitmapAsFile()).placeholder(R.drawable.placeholder).into((ImageView) viewHolder.backImageWrapper.findViewById(R.id.thumbnail2));
-			viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
-			viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapWidth() + " / " + getItem(position).getStatInfo().getMegaPixels());
-			viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapByteSize());
 			viewHolder.tvDeviation.setText("+/-" + BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().get90PercentConfidenceIntervall().getStdError()) + "ms");
 			((TextView) viewHolder.backImageWrapper.findViewById(R.id.tv_imageInfo2)).setText("bmp loading: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getLoadBitmap())+"ms\n"+
 					"blur min/max: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMin())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getMax())+"ms\n"+
@@ -81,7 +79,6 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 					"blur avg/normalized: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms/"+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getAvg())+"ms\n"+
 					"benchmark: "+BenchmarkUtil.formatNum(getItem(position).getStatInfo().getBenchmarkDuration())+"ms\n");
 
-			viewHolder.tvAdditionalInfo.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getThroughputMPixelsPerSec()) + " MPixS / " + getItem(position).getStatInfo().getAlgorithm().toString());
 			viewHolder.tvOver16ms.setText(BenchmarkUtil.formatNum(getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)) + "% over "+IBlur.MS_THRESHOLD_FOR_SMOOTH+"ms");
 			viewHolder.tvOver16ms.getLayoutParams().height = ((int) ((double) viewHolder.frontImageWrapper.getLayoutParams().height * getItem(position).getStatInfo().getAsAvg().getPercentageOverGivenValue(IBlur.MS_THRESHOLD_FOR_SMOOTH)/100d));
 			viewHolder.tvOver16ms.requestLayout();
@@ -177,14 +174,22 @@ public class BenchmarkListAdapter extends ArrayAdapter<BenchmarkWrapper> {
 
 			viewHolder.tvAvg.setVisibility(View.GONE);
 			viewHolder.tvDeviation.setVisibility(View.GONE);
-			viewHolder.tvWidthHeight.setVisibility(View.GONE);
-			viewHolder.tvImageInfo.setVisibility(View.GONE);
-			viewHolder.tvBlurRadius.setVisibility(View.GONE);
-			viewHolder.tvAdditionalInfo.setVisibility(View.GONE);
+			viewHolder.tvWidthHeight.setVisibility(View.VISIBLE);
+			viewHolder.tvImageInfo.setVisibility(View.VISIBLE);
+			viewHolder.tvBlurRadius.setVisibility(View.VISIBLE);
+			viewHolder.tvAdditionalInfo.setVisibility(View.VISIBLE);
 			viewHolder.tvOver16ms.setVisibility(View.GONE);
+
+            viewHolder.tvAdditionalInfo.setText(getItem(position).getStatInfo().getAlgorithm().toString());
+
+            viewHolder.frontImageWrapper.setOnClickListener(null);
+            viewHolder.backImageWrapper.setOnClickListener(null);
+            convertView.setOnClickListener(null);
 		}
 
-
+        viewHolder.tvBlurRadius.setText(getItem(position).getStatInfo().getBlurRadius() + "px");
+        viewHolder.tvImageInfo.setText(getItem(position).getStatInfo().getBitmapByteSize());
+        viewHolder.tvWidthHeight.setText(getItem(position).getStatInfo().getBitmapHeight() + " x " + getItem(position).getStatInfo().getBitmapWidth() + " / " + getItem(position).getStatInfo().getMegaPixels());
 
 		return convertView;
 	}

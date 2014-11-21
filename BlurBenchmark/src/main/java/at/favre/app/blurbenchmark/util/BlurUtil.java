@@ -17,6 +17,7 @@ import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussian5x5Blur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptGaussianBlur;
 import at.favre.app.blurbenchmark.blur.algorithms.RenderScriptStackBlur;
 import at.favre.app.blurbenchmark.blur.algorithms.StackBlur;
+import at.favre.app.blurbenchmark.blur.algorithms.SuperFastBlur;
 
 /**
  * Created by PatrickF on 07.04.2014.
@@ -43,6 +44,8 @@ public class BlurUtil {
 //                return NdkStackBlur.create().blur(radius, bitmap);
 //            case NDK_NE10_BOX_BLUR:
 //                return new Blur().blur(radius, bitmap);
+            case SUPER_FAST_BLUR:
+                return new SuperFastBlur().blur(radius,bitmap);
 			default:
 				return bitmap;
 		}
