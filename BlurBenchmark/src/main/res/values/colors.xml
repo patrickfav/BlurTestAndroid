@@ -3,13 +3,14 @@
     <color name="color_primary">#00BCD4</color>
     <color name="color_primary_dark">#0097A7</color>
     <color name="accent">#FF9800</color>
-
+    <color name="primary_textcolor">@android:color/white</color>
     <color name="halftransparent">#99000000</color>
     <color name="quartertransparent">#44000000</color>
     <color name="transparent">#00000000</color>
     <color name="defaultPressedColor">#44ffffff</color>
     <color name="darkgrey">#333333</color>
-    <color name="optionsTextColor">#ccc</color>
+    <color name="optionsTextColor">#333</color>
+    <color name="optionsTextColorDark">@color/primary_textcolor</color>
     <color name="optionsTextColorLowKey">#99cccccc</color>
     <color name="graphBgGreen">#992ecc71</color>
     <color name="graphBgViolet">#998e44ad</color>

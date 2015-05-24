@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -20,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:theme="@style/AppThemeFullTranslucent"
+            android:theme="@style/AppTheme"
             android:name="at.favre.app.blurbenchmark.activities.BenchmarkResultActivity">
         </activity>
     </application>

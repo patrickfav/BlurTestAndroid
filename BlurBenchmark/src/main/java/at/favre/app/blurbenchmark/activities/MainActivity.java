@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v8.renderscript.RenderScript;
 import android.view.MenuItem;
@@ -21,7 +21,7 @@ import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
 /**
  * Created by PatrickF on 10.04.2014.
  */
-public class MainActivity extends ActionBarActivity implements ActionBar.OnNavigationListener {
+public class MainActivity extends AppCompatActivity implements ActionBar.OnNavigationListener {
 	public final static String DIALOG_TAG = "blurdialog";
 	private RenderScript rs;
 
@@ -84,7 +84,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 			case 0:
 				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new BlurBenchmarkFragment(), BlurBenchmarkFragment.class.getSimpleName());
+					t.add(R.id.root, new BlurBenchmarkFragment(), BlurBenchmarkFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -95,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 			case 1:
 				if (getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new ResultsBrowserFragment(), ResultsBrowserFragment.class.getSimpleName());
+					t.add(R.id.root, new ResultsBrowserFragment(), ResultsBrowserFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -106,7 +106,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 			case 2:
 				if (getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new ResultsDiagramFragment(), ResultsDiagramFragment.class.getSimpleName());
+					t.add(R.id.root, new ResultsDiagramFragment(), ResultsDiagramFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -117,7 +117,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 			case 3:
 				if (getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new StaticBlurFragment(), StaticBlurFragment.class.getSimpleName());
+					t.add(R.id.root, new StaticBlurFragment(), StaticBlurFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -128,7 +128,7 @@ public class MainActivity extends ActionBarActivity implements ActionBar.OnNavig
 			case 4:
 				if (getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(android.R.id.content, new LiveBlurFragment(), LiveBlurFragment.class.getSimpleName());
+					t.add(R.id.root, new LiveBlurFragment(), LiveBlurFragment.class.getSimpleName());
 					t.commitAllowingStateLoss();
 				} else {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();

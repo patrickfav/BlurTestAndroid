@@ -2,7 +2,7 @@ package at.favre.app.blurbenchmark.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.fragments.BenchmarkResultFragment;
@@ -12,7 +12,7 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 /**
  * Created by PatrickF on 16.04.2014.
  */
-public class BenchmarkResultActivity extends ActionBarActivity {
+public class BenchmarkResultActivity extends AppCompatActivity {
 	public static final String BENCHMARK_LIST_KEY = "benchmark_list";
 
 	@Override

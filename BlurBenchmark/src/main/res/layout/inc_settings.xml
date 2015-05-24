@@ -13,7 +13,7 @@
         android:id="@+id/tv_insample_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/optionsTextColor"
+        android:textColor="@color/optionsTextColorDark"
         android:textSize="18sp"
         android:text="Downsample"/>
     <LinearLayout
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="1/8"
             android:gravity="center"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:textSize="16sp"
             android:layout_gravity="center"
             android:layout_weight="2"
@@ -49,7 +49,7 @@
         android:id="@+id/tv_radius_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/optionsTextColor"
+        android:textColor="@color/optionsTextColorDark"
         android:textSize="18sp"
         android:text="Blur Radius"/>
     <LinearLayout
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:text="16px"
             android:gravity="center"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:textSize="18sp"
             android:layout_gravity="center"
             android:layout_weight="1"
@@ -84,6 +84,7 @@
         android:id="@+id/spinner_algorithm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/optionsTextColorDark"
         android:layout_marginBottom="12dp"/>
 
     <CheckBox
@@ -91,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Show Alpha Crossfade"
-        android:textColor="@color/optionsTextColor"
+        android:textColor="@color/optionsTextColorDark"
         android:padding="8dp"
         android:layout_marginBottom="12dp"/>
 
@@ -101,6 +102,5 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Full Redraw"
-        android:textColor="@color/optionsTextColor"
         />
 </LinearLayout>

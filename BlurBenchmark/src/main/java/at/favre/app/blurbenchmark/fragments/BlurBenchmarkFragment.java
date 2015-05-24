@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
@@ -28,10 +29,22 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.okhttp.Interceptor;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Protocol;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
 import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import at.favre.app.blurbenchmark.BenchmarkStorage;
 import at.favre.app.blurbenchmark.BlurBenchmarkTask;
@@ -97,6 +110,7 @@ public class BlurBenchmarkFragment extends Fragment {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);
 			customPicturePaths = BenchmarkUtil.getAsFiles(savedInstanceState.getString(CUSTOM_IMAGES));
 		}
+		test();
 	}
 
 	@Override
@@ -461,5 +475,87 @@ public class BlurBenchmarkFragment extends Fragment {
 			return rounds;
 		}
 	}
+
+	public void test() {
+		AsyncTask<Void,Void,Void> task =  new AsyncTask<Void,Void,Void>() {
+
+			@Override
+			protected Void doInBackground(Void... params) {
+				OkHttpClient client = new OkHttpClient();
+				client.networkInterceptors().add(new Interceptor() {
+					@Override
+					public Response intercept(Chain chain) throws IOException {
+						Request r = chain.request();
+//						chain.connection();
+
+						final Map<String,String> headerMap = new HashMap<String, String>();
+						for (String name : r.headers().names()) {
+							headerMap.put(name,r.headers().get(name));
+						}
+
+//						Request.Builder builder = new Request.Builder();
+//						builder.url("http://test.com");
+//						builder.post(new RequestBody() {
+//							@Override
+//							public MediaType contentType() {
+//								return null;
+//							}
+//
+//							@Override
+//							public void writeTo(BufferedSink sink) throws IOException {
+//								sink.writeUtf8(JsonUtil.toJsonString(new Gksl(headerMap, "test")));
+//								sink.close();
+//							}
+//						});
+
+//						Response response = chain.proceed(r);
+						Field calls = null;
+						try {
+							calls = chain.getClass().getDeclaredField("calls");
+							calls.setAccessible(true);
+							calls.set(chain,1);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+
+						return new Response.Builder().protocol(Protocol.HTTP_1_1).request(r).message("message").code(409).build();
+					}
+				});
+
+				Request request = new Request.Builder()
+						.url("http://www.reddit.com/doesnotexistimsure")
+						.post(RequestBody.create(MediaType.parse("JSON"), "{}"))
+						.build();
+
+				try {
+					Log.d(TAG,"Start");
+					Response r = client.newCall(request).execute();
+					Log.d(TAG,"Response "+r);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return  null;
+			}
+		}.execute();
+
+
+	}
+
+	public class Gksl {
+		private Map<String,String> header;
+		private String content;
+
+		public Gksl(Map<String, String> header, String content) {
+			this.header = header;
+			this.content = content;
+		}
+	}
+
+//	public class CustomRequest extends Request {
+//
+//		private CustomRequest(Builder builder) {
+//			super(builder);
+//		}
+//	}
 
 }

@@ -57,7 +57,7 @@
             android:padding="4dp"
             android:shadowColor="#000"
             android:shadowRadius="2"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:textSize="9sp"/>
 
         <TextView
@@ -68,7 +68,7 @@
             android:padding="4dp"
             android:shadowColor="#000"
             android:shadowRadius="2"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:textSize="9sp"/>
     </FrameLayout>
 </FrameLayout>
