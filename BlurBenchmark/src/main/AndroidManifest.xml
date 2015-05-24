@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:theme="@style/AppTheme"
+            android:theme="@style/AppTheme.NoToolbar"
             android:name="at.favre.app.blurbenchmark.activities.BenchmarkResultActivity">
         </activity>
     </application>

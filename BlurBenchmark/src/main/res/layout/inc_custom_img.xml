@@ -23,6 +23,6 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:src="@drawable/ic_action_content_remove"
-        android:background="@drawable/default_selector"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_weight="1"/>
 </LinearLayout>

@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -145,7 +144,7 @@ public class BlurBenchmarkFragment extends Fragment {
 
         algorithmGroup = (ViewGroup) v.findViewById(R.id.algorithm_wrapper);
         for (EBlurAlgorithm algorithm1 : algorithmList) {
-            algorithmGroup.addView(createAlgorithmCheckbox(algorithm1));
+            algorithmGroup.addView(createAlgorithmCheckbox(algorithm1,inflater));
         }
         ((CheckBox) algorithmGroup.getChildAt(0)).setChecked(true);
 
@@ -162,13 +161,10 @@ public class BlurBenchmarkFragment extends Fragment {
         return v;
 	}
 
-    private CheckBox createAlgorithmCheckbox(EBlurAlgorithm algorithm) {
-        CheckBox cb = new CheckBox(getActivity());
+    private CheckBox createAlgorithmCheckbox(EBlurAlgorithm algorithm,LayoutInflater inflater) {
+        CheckBox cb = (CheckBox) inflater.inflate(R.layout.inc_algorithm_checkbox,null);
         cb.setText(algorithm.toString());
         cb.setTag(algorithm);
-        cb.setTextSize(TypedValue.COMPLEX_UNIT_DIP,18);
-        cb.setTextColor(getResources().getColor(R.color.optionsTextColor));
-        cb.setPadding(0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding),0,getResources().getDimensionPixelSize(R.dimen.form_element_std_padding));
         return cb;
     }
 

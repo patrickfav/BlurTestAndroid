@@ -40,7 +40,7 @@
             android:textSize="11sp"
             android:gravity="center"
             android:padding="3dp"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:background="@color/halftransparent"/>
 
         <TextView
@@ -52,7 +52,7 @@
             android:textSize="11sp"
             android:gravity="center"
             android:padding="4dp"
-            android:textColor="@color/optionsTextColor"
+            android:textColor="@color/optionsTextColorDark"
             android:background="@color/halftransparent"/>
 
         <TextView
@@ -94,7 +94,7 @@
             android:textSize="11sp"
             android:gravity="center"
             android:padding="4dp"
-            android:textColor="@color/optionsTextColor"/>
+            android:textColor="@color/optionsTextColorDark"/>
 
     </FrameLayout>
 
@@ -121,7 +121,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:gravity="bottom"
-        android:textColor="@color/optionsTextColor"
+        android:textColor="@color/optionsTextColorDark"
         android:paddingBottom="0dp"
         />
 
@@ -133,7 +133,7 @@
         android:text="+/-3ms"
         android:layout_toLeftOf="@+id/tv_avg"
         android:layout_alignBaseline="@+id/tv_avg"
-        android:textColor="@color/optionsTextColor"
+        android:textColor="@color/optionsTextColorDark"
         />
 
     <TextView

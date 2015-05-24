@@ -84,7 +84,7 @@
         android:id="@+id/spinner_algorithm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/optionsTextColorDark"
+        style="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_marginBottom="12dp"/>
 
     <CheckBox

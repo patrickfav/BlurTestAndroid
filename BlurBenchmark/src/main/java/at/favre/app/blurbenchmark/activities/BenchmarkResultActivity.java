@@ -19,7 +19,6 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_benchmark_result);
-		getSupportActionBar().hide();
 		if(savedInstanceState == null) {
 			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 			t.add(android.R.id.content, BenchmarkResultFragment.createInstance(JsonUtil.fromJsonString(getIntent().getStringExtra(BENCHMARK_LIST_KEY), BenchmarkResultList.class)),BenchmarkResultFragment.class.getSimpleName());

@@ -7,7 +7,7 @@
     <color name="halftransparent">#99000000</color>
     <color name="quartertransparent">#44000000</color>
     <color name="transparent">#00000000</color>
-    <color name="defaultPressedColor">#44ffffff</color>
+    <color name="defaultPressedColor">#28000000</color>
     <color name="darkgrey">#333333</color>
     <color name="optionsTextColor">#333</color>
     <color name="optionsTextColorDark">@color/primary_textcolor</color>
