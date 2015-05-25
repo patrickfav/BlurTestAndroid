@@ -86,7 +86,6 @@ public class BenchmarkResultFragment extends Fragment {
 	}
 
 	private void setBackground() {
-		getView().getRootView().setBackgroundColor(getResources().getColor(R.color.darkgrey));
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty() && !benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getStatInfo().isError()) {
 			new AsyncTask<Void,Void,Bitmap>() {
 				@Override
@@ -104,7 +103,7 @@ public class BenchmarkResultFragment extends Fragment {
 				protected void onPostExecute(Bitmap bitmap) {
 					if(getView() != null) {
 						BitmapDrawable bitmapDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
-						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {bitmapDrawable,new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
+						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {bitmapDrawable,new ColorDrawable(getResources().getColor(R.color.transparent))}));
 					}
 				}
 			}.execute();

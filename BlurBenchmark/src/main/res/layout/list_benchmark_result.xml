@@ -1,150 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android:id="@+id/card_view"
+                                    xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="4dp"
+                                    android:layout_marginRight="4dp"
+                                    android:layout_marginTop="4dp"
+                                    card_view:cardBackgroundColor="@color/card_view_dark_background"
+                                    card_view:cardCornerRadius="3dp"
+                                    card_view:cardElevation="@dimen/card_view_default_elevation"
+                                    card_view:cardUseCompatPadding="true">
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="136dp"
-              android:padding="8dp">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="128dp"
+                    android:orientation="vertical"
+                    android:padding="0dp">
 
-    <FrameLayout
-        android:id="@+id/thumbnail_front"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_alignParentLeft="true">
-        <ImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/placeholder"
-            android:scaleType="centerCrop"/>
+        <FrameLayout
+            android:id="@+id/thumbnail_front"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder"/>
+
+            <TextView
+                android:id="@+id/tv_over16ms"
+                android:layout_width="match_parent"
+                android:layout_height="63dp"
+                android:layout_gravity="bottom"
+                android:background="@color/redImageViewOverly"
+                android:gravity="left|bottom"
+                android:paddingBottom="22dp"
+                android:paddingLeft="4dp"
+                android:text="100% over 16ms"
+                android:textColor="@color/redImageViewOverlyText"
+                android:textSize="9sp"/>
+
+            <TextView
+                android:id="@+id/tv_width_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:background="@color/halftransparent"
+                android:gravity="center"
+                android:padding="3dp"
+                android:text="100x100"
+                android:textColor="@color/optionsTextColorDark"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/tv_imageInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:background="@color/halftransparent"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="123kb 0.6MP"
+                android:textColor="@color/optionsTextColorDark"
+                android:textSize="11sp"/>
+
+            <TextView
+                android:id="@+id/tv_radius"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="3dp"
+                android:shadowColor="#fff"
+                android:shadowRadius="2"
+                android:text="16px"
+                android:textColor="#222"
+                android:textSize="30sp"/>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/thumbnail_back"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_alignParentLeft="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/thumbnail2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/halftransparent"/>
+
+            <TextView
+                android:id="@+id/tv_imageInfo2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="loading: 450ms"
+                android:textColor="@color/optionsTextColorDark"
+                android:textSize="11sp"/>
+
+        </FrameLayout>
 
         <TextView
-            android:id="@+id/tv_over16ms"
-            android:layout_width="match_parent"
-            android:layout_height="63dp"
-            android:layout_gravity="bottom"
-            android:text="100% over 16ms"
-            android:textSize="9sp"
-            android:gravity="left|bottom"
-            android:paddingBottom="22dp"
-            android:paddingLeft="4dp"
-            android:textColor="@color/redImageViewOverlyText"
-            android:background="@color/redImageViewOverly"/>
-
-        <TextView
-            android:id="@+id/tv_width_height"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
-            android:text="100x100"
-            android:textSize="11sp"
-            android:gravity="center"
-            android:padding="3dp"
-            android:textColor="@color/optionsTextColorDark"
-            android:background="@color/halftransparent"/>
-
-        <TextView
-            android:id="@+id/tv_imageInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:text="123kb 0.6MP"
-            android:textSize="11sp"
-            android:gravity="center"
-            android:padding="4dp"
-            android:textColor="@color/optionsTextColorDark"
-            android:background="@color/halftransparent"/>
-
-        <TextView
-            android:id="@+id/tv_radius"
+            android:id="@+id/tv_errMsg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="16px"
-            android:textSize="30sp"
-            android:layout_gravity="center"
-            android:padding="3dp"
-            android:shadowColor="#fff"
-            android:shadowRadius="2"
-            android:textColor="#222"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/thumbnail_back"
-        android:layout_width="128dp"
-        android:layout_height="128dp"
-        android:layout_alignParentLeft="true"
-        android:visibility="gone">
-        <ImageView
-            android:id="@+id/thumbnail2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/halftransparent"/>
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/thumbnail_front"
+            android:paddingLeft="8dp"
+            android:text="This is the error"
+            android:textColor="@color/graphBgRed"
+            android:textSize="16sp"
+            android:visibility="gone"
+            />
 
         <TextView
-            android:id="@+id/tv_imageInfo2"
-            android:layout_width="match_parent"
+            android:id="@+id/tv_avg"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            android:text="loading: 450ms"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:gravity="bottom"
+            android:paddingLeft="8dp"
+            android:text="10.3ms"
+            android:textColor="@color/optionsTextColorDark"
+            android:textSize="32sp"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_deviation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/tv_avg"
+            android:layout_toLeftOf="@+id/tv_avg"
+            android:text="+/-3ms"
+            android:textColor="@color/optionsTextColorDark"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_algorithm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="100 Rounds / RS_GAUSSIAN"
+            android:textColor="@color/optionsTextColorLowKey"
             android:textSize="11sp"
-            android:gravity="center"
-            android:padding="4dp"
-            android:textColor="@color/optionsTextColorDark"/>
+            android:paddingTop="8dp"
+            android:paddingRight="8dp"
+            />
 
-    </FrameLayout>
-
-    <TextView
-        android:id="@+id/tv_errMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:paddingLeft="8dp"
-        android:text="This is the error"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/thumbnail_front"
-        android:textColor="@color/graphBgRed"
-        android:visibility="gone"
-        />
-
-    <TextView
-        android:id="@+id/tv_avg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="32sp"
-        android:paddingLeft="8dp"
-        android:text="10.3ms"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:gravity="bottom"
-        android:textColor="@color/optionsTextColorDark"
-        android:paddingBottom="0dp"
-        />
-
-    <TextView
-        android:id="@+id/tv_deviation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="+/-3ms"
-        android:layout_toLeftOf="@+id/tv_avg"
-        android:layout_alignBaseline="@+id/tv_avg"
-        android:textColor="@color/optionsTextColorDark"
-        />
-
-    <TextView
-        android:id="@+id/tv_algorithm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="11sp"
-        android:text="100 Rounds / RS_GAUSSIAN"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/optionsTextColorLowKey"
-        />
-
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

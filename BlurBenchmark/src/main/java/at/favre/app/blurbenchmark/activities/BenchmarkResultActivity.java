@@ -28,6 +28,7 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setTitle("Benchmark Results");
+		getSupportActionBar().setElevation(7.5f);
 
 		if(savedInstanceState == null) {
 			FragmentTransaction t = getSupportFragmentManager().beginTransaction();

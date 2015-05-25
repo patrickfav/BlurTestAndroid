@@ -53,6 +53,7 @@ android {
 dependencies {
     compile 'com.android.support:support-v4:22.1.+'
     compile "com.android.support:appcompat-v7:22.1.+"
+    compile 'com.android.support:cardview-v7:22.1.+'
     compile 'com.squareup.picasso:picasso:2.5.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'

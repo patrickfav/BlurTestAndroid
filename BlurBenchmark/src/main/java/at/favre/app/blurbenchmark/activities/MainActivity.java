@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
+		getSupportActionBar().setElevation(5f);
 		initDrawer();
 
 		if (savedInstanceState == null) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.color_primary));
 		navListView = (ListView) drawerLayout.findViewById(R.id.left_drawer);
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.lv_nav_item, new String[]{"Benchmark", "Results: Table","Results: Chart", "Blur: Static", "Blur: Live"});
+		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_nav_item, new String[]{"Benchmark", "Results: Table","Results: Chart", "Blur: Static", "Blur: Live"});
 		navListView.setAdapter(adapter);
 		navListView.setOnItemClickListener(this);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
