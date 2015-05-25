@@ -102,7 +102,7 @@ public class BenchmarkDetailsDialog extends DialogFragment {
 
 		graphView.getGraphViewStyle().setHorizontalLabelsColor(res.getColor(R.color.transparent));
 		graphView.getGraphViewStyle().setNumHorizontalLabels(0);
-		graphView.getGraphViewStyle().setVerticalLabelsColor(res.getColor(R.color.optionsTextColor));
+		graphView.getGraphViewStyle().setVerticalLabelsColor(res.getColor(R.color.optionsTextColorDark));
 		graphView.getGraphViewStyle().setNumVerticalLabels(4);
 		graphView.getGraphViewStyle().setVerticalLabelsAlign(Paint.Align.CENTER);
 		graphView.getGraphViewStyle().setVerticalLabelsWidth( (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 32, res.getDisplayMetrics()));
