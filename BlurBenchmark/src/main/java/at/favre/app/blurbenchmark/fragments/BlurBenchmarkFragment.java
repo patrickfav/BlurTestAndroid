@@ -115,12 +115,13 @@ public class BlurBenchmarkFragment extends Fragment {
 		cbSize600 = (CheckBox) v.findViewById(R.id.cb_s_600);
 
 		roundsSpinner = (Spinner)  v.findViewById(R.id.spinner_rounds);
-		roundsSpinner.setAdapter(new ArrayAdapter<Rounds>(getActivity(),android.R.layout.simple_spinner_dropdown_item,roundArray));
+		roundsSpinner.setAdapter(new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_dropdown_item, roundArray));
 		roundsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				rounds = ((Rounds)adapterView.getAdapter().getItem(i)).getRounds();
+				rounds = ((Rounds) adapterView.getAdapter().getItem(i)).getRounds();
 			}
+
 			@Override
 			public void onNothingSelected(AdapterView<?> adapterView) {
 
@@ -143,7 +144,15 @@ public class BlurBenchmarkFragment extends Fragment {
 			}
 		});
 
-		//TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.rootScrollView));
+		v.findViewById(R.id.tv_algo_header).setOnLongClickListener(new View.OnLongClickListener() {
+			@Override
+			public boolean onLongClick(View v) {
+				for (int i = 0; i < algorithmGroup.getChildCount(); i++) {
+					((CheckBox) algorithmGroup.getChildAt(i)).setChecked(true);
+				}
+				return true;
+			}
+		});
         return v;
 	}
 

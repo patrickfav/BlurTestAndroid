@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -97,6 +98,7 @@ public class ResultsBrowserFragment extends Fragment {
 
             }
         });
+		spinner.setGravity(Gravity.RIGHT);
     }
 
     private void setNewDataType(ResultTableModel.DataType type) {

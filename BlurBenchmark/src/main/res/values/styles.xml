@@ -46,18 +46,13 @@
         <item name="android:gravity">right|center_vertical</item>
     </style>
 
-    <style name="Widget.MyApp.HeaderBar.Spinner" parent="Widget.AppCompat.Light.Spinner.DropDown.ActionBar">
-        <item name="android:background">?android:selectableItemBackground</item>
-        <item name="android:dropDownSelector">?android:selectableItemBackground</item>
-        <item name="android:divider">@null</item>
-    </style>
-
     <style name="nav_drawer_item">
         <item name="android:textSize">20sp</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingLeft">16dp</item>
-        <item name="android:textColor">@color/optionsTextColor</item>
+        <item name="android:textColor">@color/nav_color_selector</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

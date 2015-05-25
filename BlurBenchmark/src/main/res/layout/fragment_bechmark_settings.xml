@@ -188,6 +188,7 @@
 
 
             <TextView
+                android:id="@+id/tv_algo_header"
                 style="@style/benchmarkSettingWidget"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
