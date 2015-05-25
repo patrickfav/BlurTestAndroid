@@ -1,6 +1,8 @@
 package at.favre.app.blurbenchmark.activities;
 
+import android.app.ActivityManager;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -41,8 +43,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-		getSupportActionBar().setElevation(5f);
+		getSupportActionBar().setElevation(15f);
 		initDrawer();
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
+		}
 
 		if (savedInstanceState == null) {
 			selectView(0);

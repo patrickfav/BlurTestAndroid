@@ -9,12 +9,12 @@ import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 
 import com.squareup.picasso.Picasso;
 
@@ -22,7 +22,8 @@ import java.io.IOException;
 
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.activities.BenchmarkResultActivity;
-import at.favre.app.blurbenchmark.adapter.BenchmarkListAdapter;
+import at.favre.app.blurbenchmark.adapter.BenchmarkResultAdapter;
+import at.favre.app.blurbenchmark.adapter.BenchmarkResultHolder;
 import at.favre.app.blurbenchmark.models.BenchmarkResultList;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 
@@ -37,8 +38,8 @@ public class BenchmarkResultFragment extends Fragment {
 
 	private BenchmarkResultList benchmarkResultList = new BenchmarkResultList();
 
-	private ListAdapter adapter;
-	private ListView listView;
+	private RecyclerView.Adapter<BenchmarkResultHolder> adapter;
+	private RecyclerView recyclerView;
 
 	public BenchmarkResultFragment() {
 	}
@@ -67,15 +68,17 @@ public class BenchmarkResultFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_benchmark_results,container,false);
 
-		listView = (ListView) v.findViewById(R.id.listview);
+		recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
+		recyclerView.setHasFixedSize(true);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		setUpListView();
 		return v;
 	}
 
 	private void setUpListView() {
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
-			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkResultList.getBenchmarkWrappers());
-			listView.setAdapter(adapter);
+			adapter = new BenchmarkResultAdapter(benchmarkResultList.getBenchmarkWrappers());
+			recyclerView.setAdapter(adapter);
 		}
 	}
 
