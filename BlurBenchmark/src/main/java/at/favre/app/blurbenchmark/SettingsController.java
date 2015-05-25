@@ -82,7 +82,7 @@ public class SettingsController {
 		});
 
 		algorithmSpinner = (Spinner)  v.findViewById(R.id.spinner_algorithm);
-		algorithmSpinner.setAdapter(new ArrayAdapter<EBlurAlgorithm>(v.getContext(),android.R.layout.simple_spinner_dropdown_item, algorithmList));
+		algorithmSpinner.setAdapter(new ArrayAdapter<>(v.getContext(),R.layout.inc_spinner_light, algorithmList));
 		algorithmSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

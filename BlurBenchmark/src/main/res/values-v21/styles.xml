@@ -5,8 +5,4 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
-    <style name="AppTheme.NoToolbar" parent="AppThemeRaw">
-        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
-        <item name="android:windowTranslucentStatus">false</item>
-    </style>
 </resources>

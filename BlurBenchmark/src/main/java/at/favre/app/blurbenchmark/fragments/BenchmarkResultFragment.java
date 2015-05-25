@@ -25,7 +25,6 @@ import at.favre.app.blurbenchmark.activities.BenchmarkResultActivity;
 import at.favre.app.blurbenchmark.adapter.BenchmarkListAdapter;
 import at.favre.app.blurbenchmark.models.BenchmarkResultList;
 import at.favre.app.blurbenchmark.util.JsonUtil;
-import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 
 /**
  * This will show the result of a benchmark in a ListView
@@ -40,7 +39,9 @@ public class BenchmarkResultFragment extends Fragment {
 
 	private ListAdapter adapter;
 	private ListView listView;
-	private View headerView;
+
+	public BenchmarkResultFragment() {
+	}
 
 	public static BenchmarkResultFragment createInstance(BenchmarkResultList resultList) {
 		BenchmarkResultFragment fragment = new BenchmarkResultFragment();
@@ -48,7 +49,8 @@ public class BenchmarkResultFragment extends Fragment {
 		return fragment;
 	}
 
-	public BenchmarkResultFragment() {
+	public void setBenchmarkResultList(BenchmarkResultList benchmarkResultList) {
+		this.benchmarkResultList = benchmarkResultList;
 	}
 
 	@Override
@@ -66,13 +68,16 @@ public class BenchmarkResultFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_benchmark_results,container,false);
 
 		listView = (ListView) v.findViewById(R.id.listview);
-		headerView = inflater.inflate(R.layout.list_benchmark_header,listView,false);
-
-		TranslucentLayoutUtil.setTranslucentThemeInsetsWithoutActionbarHeight(getActivity(), listView,false);
 		setUpListView();
 		return v;
 	}
 
+	private void setUpListView() {
+		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
+			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkResultList.getBenchmarkWrappers());
+			listView.setAdapter(adapter);
+		}
+	}
 
 	@Override
 	public void onResume() {
@@ -80,13 +85,8 @@ public class BenchmarkResultFragment extends Fragment {
 		setBackground();
 	}
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(BenchmarkResultActivity.BENCHMARK_LIST_KEY, JsonUtil.toJsonString(benchmarkResultList));
-	}
-
 	private void setBackground() {
+		getView().getRootView().setBackgroundColor(getResources().getColor(R.color.darkgrey));
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty() && !benchmarkResultList.getBenchmarkWrappers().get(benchmarkResultList.getBenchmarkWrappers().size() - 1).getStatInfo().isError()) {
 			new AsyncTask<Void,Void,Bitmap>() {
 				@Override
@@ -105,28 +105,15 @@ public class BenchmarkResultFragment extends Fragment {
 					if(getView() != null) {
 						BitmapDrawable bitmapDrawable = new BitmapDrawable(getActivity().getResources(), bitmap);
 						getView().getRootView().setBackgroundDrawable(new LayerDrawable(new Drawable[] {bitmapDrawable,new ColorDrawable(getResources().getColor(R.color.halftransparent))}));
-
-//						if (listView instanceof Parallaxor) {
-//							((Parallaxor) listView).parallaxViewBackgroundBy(listView, bitmapDrawable, .1f);
-//						}
 					}
 				}
 			}.execute();
 		}
 	}
 
-	private void setUpListView() {
-		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
-			//((TextView) headerView.findViewById(R.id.tv_header)).setText(benchmarkResultList.getBenchmarkWrappers().get(0).getStatInfo().getAlgorithm().toString());
-            listView.removeHeaderView(headerView);
-			listView.addHeaderView(headerView);
-			adapter = new BenchmarkListAdapter(getActivity(), R.id.list_item, benchmarkResultList.getBenchmarkWrappers());
-			listView.setAdapter(adapter);
-		}
-	}
-
-
-	public void setBenchmarkResultList(BenchmarkResultList benchmarkResultList) {
-		this.benchmarkResultList = benchmarkResultList;
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(BenchmarkResultActivity.BENCHMARK_LIST_KEY, JsonUtil.toJsonString(benchmarkResultList));
 	}
 }

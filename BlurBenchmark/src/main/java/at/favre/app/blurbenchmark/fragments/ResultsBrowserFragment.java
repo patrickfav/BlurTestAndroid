@@ -1,7 +1,9 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -77,8 +79,13 @@ public class ResultsBrowserFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.results_menu, menu);
         Spinner spinner = (Spinner) menu.findItem(R.id.action_select_datatype).getActionView();
-        ArrayAdapter<ResultTableModel.DataType> adapter = new ArrayAdapter<ResultTableModel.DataType>(getActivity(),android.R.layout.simple_spinner_dropdown_item,ResultTableModel.DataType.values());
+        ArrayAdapter<ResultTableModel.DataType> adapter = new ArrayAdapter<>(((AppCompatActivity)getActivity()).getSupportActionBar().getThemedContext(),R.layout.inc_spinner_light,ResultTableModel.DataType.values());
         spinner.setAdapter(adapter);
+		if (Build.VERSION.SDK_INT >= 16) {
+			spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark));
+		} else if(Build.VERSION.SDK_INT >= 21){
+			spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark,getActivity().getTheme()));
+		}
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {

@@ -10,11 +10,15 @@
 
     <style name="AppTheme" parent="AppThemeRaw">
     </style>
-    <style name="AppTheme.NoToolbar" parent="AppThemeRaw">
+    <style name="AppTheme.OpaqueStatusBar" parent="AppThemeRaw">
     </style>
     
     <style name="action_bar_theme" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/primary_textcolor</item>
+    </style>
+
+    <style name="PopupMenu" parent="Widget.AppCompat.PopupMenu">
+        <!--<item name="android:popupBackground">@color/anybill_blue</item>-->
     </style>
 
     <style name="ellipsize">

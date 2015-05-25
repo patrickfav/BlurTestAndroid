@@ -79,12 +79,11 @@
             android:layout_weight="1"
             />
     </LinearLayout>
-
     <Spinner
         android:id="@+id/spinner_algorithm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/ThemeOverlay.AppCompat.Dark"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
         android:layout_marginBottom="12dp"/>
 
     <CheckBox

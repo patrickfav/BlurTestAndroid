@@ -18,8 +18,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "1.1"
+        versionCode 15
+        versionName "2.0"
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled  true
 
@@ -57,7 +57,6 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-core:2.4.+'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.4.+'
-    compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
     compile project(':tablefixedheader')
 //    compile project(':paralloid')
