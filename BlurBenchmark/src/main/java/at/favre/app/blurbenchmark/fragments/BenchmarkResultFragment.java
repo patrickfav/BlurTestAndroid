@@ -77,7 +77,7 @@ public class BenchmarkResultFragment extends Fragment {
 
 	private void setUpListView() {
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
-			adapter = new BenchmarkResultAdapter(benchmarkResultList.getBenchmarkWrappers());
+			adapter = new BenchmarkResultAdapter(benchmarkResultList.getBenchmarkWrappers(), getActivity().getSupportFragmentManager());
 			recyclerView.setAdapter(adapter);
 		}
 	}

@@ -5,7 +5,7 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -37,10 +37,12 @@ public class BenchmarkResultHolder extends RecyclerView.ViewHolder {
 	private FrameLayout backImageWrapper;
 	
 	private Context ctx;
+	private final FragmentManager fragmentManager;
 
-	public BenchmarkResultHolder(View itemView) {
+	public BenchmarkResultHolder(View itemView,FragmentManager fragmentManager) {
 		super(itemView);
 		this.ctx = itemView.getContext();
+		this.fragmentManager = fragmentManager;
 
 		root = itemView;
 		tvAvg = (TextView) itemView.findViewById(R.id.tv_avg);
@@ -161,7 +163,7 @@ public class BenchmarkResultHolder extends RecyclerView.ViewHolder {
 				@Override
 				public void onClick(View view) {
 					BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(wrapper);
-					dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
+					dialog.show(fragmentManager, MainActivity.DIALOG_TAG);
 				}
 			});
 		} else {

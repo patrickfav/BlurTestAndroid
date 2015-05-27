@@ -1,7 +1,7 @@
 package at.favre.app.blurbenchmark.adapter;
 
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +83,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 					@Override
 					public void onClick(View view) {
 						BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
-						dialog.show(((FragmentActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
+						dialog.show(((AppCompatActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
 
 					}
 				});
