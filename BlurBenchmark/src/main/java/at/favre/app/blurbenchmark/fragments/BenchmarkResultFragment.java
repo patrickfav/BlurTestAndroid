@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,6 +27,7 @@ import at.favre.app.blurbenchmark.activities.BenchmarkResultActivity;
 import at.favre.app.blurbenchmark.adapter.BenchmarkResultAdapter;
 import at.favre.app.blurbenchmark.adapter.BenchmarkResultHolder;
 import at.favre.app.blurbenchmark.models.BenchmarkResultList;
+import at.favre.app.blurbenchmark.util.HidingScrollListener;
 import at.favre.app.blurbenchmark.util.JsonUtil;
 
 /**
@@ -71,8 +74,27 @@ public class BenchmarkResultFragment extends Fragment {
 		recyclerView = (RecyclerView) v.findViewById(R.id.recycler_view);
 		recyclerView.setHasFixedSize(true);
 		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		recyclerView.addOnScrollListener(new HidingScrollListener() {
+			@Override
+			public void onHide() {
+				hideViews();
+			}
+
+			@Override
+			public void onShow() {
+				showViews();
+			}
+		});
 		setUpListView();
 		return v;
+	}
+
+	private void hideViews() {
+		((BenchmarkResultActivity) getActivity()).getToolbar().animate().translationY(-((BenchmarkResultActivity) getActivity()).getToolbar().getHeight()).setInterpolator(new AccelerateInterpolator(2));
+	}
+
+	private void showViews() {
+		((BenchmarkResultActivity) getActivity()).getToolbar().animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
 	}
 
 	private void setUpListView() {

@@ -21,13 +21,15 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 public class BenchmarkResultActivity extends AppCompatActivity {
 	public static final String BENCHMARK_LIST_KEY = "benchmark_list";
 
+	private Toolbar toolbar;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_benchmark_result);
-
-		setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setTitle("Benchmark Results");
 		getSupportActionBar().setElevation(15f);
@@ -44,6 +46,17 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		toolbar.bringToFront();
+
+		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+			findViewById(R.id.root).requestLayout();
+			findViewById(R.id.root).invalidate();
+		}
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
@@ -55,5 +68,9 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	public Toolbar getToolbar() {
+		return toolbar;
 	}
 }
