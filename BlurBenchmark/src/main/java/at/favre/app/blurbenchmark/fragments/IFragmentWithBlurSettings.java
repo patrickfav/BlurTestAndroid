@@ -6,5 +6,5 @@ package at.favre.app.blurbenchmark.fragments;
  * @author pfavre
  */
 public interface IFragmentWithBlurSettings {
-	public void switchShowSettings();
+	void switchShowSettings();
 }

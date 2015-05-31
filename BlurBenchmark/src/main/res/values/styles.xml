@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppThemeRaw" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppThemeRaw" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="actionBarStyle">@style/action_bar_theme</item>
 
         <item name="colorPrimary">@color/color_primary</item>
@@ -13,7 +13,7 @@
     <style name="AppTheme.OpaqueStatusBar" parent="AppThemeRaw">
     </style>
     
-    <style name="action_bar_theme" parent="ThemeOverlay.AppCompat.ActionBar">
+    <style name="action_bar_theme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/primary_textcolor</item>
     </style>
 
