@@ -21,18 +21,12 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 public class BenchmarkResultActivity extends AppCompatActivity {
 	public static final String BENCHMARK_LIST_KEY = "benchmark_list";
 
-	private Toolbar toolbar;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_benchmark_result);
-		toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle("Benchmark Results");
-		getSupportActionBar().setElevation(15f);
+
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
@@ -48,7 +42,6 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		toolbar.bringToFront();
 
 		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
 			findViewById(R.id.root).requestLayout();
@@ -70,7 +63,10 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	public Toolbar getToolbar() {
-		return toolbar;
+	public void setupToolbar(Toolbar toolbar) {
+		setSupportActionBar(toolbar);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setTitle("Benchmark Results");
+		getSupportActionBar().setElevation(getResources().getDimension(R.dimen.toolbar_elevation));
 	}
 }

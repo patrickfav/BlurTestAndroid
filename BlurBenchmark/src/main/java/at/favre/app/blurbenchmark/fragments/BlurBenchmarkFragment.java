@@ -10,12 +10,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -81,6 +79,7 @@ public class BlurBenchmarkFragment extends Fragment {
     private ViewGroup algorithmGroup;
 
 	private ProgressDialog progressDialog;
+	private FloatingActionButton fab;
 
 	public BlurBenchmarkFragment() {
 	}
@@ -101,6 +100,13 @@ public class BlurBenchmarkFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_bechmark_settings,container,false);
+		fab = ((FloatingActionButton) v.findViewById(R.id.fab));
+		fab.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				benchmark();
+			}
+		});
 
 		cBradius4px = (CheckBox) v.findViewById(R.id.cb_r_4px);
 		cBradius8px = (CheckBox) v.findViewById(R.id.cb_r_8px);
@@ -332,23 +338,6 @@ public class BlurBenchmarkFragment extends Fragment {
 	private void saveTest() {
 		BenchmarkStorage.getInstance(getActivity()).saveTest(benchmarkResultList.getBenchmarkWrappers());
 	}
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.benchmark_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_benchmark:
-                benchmark();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
 	@Override
 	public void onPause() {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_item_1"
+            android:icon="@drawable/ic_play_circle_outline_white_36dp"
+            android:title="Benchmark"/>
+        <item
+            android:id="@+id/navigation_item_2"
+            android:icon="@drawable/ic_action_action_view_column"
+            android:title="Results: Table"/>
+        <item
+            android:id="@+id/navigation_item_3"
+            android:icon="@drawable/ic_action_editor_insert_chart"
+            android:title="Results: Chart"/>
+        <item
+            android:id="@+id/navigation_item_4"
+            android:icon="@drawable/ic_action_image_blur_on"
+            android:title="Blur: Static"/>
+        <item
+            android:id="@+id/navigation_item_5"
+            android:icon="@drawable/ic_action_image_blur_linear"
+            android:title="Blur: Live"/>
+    </group>
+</menu>

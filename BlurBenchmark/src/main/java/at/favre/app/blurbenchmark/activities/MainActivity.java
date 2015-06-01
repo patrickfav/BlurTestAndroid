@@ -5,6 +5,8 @@ import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -14,9 +16,6 @@ import android.support.v7.widget.Toolbar;
 import android.support.v8.renderscript.RenderScript;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.fragments.BlurBenchmarkFragment;
@@ -29,42 +28,38 @@ import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
 /**
  * Created by PatrickF on 10.04.2014.
  */
-public class MainActivity extends AppCompatActivity implements ListView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity {
 	public final static String DIALOG_TAG = "blurdialog";
 	private RenderScript rs;
 
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
-	private ListView navListView;
+	private NavigationView navigationView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
 
-        setContentView(R.layout.activity_main);
+		navigationView = ((NavigationView) findViewById(R.id.navigationView));
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-		getSupportActionBar().setElevation(15f);
+		getSupportActionBar().setElevation(getResources().getDimension(R.dimen.toolbar_elevation));
 		initDrawer();
+
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
 		}
 
 		if (savedInstanceState == null) {
-			selectView(0);
+			selectView(R.id.navigation_item_1);
 		}
 	}
 
 	private void initDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 		drawerLayout.setStatusBarBackgroundColor(getResources().getColor(R.color.color_primary));
-		navListView = (ListView) drawerLayout.findViewById(R.id.left_drawer);
-		ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_nav_item, new String[]{"Benchmark", "Results: Table","Results: Chart", "Blur: Static", "Blur: Live"});
-		navListView.setAdapter(adapter);
-		navListView.setOnItemClickListener(this);
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			navListView.setElevation(30);
-		}
 		drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, (Toolbar) findViewById(R.id.toolbar), R.string.drawer_open, R.string.drawer_close) {
 
 			@Override
@@ -80,6 +75,12 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 			}
 		};
 		drawerLayout.setDrawerListener(drawerToggle);
+		navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+			@Override
+			public boolean onNavigationItemSelected(MenuItem menuItem) {
+				return selectView(menuItem.getItemId());
+			}
+		});
 	}
 
 	@Override
@@ -122,12 +123,9 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 		}
 	}
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		selectView(position);
-	}
 
-	private void selectView(int position) {
+
+	private boolean selectView(@IdRes int menuId) {
 
 		if (getSupportFragmentManager().getFragments() != null) {
 			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -139,8 +137,8 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 			t.commitAllowingStateLoss();
 		}
 
-		switch (position) {
-			case 0:
+		switch (menuId) {
+			case R.id.navigation_item_1:
 				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(R.id.root, new BlurBenchmarkFragment(), BlurBenchmarkFragment.class.getSimpleName());
@@ -151,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 					t.commitAllowingStateLoss();
 				}
 				break;
-			case 1:
+			case R.id.navigation_item_2:
 				if (getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(R.id.root, new ResultsBrowserFragment(), ResultsBrowserFragment.class.getSimpleName());
@@ -162,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 					t.commitAllowingStateLoss();
 				}
 				break;
-			case 2:
+			case R.id.navigation_item_3:
 				if (getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(R.id.root, new ResultsDiagramFragment(), ResultsDiagramFragment.class.getSimpleName());
@@ -173,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 					t.commitAllowingStateLoss();
 				}
 				break;
-			case 3:
+			case R.id.navigation_item_4:
 				if (getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(R.id.root, new StaticBlurFragment(), StaticBlurFragment.class.getSimpleName());
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 					t.commitAllowingStateLoss();
 				}
 				break;
-			case 4:
+			case R.id.navigation_item_5:
 				if (getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
 					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
 					t.add(R.id.root, new LiveBlurFragment(), LiveBlurFragment.class.getSimpleName());
@@ -199,10 +197,9 @@ public class MainActivity extends AppCompatActivity implements ListView.OnItemCl
 			default:
 				break;
 		}
-
-		navListView.setItemChecked(position, true);
-		drawerLayout.closeDrawer(navListView);
-		return;
+		navigationView.getMenu().findItem(menuId).setChecked(true);
+		drawerLayout.closeDrawer(navigationView);
+		return true;
 	}
 
 

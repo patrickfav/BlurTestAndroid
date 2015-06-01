@@ -7,4 +7,5 @@
     <dimen name="form_element_std_padding">12dp</dimen>
     <dimen name="optionsTextSize">18sp</dimen>
     <dimen name="card_view_default_elevation">3dp</dimen>
+    <dimen name="toolbar_elevation">10dp</dimen>
 </resources>

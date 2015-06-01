@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:blurapp="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/action_benchmark"
-          android:icon="@drawable/ic_av_play_over_video"
-          blurapp:showAsAction="ifRoom"
-          android:title="Start Benchmark"/>
-</menu>
