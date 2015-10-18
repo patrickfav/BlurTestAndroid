@@ -22,7 +22,7 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
  *
  * @author pfavre
  */
-public class BenchmarkStorage {
+public class  BenchmarkStorage {
 	private static final String TAG = BenchmarkStorage.class.getSimpleName();
 	private static final String PREF_NAME = "at.favre.app.blurbenchmark.sharedpref";
 	private static final String PREF_RESULTS = "results";
