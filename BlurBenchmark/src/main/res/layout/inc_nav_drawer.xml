@@ -16,7 +16,7 @@
         <FrameLayout
             android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <!-- The navigation drawer -->
@@ -26,5 +26,4 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/dawer_menu"/>
-
 </android.support.v4.widget.DrawerLayout>

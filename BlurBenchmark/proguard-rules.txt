@@ -26,6 +26,8 @@
 -keep public class * extends android.content.ContentProvider
 -keep public class com.android.vending.licensing.ILicensingService
 
+-keep class !android.support.v7.internal.view.menu.*MenuBuilder*, android.support.v7.** { *; }
+
 #keep jackson
 -keepnames class com.fasterxml.jackson.** { *; }
 -dontwarn com.fasterxml.jackson.databind.**
