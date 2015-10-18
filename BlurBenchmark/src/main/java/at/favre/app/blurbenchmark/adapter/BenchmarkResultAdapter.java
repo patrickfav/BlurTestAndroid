@@ -1,8 +1,8 @@
 package at.favre.app.blurbenchmark.adapter;
 
 
+import android.app.FragmentManager;
 import android.content.Context;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;

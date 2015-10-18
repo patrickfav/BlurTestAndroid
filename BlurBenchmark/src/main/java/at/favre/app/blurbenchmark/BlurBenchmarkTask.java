@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 
+import java.io.IOException;
+
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.models.BenchmarkImage;
 import at.favre.app.blurbenchmark.models.BenchmarkWrapper;
@@ -72,6 +74,11 @@ public class BlurBenchmarkTask extends AsyncTask<Void, Void, BenchmarkWrapper> {
 			run=true;
 			long startReadBitmap = BenchmarkUtil.elapsedRealTimeNanos();
 			master = loadBitmap();
+
+			if(master == null) {
+				throw new IOException("Could not load bitmap");
+			}
+
 			if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) master.setHasMipMap(false);
 			long readBitmapDuration = (BenchmarkUtil.elapsedRealTimeNanos() - startReadBitmap)/1000000l;
 

@@ -1,17 +1,22 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+import android.support.design.widget.Snackbar;
+import android.support.v13.app.FragmentCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +55,7 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
 public class BlurBenchmarkFragment extends Fragment {
 	private static final String TAG = BlurBenchmarkFragment.class.getSimpleName();
 	private static final int IMAGE_PICK = 43762;
+	public static final int REQUEST_CODE_PERMISSION = 432;
 	private static List<EBlurAlgorithm> algorithmList = new ArrayList<EBlurAlgorithm>(Arrays.asList(EBlurAlgorithm.values()));
 	private static Rounds[] roundArray = new Rounds[] {new Rounds(3),new Rounds(10),new Rounds(25),new Rounds(50),new Rounds(100),new Rounds(250),new Rounds(500),new Rounds(1000)};
 
@@ -144,9 +150,9 @@ public class BlurBenchmarkFragment extends Fragment {
 		v.findViewById(R.id.btn_addpic).setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				Intent i = new Intent(
-						Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				startActivityForResult(i, IMAGE_PICK);
+				if(checkHasReadStoragePermission()) {
+					startSelectImage();
+				}
 			}
 		});
 
@@ -160,6 +166,39 @@ public class BlurBenchmarkFragment extends Fragment {
 			}
 		});
         return v;
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		Log.d(TAG, "onRequestPermissionsResult " + requestCode);
+		if (requestCode == REQUEST_CODE_PERMISSION) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+				Log.d(TAG, "permission granted");
+				startSelectImage();
+			} else {
+				if (FragmentCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+					Log.d(TAG, "show permission rationale");
+					Snackbar.make(getView(), "You need to allow the app to read your disk if you want to add custom images.", Snackbar.LENGTH_LONG).show();
+				}
+			}
+		}
+		Log.d(TAG, "permission denied");
+	}
+
+	private boolean checkHasReadStoragePermission() {
+		if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+			Log.d(TAG,"permission not granted yet, show dialog");
+			FragmentCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_PERMISSION);
+			return false;
+		}
+		Log.d(TAG,"permission already granted");
+		return true;
+	}
+
+	private void startSelectImage() {
+		Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+		startActivityForResult(i, IMAGE_PICK);
 	}
 
     private CheckBox createAlgorithmCheckbox(EBlurAlgorithm algorithm,LayoutInflater inflater) {

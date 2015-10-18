@@ -1,10 +1,10 @@
 package at.favre.app.blurbenchmark.activities;
 
 import android.app.ActivityManager;
+import android.app.FragmentTransaction;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -33,7 +33,7 @@ public class BenchmarkResultActivity extends AppCompatActivity {
 		}
 
 		if(savedInstanceState == null) {
-			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+			FragmentTransaction t = getFragmentManager().beginTransaction();
 			t.add(R.id.root, BenchmarkResultFragment.createInstance(JsonUtil.fromJsonString(getIntent().getStringExtra(BENCHMARK_LIST_KEY), BenchmarkResultList.class)),BenchmarkResultFragment.class.getSimpleName());
 			t.commit();
 		}

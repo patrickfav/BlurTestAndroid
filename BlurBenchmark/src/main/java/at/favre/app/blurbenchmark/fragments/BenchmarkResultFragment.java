@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -81,7 +81,7 @@ public class BenchmarkResultFragment extends Fragment {
 
 	private void setUpListView() {
 		if(!benchmarkResultList.getBenchmarkWrappers().isEmpty()) {
-			adapter = new BenchmarkResultAdapter(benchmarkResultList.getBenchmarkWrappers(), getActivity().getSupportFragmentManager());
+			adapter = new BenchmarkResultAdapter(benchmarkResultList.getBenchmarkWrappers(), getActivity().getFragmentManager());
 			recyclerView.setAdapter(adapter);
 		}
 	}

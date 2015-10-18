@@ -1,14 +1,14 @@
 package at.favre.app.blurbenchmark.activities;
 
 import android.app.ActivityManager;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 	private ActionBarDrawerToggle drawerToggle;
 	private DrawerLayout drawerLayout;
 	private NavigationView navigationView;
+	private String currentFragmentTag;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,10 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
 		switch (item.getItemId()) {
 			case R.id.action_settings:
-				for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-					if (fragment != null && fragment.isAdded() && fragment instanceof IFragmentWithBlurSettings) {
-						((IFragmentWithBlurSettings) fragment).switchShowSettings();
-					}
+				Fragment fragment;
+				if((fragment= getFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName())) != null) {
+					((IFragmentWithBlurSettings) fragment).switchShowSettings();
+				}
+				if((fragment= getFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName())) != null) {
+					((IFragmentWithBlurSettings) fragment).switchShowSettings();
 				}
 				return true;
 			default:
@@ -127,73 +130,52 @@ public class MainActivity extends AppCompatActivity {
 
 	private boolean selectView(@IdRes int menuId) {
 
-		if (getSupportFragmentManager().getFragments() != null) {
-			FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-			for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-				if(fragment != null && fragment.getTag() != null && !MainActivity.DIALOG_TAG.equals(fragment.getTag())) {
-					t.detach(fragment);
-				}
-			}
-			t.commitAllowingStateLoss();
+		if(currentFragmentTag != null) {
+			Fragment f = getFragmentManager().findFragmentByTag(currentFragmentTag);
+			getFragmentManager().beginTransaction().detach(f).commitAllowingStateLoss();
 		}
 
 		switch (menuId) {
 			case R.id.navigation_item_1:
-				if (getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(R.id.root, new BlurBenchmarkFragment(), BlurBenchmarkFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(BlurBenchmarkFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
+				setFragment(BlurBenchmarkFragment.class.getSimpleName(), new FragmentFactory() {
+					@Override
+					public Fragment create() {
+						return new BlurBenchmarkFragment();
+					}
+				});
 				break;
 			case R.id.navigation_item_2:
-				if (getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(R.id.root, new ResultsBrowserFragment(), ResultsBrowserFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(ResultsBrowserFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
+				setFragment(ResultsBrowserFragment.class.getSimpleName(), new FragmentFactory() {
+					@Override
+					public Fragment create() {
+						return new ResultsBrowserFragment();
+					}
+				});
 				break;
 			case R.id.navigation_item_3:
-				if (getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(R.id.root, new ResultsDiagramFragment(), ResultsDiagramFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(ResultsDiagramFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
+				setFragment(ResultsDiagramFragment.class.getSimpleName(), new FragmentFactory() {
+					@Override
+					public Fragment create() {
+						return new ResultsDiagramFragment();
+					}
+				});
 				break;
 			case R.id.navigation_item_4:
-				if (getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(R.id.root, new StaticBlurFragment(), StaticBlurFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(StaticBlurFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
+				setFragment(StaticBlurFragment.class.getSimpleName(), new FragmentFactory() {
+					@Override
+					public Fragment create() {
+						return new StaticBlurFragment();
+					}
+				});
 				break;
 			case R.id.navigation_item_5:
-				if (getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()) == null) {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.add(R.id.root, new LiveBlurFragment(), LiveBlurFragment.class.getSimpleName());
-					t.commitAllowingStateLoss();
-				} else {
-					FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-					t.attach(getSupportFragmentManager().findFragmentByTag(LiveBlurFragment.class.getSimpleName()));
-					t.commitAllowingStateLoss();
-				}
+				setFragment(LiveBlurFragment.class.getSimpleName(), new FragmentFactory() {
+					@Override
+					public Fragment create() {
+						return new LiveBlurFragment();
+					}
+				});
 				break;
-
 			default:
 				break;
 		}
@@ -202,11 +184,28 @@ public class MainActivity extends AppCompatActivity {
 		return true;
 	}
 
+	private void setFragment(String tag, FragmentFactory factory) {
+		if (getFragmentManager().findFragmentByTag(tag) == null) {
+			FragmentTransaction t = getFragmentManager().beginTransaction();
+			t.add(R.id.root, factory.create(), tag);
+			t.commitAllowingStateLoss();
+		} else {
+			FragmentTransaction t = getFragmentManager().beginTransaction();
+			t.attach(getFragmentManager().findFragmentByTag(tag));
+			t.commitAllowingStateLoss();
+		}
+		currentFragmentTag = tag;
+	}
+
 
 	public RenderScript getRs() {
 		if (rs == null) {
 			rs = RenderScript.create(this);
 		}
 		return rs;
+	}
+
+	public interface FragmentFactory {
+		Fragment create();
 	}
 }

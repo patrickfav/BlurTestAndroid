@@ -83,7 +83,7 @@ public class ResultTableAdapter extends BaseTableAdapter {
 					@Override
 					public void onClick(View view) {
 						BenchmarkDetailsDialog dialog = BenchmarkDetailsDialog.createInstance(BenchmarkResultDatabase.getRecentWrapper((BenchmarkResultDatabase.BenchmarkEntry) view.getTag()));
-						dialog.show(((AppCompatActivity) ctx).getSupportFragmentManager(), MainActivity.DIALOG_TAG);
+						dialog.show(((AppCompatActivity) ctx).getFragmentManager(), MainActivity.DIALOG_TAG);
 
 					}
 				});
