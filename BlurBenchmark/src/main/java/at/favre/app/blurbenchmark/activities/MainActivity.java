@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.support.v8.renderscript.RenderScript;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -30,6 +31,8 @@ import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
  */
 public class MainActivity extends AppCompatActivity {
 	public final static String DIALOG_TAG = "blurdialog";
+	private static final String TAG = MainActivity.class.getSimpleName();
+	private static final String ARG_VISIBLE_FRAGMENT_TAG = "at.favre.app.blurbenchmark.activities.ARG_VISIBLE_FRAGMENT_TAG";
 	private RenderScript rs;
 
 	private ActionBarDrawerToggle drawerToggle;
@@ -55,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
 		if (savedInstanceState == null) {
 			selectView(R.id.navigation_item_1);
+		} else {
+			currentFragmentTag= savedInstanceState.getString(ARG_VISIBLE_FRAGMENT_TAG);
 		}
 	}
 
@@ -133,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 		if(currentFragmentTag != null) {
 			Fragment f = getFragmentManager().findFragmentByTag(currentFragmentTag);
 			getFragmentManager().beginTransaction().detach(f).commitAllowingStateLoss();
+			Log.v(TAG, "detach " + currentFragmentTag);
 		}
 
 		switch (menuId) {
@@ -186,10 +192,12 @@ public class MainActivity extends AppCompatActivity {
 
 	private void setFragment(String tag, FragmentFactory factory) {
 		if (getFragmentManager().findFragmentByTag(tag) == null) {
+			Log.v(TAG,"add "+tag);
 			FragmentTransaction t = getFragmentManager().beginTransaction();
 			t.add(R.id.root, factory.create(), tag);
 			t.commitAllowingStateLoss();
 		} else {
+			Log.v(TAG,"attach "+tag);
 			FragmentTransaction t = getFragmentManager().beginTransaction();
 			t.attach(getFragmentManager().findFragmentByTag(tag));
 			t.commitAllowingStateLoss();
@@ -203,6 +211,12 @@ public class MainActivity extends AppCompatActivity {
 			rs = RenderScript.create(this);
 		}
 		return rs;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(ARG_VISIBLE_FRAGMENT_TAG,currentFragmentTag);
 	}
 
 	public interface FragmentFactory {

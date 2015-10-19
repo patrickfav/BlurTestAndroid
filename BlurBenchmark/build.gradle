@@ -18,8 +18,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 19
-        versionName "2.3"
+        versionCode 20
+        versionName "2.3a"
         renderscriptTargetApi 19
         renderscriptSupportModeEnabled  true
 
