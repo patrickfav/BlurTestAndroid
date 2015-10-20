@@ -1,3 +1,3 @@
-include ':BlurBenchmark', ':tablefixedheader'
+include ':BlurBenchmark', ':tablefixedheader', ':entity-store'
 
 //, ':paralloid' , ':ne10blur'
