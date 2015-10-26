@@ -46,8 +46,11 @@ public class SharedPreferencesPersistence<Key> implements Persistence<Key> {
 	}
 
 	@Override
-	public void remove(Key key) {
-		sharedPreferences.edit().remove(key.toString()).commit();
+	public boolean remove(Key key) {
+		if(sharedPreferences.contains(key.toString())) {
+			return sharedPreferences.edit().remove(key.toString()).commit();
+		}
+		return false;
 	}
 
 	@Override

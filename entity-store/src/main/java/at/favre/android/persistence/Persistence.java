@@ -7,11 +7,11 @@ public interface Persistence<Key> {
 
 	void setup();
 
-	void writeToPersistence(Key k, byte[] content);
+	void writeToPersistence(Key k, byte[] content) throws Exception;
 
-	byte[] readFromPersistence(Key k);
+	byte[] readFromPersistence(Key k) throws Exception;
 
-	void remove(Key k);
+	boolean remove(Key k);
 
 	void clear();
 
