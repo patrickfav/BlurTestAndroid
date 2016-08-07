@@ -1,7 +1,7 @@
 # Blur Benchmark & Showcase for Android
 
-
 This is a simple benchmark and showcase app on whats possible with blurring in Android 2014. Noteably this app uses Android's Renderscript v8 support library for fast blurring.
+Also check out the [Android blur framework Dali](https://github.com/patrickfav/Dali) I'm currently working on, which makes many of the features shown here easy to implement in your own app.
 
 ## Download App
 
