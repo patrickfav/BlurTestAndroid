@@ -1,5 +1,6 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
@@ -7,7 +8,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
-import android.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -37,6 +37,13 @@ import at.favre.app.blurbenchmark.activities.MainActivity;
 import at.favre.app.blurbenchmark.util.BlurUtil;
 import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
 import at.favre.app.blurbenchmark.view.ObservableScrollView;
+import at.favre.lib.hood.Hood;
+import at.favre.lib.hood.interfaces.Config;
+import at.favre.lib.hood.interfaces.Page;
+import at.favre.lib.hood.interfaces.Pages;
+import at.favre.lib.hood.util.defaults.DefaultButtonDefinitions;
+import at.favre.lib.hood.util.defaults.DefaultProperties;
+import at.favre.lib.hood.view.HoodDebugPageView;
 
 /**
  * A view with a live blur under the actionbar and
@@ -267,22 +274,42 @@ public class LiveBlurFragment extends Fragment implements IFragmentWithBlurSetti
 					return createScrollView();
 				case 4:
 					return createListView();
-
-				default:
+                case 5:
+                    return createDebugView();
+                default:
 					return createImageView(R.drawable.photo1_med);
 			}
 		}
 
+        private View createDebugView() {
+            LayoutInflater inflater = LayoutInflater.from(getActivity());
+            ViewGroup root = (ViewGroup) inflater.inflate(R.layout.inc_debugview, null);
 
-		@Override
-		public boolean isViewFromObject(View view, Object object) {
+            HoodDebugPageView debugView = (HoodDebugPageView) root.findViewById(R.id.debug_view);
+
+            Pages pages = Hood.get().createPages(Config.newBuilder().setShowHighlightContent(false).build());
+            Page firstPage = pages.addNewPage("Debug Info");
+            firstPage.add(Hood.get().createActionEntry(DefaultButtonDefinitions.getCrashAction()));
+            firstPage.add(DefaultProperties.createSectionConnectivityStatusInfo(getActivity()));
+            firstPage.add(DefaultProperties.createSectionBatteryInfo(getActivity()));
+            firstPage.add(DefaultProperties.createSectionBasicDeviceInfo());
+            firstPage.add(DefaultProperties.createDetailedDeviceInfo(getActivity()));
+            firstPage.add(DefaultProperties.createInternalProcessDebugInfo(getActivity()));
+
+            debugView.setPageData(pages);
+            return root;
+        }
+
+
+        @Override
+        public boolean isViewFromObject(View view, Object object) {
 			return view == object;
 		}
 
 		@Override
 		public int getCount() {
-			return 5;
-		}
+            return 6;
+        }
 
 		@Override
 		public Object instantiateItem(ViewGroup container, int position) {

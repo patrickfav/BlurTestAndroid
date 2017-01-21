@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <at.favre.lib.hood.view.HoodDebugPageView
+        android:id="@+id/debug_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/HoodViewOverlayDark">
+
+    </at.favre.lib.hood.view.HoodDebugPageView>
+</FrameLayout>

@@ -55,4 +55,13 @@
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="HoodViewOverlayDark" parent="ThemeOverlay.AppCompat.Dark">
+        <item name="android:background">?android:windowBackground</item>
+        <item name="hoodZebraColor">@color/hoodlib_zebra_color_dark</item>
+        <item name="hoodTextSizeNormal">@dimen/hoodlib_standard_text_size</item>
+        <item name="hoodTextSizeHeader">@dimen/hoodlib_header_text_size</item>
+        <item name="hoodViewpagerTabTextColor">@android:color/primary_text_dark</item>
+        <item name="hoodViewpagerTabBackgroundColor">?attr/colorPrimary</item>
+    </style>
 </resources>
