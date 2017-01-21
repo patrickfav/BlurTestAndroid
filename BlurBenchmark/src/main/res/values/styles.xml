@@ -64,4 +64,10 @@
         <item name="hoodViewpagerTabTextColor">@android:color/primary_text_dark</item>
         <item name="hoodViewpagerTabBackgroundColor">?attr/colorPrimary</item>
     </style>
+
+    <style name="DebugActivityTheme" parent="HoodThemeLight">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+    </style>
 </resources>

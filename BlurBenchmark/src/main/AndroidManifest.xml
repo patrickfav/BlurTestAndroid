@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <!-- for loading custom images -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -21,10 +21,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="at.favre.app.blurbenchmark.activities.BenchmarkResultActivity"
             android:parentActivityName=".activities.MainActivity"
-            android:theme="@style/AppTheme.OpaqueStatusBar"
-            android:name="at.favre.app.blurbenchmark.activities.BenchmarkResultActivity">
+            android:theme="@style/AppTheme.OpaqueStatusBar">
         </activity>
+        <activity
+            android:name="at.favre.app.blurbenchmark.activities.DebugActivity"
+            android:theme="@style/DebugActivityTheme"/>
     </application>
 
 </manifest>

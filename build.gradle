@@ -14,12 +14,21 @@ allprojects {
 }
 
 ext {
-    compileSdkVersion = 24
+    compileSdkVersion = 25
     minSdkVersion = 14
     buildToolsVersion = "25.0.1"
     targetSdkVersion = 24
 
-    versionName = "2.4.0"
-    versionCode = 21
+    versionName = "2.4.1"
+    versionCode = 22
 
+}
+
+def getSigningProperties() {
+    def Properties props = new Properties()
+    try {
+        props.load(new FileInputStream(file('local.properties')))
+    } catch (Exception e) {//just load any file to not get error
+    }
+    return props
 }

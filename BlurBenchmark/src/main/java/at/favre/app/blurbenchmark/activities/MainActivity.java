@@ -25,10 +25,10 @@ import at.favre.app.blurbenchmark.fragments.LiveBlurFragment;
 import at.favre.app.blurbenchmark.fragments.ResultsBrowserFragment;
 import at.favre.app.blurbenchmark.fragments.ResultsDiagramFragment;
 import at.favre.app.blurbenchmark.fragments.StaticBlurFragment;
+import at.favre.lib.hood.Hood;
+import at.favre.lib.hood.extended.PopHoodActivity;
+import at.favre.lib.hood.interfaces.actions.ManagerControl;
 
-/**
- * Created by PatrickF on 10.04.2014.
- */
 public class MainActivity extends AppCompatActivity {
 	public final static String DIALOG_TAG = "blurdialog";
 	private static final String TAG = MainActivity.class.getSimpleName();
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 	private DrawerLayout drawerLayout;
 	private NavigationView navigationView;
 	private String currentFragmentTag;
+    private ManagerControl control;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
 		} else {
 			currentFragmentTag= savedInstanceState.getString(ARG_VISIBLE_FRAGMENT_TAG);
 		}
-	}
+
+        control = Hood.ext().registerShakeToOpenDebugActivity(this, PopHoodActivity.createIntent(this, DebugActivity.class));
+    }
 
 	private void initDrawer() {
 		drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -95,10 +98,17 @@ public class MainActivity extends AppCompatActivity {
 		drawerToggle.syncState();
 	}
 
-	@Override
-	protected void onPause() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        control.start();
+    }
+
+    @Override
+    protected void onPause() {
 		super.onPause();
-		if (rs != null) {
+        control.stop();
+        if (rs != null) {
 			rs.destroy();
 			rs = null;
 		}
