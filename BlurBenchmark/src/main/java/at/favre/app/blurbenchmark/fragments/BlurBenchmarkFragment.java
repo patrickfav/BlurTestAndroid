@@ -37,6 +37,7 @@ import java.util.List;
 
 import at.favre.app.blurbenchmark.BenchmarkStorage;
 import at.favre.app.blurbenchmark.BlurBenchmarkTask;
+import at.favre.app.blurbenchmark.BuildConfig;
 import at.favre.app.blurbenchmark.R;
 import at.favre.app.blurbenchmark.activities.BenchmarkResultActivity;
 import at.favre.app.blurbenchmark.activities.MainActivity;
@@ -95,7 +96,7 @@ public class BlurBenchmarkFragment extends Fragment {
 		super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-		rounds = getResources().getBoolean(R.bool.debugBuild) ? 3 : 100;
+        rounds = BuildConfig.DEBUG ? 3 : 100;
 
 		if(savedInstanceState !=  null) {
 			rounds = savedInstanceState.getInt(ROUNDS_KEY);

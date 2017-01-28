@@ -1,5 +1,3 @@
-apply from: "$rootDir/gradle/common-build.gradle"
-
 buildscript {
     repositories {
         mavenCentral()
@@ -14,6 +12,8 @@ allprojects {
         jcenter()
     }
 }
+
+apply from: "$rootDir/gradle/common-build.gradle"
 
 ext {
     compileSdkVersion = 25
