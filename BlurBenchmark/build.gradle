@@ -27,6 +27,7 @@ android {
         buildConfigField "String", "GIT_BRANCH", "\"" + getGitBranch() + "\""
         buildConfigField "String", "GIT_DATE", "\"" + getGitCommitDate() + "\""
         buildConfigField "String", "BUILD_NUMBER", "\"" + getCiBuildNumber() + "\""
+        buildConfigField "String", "BUILD_DATE", "\"" + getBuildTime() + "\""
         buildConfigField "boolean", "IS_CI_BUILD", "${isCiBuild()}"
 //        ndk {
 //            moduleName "libblur"
@@ -58,6 +59,14 @@ android {
 
     lintOptions {
         abortOnError false
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    output.outputFile.name.replace(".apk", "-${variant.versionName}.apk"))
+        }
     }
 }
 
