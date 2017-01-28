@@ -1,0 +1,7 @@
+# Releases
+
+## v2.4.2
+
+* fixes launcher using mipmap folder
+* build config now not obfuscated
+* adds travis build script

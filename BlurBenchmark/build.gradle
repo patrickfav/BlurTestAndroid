@@ -71,7 +71,7 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.8.6'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.8.6'
 
-    compile('at.favre.lib.hood:hood-extended:0.3.0')
+    compile('at.favre.lib.hood:hood-extended:0.4.1')
 
     compile project(':tablefixedheader')
 //    compile project(':paralloid')

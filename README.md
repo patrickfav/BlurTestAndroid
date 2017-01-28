@@ -4,11 +4,13 @@
 This is a simple benchmark and showcase app on what's possible with blurring in Android 2016. Noteably this app uses Android's Renderscript v8 support library for fast blurring.
 Also check out the [Android blur framework Dali](https://github.com/patrickfav/Dali) I'm currently working on, which makes many of the features shown here easy to implement in your own app.
 
+[![Build Status](https://travis-ci.org/patrickfav/BlurTestAndroid.svg?branch=master)](https://travis-ci.org/patrickfav/BlurTestAndroid)
+
 ## Download App
 
-[![App Icon](http://developer.android.com/images/brand/en_app_rgb_wo_60.png)](https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark)
+[![Get it on Google Play](misc/playstore_badge_new.png)](https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark)
 
-The app can be found in the Playstore; you can get it here [Blur Benchmark](https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark).
+The app can be found in the [Playstore](https://play.google.com/store/apps/details?id=at.favre.app.blurbenchmark).
 
 ## Blur Benchmark
 
@@ -76,7 +78,6 @@ For more tips, check out the [stack overflow post I did on this topic](http://st
 This is a simple showcase to check out the different settings (blur radius, algorithm and sample size) and choose the best option for you (quality vs. performance). When pressing "Full redraw" it features a simple alpha blend from sharp to blur.
 
 ![diagrams](misc/readme/readme_screen06.png)
-
 
 
 ## Extra Credits
