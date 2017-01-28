@@ -1,0 +1,59 @@
+# Possible Issues:
+#
+# .gradlw permission denied:
+# git update-index --chmod=+x gradlew //http://stackoverflow.com/questions/33820638/travis-yml-gradlew-permission-denied
+
+language: android
+jdk: oraclejdk8
+
+android:
+
+  components:
+    - tools # to get the new `repository-11.xml`
+    - platform-tools
+    - tools # to install Android SDK tools 25.1.x (x = 6 right now)
+    - build-tools-25.0.2
+    - android-25
+    - extra-google-m2repository
+    - extra-android-m2repository
+
+  licenses:
+      - 'android-sdk-preview-license-.+'
+      - 'android-sdk-license-.+'
+      - 'google-gdk-license-.+'
+
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_600b0ce86913_key -iv $encrypted_600b0ce86913_iv -in credentials.tar.enc -out credentials.tar -d
+  - tar xvf credentials.tar
+
+script:
+    - ./gradlew clean
+    - ./gradlew assemble --stacktrace
+    - ./gradlew lint --stacktrace
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: "uAYry0oy46Tye7xoS6dvlCX8EoI/i7o3vKYAV5XvFlqSN6JUH6aryXVEs9+rQeEMMchyDyNyIG2LbVocVHpt3y2eqElCNToVj6zx/MuG9IbElhfjroVOSc703iFfE3zbSYrVM9whncBwSF18e1aZdAmNDouAYNaUXf5h6uU9KB7aZwIOIgxxha3NK9/vXKjweYFAfUaQajrKsQq9HvZXPGCWpkPsiNaD90BH2IjKd7NTwzXBFnU/6g7zM4UDyUaFb2+l7+rFFOVo4jsxYDeAVc2bfQudKQCszFO0/wucX7Mi2dTXtEMNAAWaqLXzhvnFIY98xdeNSknamv8fioZ9xA38ANWPv26XN2ijUBrbjo69MZZ3uDL77piUjgqINI3haS7UEXkBtm3p2qS2PCbT20Py6F5J5psLK6cmiEdVitvAFPoWF5IHHNw0BuhPuZZN/23LzDr2N86rxH5qObfix0+6K50MU8AokX0Z0EI5us65l4F1Q0U+xtsjl6h0ZUx7qs//tosyXUReHMYHwuMb79RJ9aetj2gBJLorFiYN9Sp+H4HNzTyQxiTiwyALkQBf8fimK4Eywb78OxU2wxZetVMkv2I/G2Wg+aErU74peMTnj0ZYcnZglGmmo1V/wBO3n+LPH28NAuzlGAQjHz/S5uyvgjxk6O3DFfHmYW91Eu4="
+    file:
+     - 'BlurBenchmark/build/outputs/apk/BlurBenchmark-release.apk'
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+
+notifications:
+  slack:
+    secure: "pbRymMs5bhpPxLPRLVZ4hpISCvJhfFn60p27X/P82TUUqA3akLlRqt8zsPBgkANi8ViSJLPqb5EpvpjeVCW1sv6oOCKbgZKXOsnEIFIRkJqXFW3HAxOT2WkbeQNq/bo42e9Ok4WTbBPcnGRv6Lm0jSEgaL/1iPL22GVsfN489PwKymso63LppOjmXpl1KEjwYbsAQIhM3EJ+05P/hyE6J6QCyuO2HaR2PkqaOW8RwPYC+BConJndwShrK6YbWOwrukhUOjUajR1lYZ0Bgc2hQGrniqRyaxXKNP1waT2qjBVCvR+iPkIwEimeGznXV9AEfDHcSb4JYNJhczKW04f+wtqCwSOcOAxrXP16asy+qH9jJ28vrxVJ45VM2ppzgLGHamgudzM8yD4QH1oDDgB1+dmZwqhB+ZDhUPxDpkdjGkvTPVJa/+ZB6D2rKrg3AOxeeu4W+yzVupJkrkMyDcMhBgge2RVEfRrvud2Tuf4mv1F9ivK7sU0FXqtNF2O7ET8ihMhmBi2sOCq3jie4D3wARxFcfiKEOY1lQR6x4Qva5hN2fKPPMYqEPZQz7IzH96EILS+fpfJhyCe0BVFZfC1mK1+tUwErjzVNVCL2xp9eixy8tumob0FOPbOcMUbbxyrH8PY9wBLWyJh03O5epCT73jPwxslFdH8k9OLd4DWAD6k="
+  email: false

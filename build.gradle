@@ -1,9 +1,11 @@
+apply from: "$rootDir/gradle/common-build.gradle"
+
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
+        classpath 'com.android.tools.build:gradle:2.3.0-beta3'
     }
 }
 
@@ -16,19 +18,10 @@ allprojects {
 ext {
     compileSdkVersion = 25
     minSdkVersion = 14
-    buildToolsVersion = "25.0.1"
+    buildToolsVersion = "25.0.2"
     targetSdkVersion = 24
 
-    versionName = "2.4.1"
-    versionCode = 22
+    versionName = "2.4.2"
+    versionCode = getCiBuildNumber() + 22
 
-}
-
-def getSigningProperties() {
-    def Properties props = new Properties()
-    try {
-        props.load(new FileInputStream(file('local.properties')))
-    } catch (Exception e) {//just load any file to not get error
-    }
-    return props
 }

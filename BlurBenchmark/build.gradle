@@ -26,6 +26,8 @@ android {
         buildConfigField "String", "GIT_REV", "\"" + getGitRev() + "\""
         buildConfigField "String", "GIT_BRANCH", "\"" + getGitBranch() + "\""
         buildConfigField "String", "GIT_DATE", "\"" + getGitCommitDate() + "\""
+        buildConfigField "String", "BUILD_NUMBER", "\"" + getCiBuildNumber() + "\""
+        buildConfigField "boolean", "IS_CI_BUILD", "${isCiBuild()}"
 //        ndk {
 //            moduleName "libblur"
 //            cFlags "-fvisibility=hidden -W -Wall -ffast-math -O3 -funroll-loops"
@@ -53,6 +55,7 @@ android {
         exclude 'META-INF/LICENSE'
     }
 }
+
 dependencies {
     compile "com.android.support:support-v4:25.1.0"
     compile 'com.android.support:support-annotations:25.1.0'
@@ -74,37 +77,6 @@ dependencies {
 //    compile project(':paralloid')
 //    compile project(':ne10blur')
     compile fileTree(dir: 'libs', include: ['*.jar'])
-}
-
-def String getGitRev() {
-    def git_rev = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '-1', '--format=%H'
-        standardOutput = git_rev
-    }
-    git_rev = git_rev.toString().trim()
-    return git_rev
-}
-
-def String getGitCommitDate() {
-    def git_date = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'log', '-1', '--format=%cI'
-        standardOutput = git_date
-    }
-    git_date = git_date.toString().trim()
-    return git_date
-}
-
-def String getGitBranch() {
-    def git_branch = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-        standardOutput = git_branch
-        ignoreExitValue = true
-    }
-    git_branch = git_branch.toString().trim()
-    return git_branch
 }
 
 

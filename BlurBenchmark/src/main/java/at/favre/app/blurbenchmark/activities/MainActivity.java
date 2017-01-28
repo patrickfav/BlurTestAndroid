@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
-		}
+            setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
+        }
 
 		if (savedInstanceState == null) {
 			selectView(R.id.navigation_item_1);

@@ -64,3 +64,5 @@
 
 -keep class android.support.design.widget.AppBarLayout {*;}
 -keep class android.support.design.widget.AppBarLayout$* {*;}
+
+-keep public class at.favre.app.blurbenchmark.BuildConfig {public static *;}
