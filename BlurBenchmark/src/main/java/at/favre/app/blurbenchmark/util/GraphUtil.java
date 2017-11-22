@@ -8,10 +8,10 @@ import com.jjoe64.graphview.GraphViewSeries;
  */
 public class GraphUtil {
 
-	public static GraphViewSeries getStraightLine(int heightY,int maxX,String name,GraphViewSeries.GraphViewSeriesStyle seriesStyle) {
-		GraphView.GraphViewData[] data  = new GraphView.GraphViewData[2];
-		data[0] = new GraphView.GraphViewData(0,heightY);
-		data[1] = new GraphView.GraphViewData(maxX,heightY);
-		return new GraphViewSeries(name,seriesStyle,data);
-	}
+    public static GraphViewSeries getStraightLine(int heightY, int maxX, String name, GraphViewSeries.GraphViewSeriesStyle seriesStyle) {
+        GraphView.GraphViewData[] data = new GraphView.GraphViewData[2];
+        data[0] = new GraphView.GraphViewData(0, heightY);
+        data[1] = new GraphView.GraphViewData(maxX, heightY);
+        return new GraphViewSeries(name, seriesStyle, data);
+    }
 }

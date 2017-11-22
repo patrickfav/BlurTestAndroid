@@ -1,6 +1,5 @@
 package at.favre.app.blurbenchmark.util;
 
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -24,44 +23,44 @@ import at.favre.app.blurbenchmark.blur.algorithms.SuperFastBlur;
  */
 public class BlurUtil {
 
-    public static Bitmap blur(RenderScript rs,Context ctx, Bitmap bitmap, int radius, EBlurAlgorithm algorithm) {
-		switch (algorithm) {
-			case RS_GAUSS_FAST:
-				return new RenderScriptGaussianBlur(rs).blur(radius, bitmap);
+    public static Bitmap blur(RenderScript rs, Context ctx, Bitmap bitmap, int radius, EBlurAlgorithm algorithm) {
+        switch (algorithm) {
+            case RS_GAUSS_FAST:
+                return new RenderScriptGaussianBlur(rs).blur(radius, bitmap);
             case RS_BOX_5x5:
-				return new RenderScriptBox5x5Blur(rs).blur(radius, bitmap);
-			case RS_GAUSS_5x5:
-				return new RenderScriptGaussian5x5Blur(rs).blur(radius, bitmap);
-			case RS_STACKBLUR:
-				return new RenderScriptStackBlur(rs,ctx).blur(radius, bitmap);
+                return new RenderScriptBox5x5Blur(rs).blur(radius, bitmap);
+            case RS_GAUSS_5x5:
+                return new RenderScriptGaussian5x5Blur(rs).blur(radius, bitmap);
+            case RS_STACKBLUR:
+                return new RenderScriptStackBlur(rs, ctx).blur(radius, bitmap);
             case STACKBLUR:
-				return new StackBlur().blur(radius, bitmap);
-			case GAUSS_FAST:
-				return new GaussianFastBlur().blur(radius, bitmap);
-			case BOX_BLUR:
-				return new BoxBlur().blur(radius,bitmap);
+                return new StackBlur().blur(radius, bitmap);
+            case GAUSS_FAST:
+                return new GaussianFastBlur().blur(radius, bitmap);
+            case BOX_BLUR:
+                return new BoxBlur().blur(radius, bitmap);
 //            case NDK_STACKBLUR:
 //                return NdkStackBlur.create().blur(radius, bitmap);
 //            case NDK_NE10_BOX_BLUR:
 //                return new Blur().blur(radius, bitmap);
             case SUPER_FAST_BLUR:
-                return new SuperFastBlur().blur(radius,bitmap);
-			default:
-				return bitmap;
-		}
-	}
+                return new SuperFastBlur().blur(radius, bitmap);
+            default:
+                return bitmap;
+        }
+    }
 
-	public static Bitmap blendRenderScript(RenderScript rs, Bitmap bitmap1, Bitmap bitmap2) {
-		if (Build.VERSION.SDK_INT >= 17) {
-			final Allocation input1 = Allocation.createFromBitmap(rs, bitmap1, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
-			final Allocation input2 = Allocation.createFromBitmap(rs, bitmap2, Allocation.MipmapControl.MIPMAP_NONE,Allocation.USAGE_SCRIPT);
-			final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs, Element.U8_4(rs));
-			blendScript.forEachAdd(input1,input2);
-			input2.copyTo(bitmap1);
-			return bitmap1;
+    public static Bitmap blendRenderScript(RenderScript rs, Bitmap bitmap1, Bitmap bitmap2) {
+        if (Build.VERSION.SDK_INT >= 17) {
+            final Allocation input1 = Allocation.createFromBitmap(rs, bitmap1, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+            final Allocation input2 = Allocation.createFromBitmap(rs, bitmap2, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+            final ScriptIntrinsicBlend blendScript = ScriptIntrinsicBlend.create(rs, Element.U8_4(rs));
+            blendScript.forEachAdd(input1, input2);
+            input2.copyTo(bitmap1);
+            return bitmap1;
 
-		} else {
-			throw new IllegalStateException("Renderscript needs sdk >= 17");
-		}
-	}
+        } else {
+            throw new IllegalStateException("Renderscript needs sdk >= 17");
+        }
+    }
 }

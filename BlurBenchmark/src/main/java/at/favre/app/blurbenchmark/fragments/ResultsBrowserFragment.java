@@ -1,8 +1,8 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,63 +30,61 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
  * @author pfavre
  */
 public class ResultsBrowserFragment extends Fragment {
-	private static final String TAG = ResultsBrowserFragment.class.getSimpleName();
+    private static final String TAG = ResultsBrowserFragment.class.getSimpleName();
 
-	private TableFixHeaders table;
+    private TableFixHeaders table;
     private ResultTableModel.DataType dataType = ResultTableModel.DataType.AVG;
-	private BenchmarkResultDatabase db;
+    private BenchmarkResultDatabase db;
 
-	public ResultsBrowserFragment() {
-	}
+    public ResultsBrowserFragment() {
+    }
 
-	@Override
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		final View v = inflater.inflate(R.layout.fragment_resultbrowser,container,false);
-		table = (TableFixHeaders) v.findViewById(R.id.table);
-		table.setVisibility(View.GONE);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View v = inflater.inflate(R.layout.fragment_resultbrowser, container, false);
+        table = v.findViewById(R.id.table);
+        table.setVisibility(View.GONE);
 
-		v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
+        v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
 
-		new BenchmarkStorage.AsyncLoadResults() {
-			@Override
-			protected void onPostExecute(BenchmarkResultDatabase benchmarkResultDatabase) {
-				if(isAdded() && isVisible()) {
-					v.findViewById(R.id.progressBar).setVisibility(View.GONE);
-					if (benchmarkResultDatabase == null) {
-						table.setVisibility(View.GONE);
-						v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
-					} else {
-						table.setVisibility(View.VISIBLE);
-						table.setAdapter(new ResultTableAdapter(getActivity(), benchmarkResultDatabase, dataType));
-						TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
-					}
-				}
-			}
-		}.execute(getActivity());
+        new BenchmarkStorage.AsyncLoadResults() {
+            @Override
+            protected void onPostExecute(BenchmarkResultDatabase benchmarkResultDatabase) {
+                if (isAdded() && isVisible()) {
+                    v.findViewById(R.id.progressBar).setVisibility(View.GONE);
+                    if (benchmarkResultDatabase == null) {
+                        table.setVisibility(View.GONE);
+                        v.findViewById(R.id.tv_noresults).setVisibility(View.VISIBLE);
+                    } else {
+                        table.setVisibility(View.VISIBLE);
+                        table.setAdapter(new ResultTableAdapter(getActivity(), benchmarkResultDatabase, dataType));
+                        TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.tableWrapper));
+                    }
+                }
+            }
+        }.execute(getActivity());
 
-		return v;
-	}
+        return v;
+    }
 
-
-
-	@Override
-    public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.results_menu, menu);
         Spinner spinner = (Spinner) menu.findItem(R.id.action_select_datatype).getActionView();
-        ArrayAdapter<ResultTableModel.DataType> adapter = new ArrayAdapter<>(((AppCompatActivity)getActivity()).getSupportActionBar().getThemedContext(),R.layout.inc_spinner_light,ResultTableModel.DataType.values());
+        ArrayAdapter<ResultTableModel.DataType> adapter = new ArrayAdapter<>(((AppCompatActivity) getActivity()).getSupportActionBar().getThemedContext(), R.layout.inc_spinner_light, ResultTableModel.DataType.values());
         spinner.setAdapter(adapter);
-		if (Build.VERSION.SDK_INT >= 16) {
-			spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark));
-		} else if(Build.VERSION.SDK_INT >= 21){
-			spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark,getActivity().getTheme()));
-		}
+        if (Build.VERSION.SDK_INT >= 16) {
+            spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark));
+        } else if (Build.VERSION.SDK_INT >= 21) {
+            spinner.setPopupBackgroundDrawable(getResources().getDrawable(R.drawable.spinner_popup_dark, getActivity().getTheme()));
+        }
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -98,12 +96,12 @@ public class ResultsBrowserFragment extends Fragment {
 
             }
         });
-		spinner.setGravity(Gravity.RIGHT);
+        spinner.setGravity(Gravity.RIGHT);
     }
 
     private void setNewDataType(ResultTableModel.DataType type) {
         dataType = type;
-        table.setAdapter(new ResultTableAdapter(getActivity(),BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
+        table.setAdapter(new ResultTableAdapter(getActivity(), BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
     }
 
     @Override
@@ -119,6 +117,6 @@ public class ResultsBrowserFragment extends Fragment {
 
     private void deleteData() {
         BenchmarkStorage.getInstance(getActivity()).deleteData();
-        table.setAdapter(new ResultTableAdapter(getActivity(),BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
+        table.setAdapter(new ResultTableAdapter(getActivity(), BenchmarkStorage.getInstance(getActivity()).loadResultsDB(), dataType));
     }
 }

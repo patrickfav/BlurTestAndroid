@@ -1,12 +1,12 @@
 package at.favre.app.blurbenchmark.fragments;
 
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,175 +36,181 @@ import at.favre.app.blurbenchmark.util.TranslucentLayoutUtil;
  * @author pfavre
  */
 public class StaticBlurFragment extends Fragment implements IFragmentWithBlurSettings {
-	private static final String TAG = StaticBlurFragment.class.getSimpleName();
+    private static final String TAG = StaticBlurFragment.class.getSimpleName();
 
-	private ImageView imageViewBlur;
-	private ImageView imageViewNormal;
+    private ImageView imageViewBlur;
+    private ImageView imageViewNormal;
 
-	private Bitmap blurTemplate;
-	private SettingsController settingsController;
+    private Bitmap blurTemplate;
+    private SettingsController settingsController;
 
-	public StaticBlurFragment() {
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_staticblur,container,false);
-
-		imageViewNormal= (ImageView) v.findViewById(R.id.normal_image);
-		imageViewBlur = (ImageView)  v.findViewById(R.id.blur_image);
-		settingsController = new SettingsController(v,new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {reBlur();}
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {}
-		},new SeekBar.OnSeekBarChangeListener() {
-			@Override
-			public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-				blurTemplate = null;
-			}
-			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {
-
-			}
-			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {
-				reBlur();
-			}
-		},new AdapterView.OnItemSelectedListener() {
-			@Override
-			public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-				reBlur();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> adapterView) {
-
-			}
-		},new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				blurTemplate = null;
-				startBlur();
-			}
-		});
-
-		Bitmap originalBitmap = ((BitmapDrawable)imageViewNormal.getDrawable()).getBitmap();
-		((TextView)  v.findViewById(R.id.tv_resolution_normal)).setText("Original: "+originalBitmap.getWidth()+"x"+originalBitmap.getHeight()+" / "+BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(originalBitmap)));
-
-		TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
-		return v;
+    public StaticBlurFragment() {
     }
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		startBlur();
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
-	@Override
-	public void onCreateOptionsMenu(Menu menu,MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.main_menu, menu);
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_staticblur, container, false);
 
-	private void startBlur() {
-		new BlurTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+        imageViewNormal = v.findViewById(R.id.normal_image);
+        imageViewBlur = v.findViewById(R.id.blur_image);
+        settingsController = new SettingsController(v, new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                reBlur();
+            }
 
-	private void reBlur() {
-		new BlurTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-	}
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
-	@Override
-	public void switchShowSettings() {
-		settingsController.switchShow();
-	}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        }, new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                blurTemplate = null;
+            }
 
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
 
-	public class BlurTask extends AsyncTask<Void, Void, Bitmap> {
-		private long startWholeProcess;
-		private long readBitmapDuration;
-		private long blurDuration;
+            }
 
-		private boolean onlyReBlur;
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                reBlur();
+            }
+        }, new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                reBlur();
+            }
 
-		public BlurTask() {
-			this(false);
-		}
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
-		public BlurTask(boolean onlyReBlur) {
-			this.onlyReBlur= onlyReBlur;
-		}
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                blurTemplate = null;
+                startBlur();
+            }
+        });
 
-		@Override
-		protected void onPreExecute() {
-			startWholeProcess = SystemClock.elapsedRealtime();
-			if(!onlyReBlur) {
-				imageViewNormal.setAlpha(1f);
-				imageViewBlur.setAlpha(1f);
-			}
-		}
+        Bitmap originalBitmap = ((BitmapDrawable) imageViewNormal.getDrawable()).getBitmap();
+        ((TextView) v.findViewById(R.id.tv_resolution_normal)).setText("Original: " + originalBitmap.getWidth() + "x" + originalBitmap.getHeight() + " / " + BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(originalBitmap)));
 
-		@Override
-		protected Bitmap doInBackground(Void... voids) {
-			if(blurTemplate == null) {
-				Log.d(TAG, "Load Bitmap");
-				long startReadBitmap = SystemClock.elapsedRealtime();
-				final BitmapFactory.Options options = new BitmapFactory.Options();
-				options.inSampleSize = settingsController.getInSampleSize();
-				blurTemplate = BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options);
-				readBitmapDuration = SystemClock.elapsedRealtime() - startReadBitmap;
-			}
+        TranslucentLayoutUtil.setTranslucentThemeInsets(getActivity(), v.findViewById(R.id.contentWrapper));
+        return v;
+    }
 
-			Log.d(TAG,"Start blur algorithm");
-			long startBlur = SystemClock.elapsedRealtime();
-			Bitmap blurredBitmap=null;
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        startBlur();
+    }
 
-			try {
-				blurredBitmap = BlurUtil.blur(((MainActivity)getActivity()).getRs(),getActivity(),blurTemplate.copy(blurTemplate.getConfig(),true), settingsController.getRadius(), settingsController.getAlgorithm());
-			} catch (Exception e) {
-				Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-			}
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main_menu, menu);
+    }
 
-			blurDuration = SystemClock.elapsedRealtime()- startBlur;
-			Log.d(TAG,"Done blur algorithm");
-			return  blurredBitmap;
-		}
+    private void startBlur() {
+        new BlurTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-		@Override
-		protected void onPostExecute(Bitmap bitmap) {
-			if(bitmap != null) {
-				Log.d(TAG, "Set image to imageView");
-				imageViewBlur.setImageBitmap(bitmap);
-				long duration = (SystemClock.elapsedRealtime() - startWholeProcess);
-				Log.d(TAG, "Bluring duration " + duration + "ms");
+    private void reBlur() {
+        new BlurTask(true).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
 
-				if (settingsController.isShowCrossfade() && !onlyReBlur) {
-					final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadeout);
-					anim.setFillAfter(true);
-					imageViewNormal.startAnimation(anim);
-					final Animation anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadein);
-					anim2.setFillAfter(true);
-					imageViewBlur.startAnimation(anim2);
-				} else {
-					imageViewBlur.setAlpha(1.0f);
-					imageViewNormal.setAlpha(0.0f);
-				}
+    @Override
+    public void switchShowSettings() {
+        settingsController.switchShow();
+    }
 
-				Bitmap blurBitmap = ((BitmapDrawable) imageViewBlur.getDrawable()).getBitmap();
-				((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(blurBitmap))+" / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
-			}
-		}
-	}
+    public class BlurTask extends AsyncTask<Void, Void, Bitmap> {
+        private long startWholeProcess;
+        private long readBitmapDuration;
+        private long blurDuration;
 
+        private boolean onlyReBlur;
+
+        public BlurTask() {
+            this(false);
+        }
+
+        public BlurTask(boolean onlyReBlur) {
+            this.onlyReBlur = onlyReBlur;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            startWholeProcess = SystemClock.elapsedRealtime();
+            if (!onlyReBlur) {
+                imageViewNormal.setAlpha(1f);
+                imageViewBlur.setAlpha(1f);
+            }
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... voids) {
+            if (blurTemplate == null) {
+                Log.d(TAG, "Load Bitmap");
+                long startReadBitmap = SystemClock.elapsedRealtime();
+                final BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = settingsController.getInSampleSize();
+                blurTemplate = BitmapFactory.decodeResource(getResources(), R.drawable.photo1, options);
+                readBitmapDuration = SystemClock.elapsedRealtime() - startReadBitmap;
+            }
+
+            Log.d(TAG, "Start blur algorithm");
+            long startBlur = SystemClock.elapsedRealtime();
+            Bitmap blurredBitmap = null;
+
+            try {
+                blurredBitmap = BlurUtil.blur(((MainActivity) getActivity()).getRs(), getActivity(), blurTemplate.copy(blurTemplate.getConfig(), true), settingsController.getRadius(), settingsController.getAlgorithm());
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), e.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+
+            blurDuration = SystemClock.elapsedRealtime() - startBlur;
+            Log.d(TAG, "Done blur algorithm");
+            return blurredBitmap;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap bitmap) {
+            if (bitmap != null) {
+                Log.d(TAG, "Set image to imageView");
+                imageViewBlur.setImageBitmap(bitmap);
+                long duration = (SystemClock.elapsedRealtime() - startWholeProcess);
+                Log.d(TAG, "Bluring duration " + duration + "ms");
+
+                if (settingsController.isShowCrossfade() && !onlyReBlur) {
+                    final Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadeout);
+                    anim.setFillAfter(true);
+                    imageViewNormal.startAnimation(anim);
+                    final Animation anim2 = AnimationUtils.loadAnimation(getActivity(), R.anim.alpha_fadein);
+                    anim2.setFillAfter(true);
+                    imageViewBlur.startAnimation(anim2);
+                } else {
+                    imageViewBlur.setAlpha(1.0f);
+                    imageViewNormal.setAlpha(0.0f);
+                }
+
+                Bitmap blurBitmap = ((BitmapDrawable) imageViewBlur.getDrawable()).getBitmap();
+                ((TextView) getView().findViewById(R.id.tv_resolution_blur)).setText(blurBitmap.getWidth() + "x" + blurBitmap.getHeight() + " / " + BenchmarkUtil.getScalingUnitByteSize(BitmapUtil.sizeOf(blurBitmap)) + " / " + settingsController.getAlgorithm() + " / r:" + settingsController.getRadius() + "px / blur: " + blurDuration + "ms / " + duration + "ms");
+            }
+        }
+    }
 
 }

@@ -19,54 +19,53 @@ import at.favre.app.blurbenchmark.util.JsonUtil;
  * Created by PatrickF on 16.04.2014.
  */
 public class BenchmarkResultActivity extends AppCompatActivity {
-	public static final String BENCHMARK_LIST_KEY = "benchmark_list";
+    public static final String BENCHMARK_LIST_KEY = "benchmark_list";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.activity_benchmark_result);
+        setContentView(R.layout.activity_benchmark_result);
 
-
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setTaskDescription(new ActivityManager.TaskDescription(getString(R.string.app_name), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher), getResources().getColor(R.color.color_primary_dark)));
         }
 
-		if(savedInstanceState == null) {
-			FragmentTransaction t = getFragmentManager().beginTransaction();
-			t.add(R.id.root, BenchmarkResultFragment.createInstance(JsonUtil.fromJsonString(getIntent().getStringExtra(BENCHMARK_LIST_KEY), BenchmarkResultList.class)),BenchmarkResultFragment.class.getSimpleName());
-			t.commit();
-		}
-	}
+        if (savedInstanceState == null) {
+            FragmentTransaction t = getFragmentManager().beginTransaction();
+            t.add(R.id.root, BenchmarkResultFragment.createInstance(JsonUtil.fromJsonString(getIntent().getStringExtra(BENCHMARK_LIST_KEY), BenchmarkResultList.class)), BenchmarkResultFragment.class.getSimpleName());
+            t.commit();
+        }
+    }
 
-	@Override
-	protected void onResume() {
-		super.onResume();
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-		if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-			findViewById(R.id.root).requestLayout();
-			findViewById(R.id.root).invalidate();
-		}
-	}
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            findViewById(R.id.root).requestLayout();
+            findViewById(R.id.root).invalidate();
+        }
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case android.R.id.home:
-				if (Build.VERSION.SDK_INT >= 16) {
-					NavUtils.navigateUpFromSameTask(this);
-				} else {
-					finish();
-				}
-				return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (Build.VERSION.SDK_INT >= 16) {
+                    NavUtils.navigateUpFromSameTask(this);
+                } else {
+                    finish();
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-	public void setupToolbar(Toolbar toolbar) {
-		setSupportActionBar(toolbar);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setTitle("Benchmark Results");
-		getSupportActionBar().setElevation(getResources().getDimension(R.dimen.toolbar_elevation));
-	}
+    public void setupToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Benchmark Results");
+        getSupportActionBar().setElevation(getResources().getDimension(R.dimen.toolbar_elevation));
+    }
 }
