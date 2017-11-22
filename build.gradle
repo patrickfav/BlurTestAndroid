@@ -1,14 +1,16 @@
 buildscript {
     repositories {
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.0.1'
     }
 }
 
 allprojects {
     repositories {
+        google()
         jcenter()
     }
 }
@@ -16,12 +18,11 @@ allprojects {
 apply from: "$rootDir/gradle/common-build.gradle"
 
 ext {
-    compileSdkVersion = 25
+    compileSdkVersion = 26
     minSdkVersion = 14
-    buildToolsVersion = "25.0.2"
-    targetSdkVersion = 24
+    buildToolsVersion = "26.0.2"
+    targetSdkVersion = 26
 
-    versionName = "2.4.2"
+    versionName = "2.5.0"
     versionCode = getCiBuildNumber() + 22
-
 }
