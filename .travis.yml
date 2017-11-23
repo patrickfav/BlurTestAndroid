@@ -38,7 +38,7 @@ deploy:
       secure: "uAYry0oy46Tye7xoS6dvlCX8EoI/i7o3vKYAV5XvFlqSN6JUH6aryXVEs9+rQeEMMchyDyNyIG2LbVocVHpt3y2eqElCNToVj6zx/MuG9IbElhfjroVOSc703iFfE3zbSYrVM9whncBwSF18e1aZdAmNDouAYNaUXf5h6uU9KB7aZwIOIgxxha3NK9/vXKjweYFAfUaQajrKsQq9HvZXPGCWpkPsiNaD90BH2IjKd7NTwzXBFnU/6g7zM4UDyUaFb2+l7+rFFOVo4jsxYDeAVc2bfQudKQCszFO0/wucX7Mi2dTXtEMNAAWaqLXzhvnFIY98xdeNSknamv8fioZ9xA38ANWPv26XN2ijUBrbjo69MZZ3uDL77piUjgqINI3haS7UEXkBtm3p2qS2PCbT20Py6F5J5psLK6cmiEdVitvAFPoWF5IHHNw0BuhPuZZN/23LzDr2N86rxH5qObfix0+6K50MU8AokX0Z0EI5us65l4F1Q0U+xtsjl6h0ZUx7qs//tosyXUReHMYHwuMb79RJ9aetj2gBJLorFiYN9Sp+H4HNzTyQxiTiwyALkQBf8fimK4Eywb78OxU2wxZetVMkv2I/G2Wg+aErU74peMTnj0ZYcnZglGmmo1V/wBO3n+LPH28NAuzlGAQjHz/S5uyvgjxk6O3DFfHmYW91Eu4="
     file_glob: true
     file:
-     - 'BlurBenchmark/build/outputs/apk/BlurBenchmark-release*.apk'
+     - 'BlurBenchmark/build/outputs/apk/release/BlurBenchmark-release*.apk'
     skip_cleanup: true
     on:
       branch: master
