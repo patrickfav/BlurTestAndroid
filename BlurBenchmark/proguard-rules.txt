@@ -42,7 +42,7 @@
 -dontwarn com.squareup.okhttp.**
 
 #keep renderscript
--keepclasseswithmembers class android.support.v8.renderscript.** {
+-keepclasseswithmembers class androidx.renderscript.** {
     native <methods>;
 }
 
