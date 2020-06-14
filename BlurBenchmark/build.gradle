@@ -45,14 +45,11 @@ android {
         debug {
             applicationIdSuffix '.debug'
             minifyEnabled false
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt")
-            proguardFiles 'proguard-rules.txt'
             //jniDebuggable true
         }
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt")
-            proguardFiles 'proguard-rules.txt'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
     }

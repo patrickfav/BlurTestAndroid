@@ -16,17 +16,6 @@
 #   public *;
 #}
 
--keepattributes EnclosingMethod, Signature
-
-#Keep classes that are referenced on the AndroidManifest
--keepnames public class * extends android.app.Activity
--keep public class * extends android.app.Application
--keep public class * extends android.app.Service
--keep public class * extends android.content.BroadcastReceiver
--keep public class * extends android.content.ContentProvider
--keep public class com.android.vending.licensing.ILicensingService
-
--keep class !android.support.v7.internal.view.menu.*MenuBuilder*, android.support.v7.** { *; }
 
 #keep jackson
 -keepnames class com.fasterxml.jackson.** { *; }
@@ -42,13 +31,9 @@
 -dontwarn com.squareup.okhttp.**
 
 #keep renderscript
--keepclasseswithmembers class androidx.renderscript.** {
+-keep class androidx.renderscript.** {
     native <methods>;
 }
-
-#keep systembartint
--keep class com.readystatesoftware.** { *; }
--keep interface com.readystatesoftware.** { *; }
 
 -keep class at.favre.app.blurbenchmark.models.** {*;}
 -keep class at.favre.app.blurbenchmark.blur.** {*;}
@@ -61,8 +46,5 @@
     public static int v(...);
     public static int d(...);
 }
-
--keep class android.support.design.widget.AppBarLayout {*;}
--keep class android.support.design.widget.AppBarLayout$* {*;}
 
 -keep public class at.favre.app.blurbenchmark.BuildConfig {public static *;}
