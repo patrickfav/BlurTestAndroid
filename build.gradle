@@ -18,11 +18,11 @@ allprojects {
 apply from: "$rootDir/gradle/common-build.gradle"
 
 ext {
-    compileSdkVersion = 29
+    compileSdkVersion = 30
     minSdkVersion = 14
-    buildToolsVersion = "29.0.2"
-    targetSdkVersion = 29
+    buildToolsVersion = "30.0.0"
+    targetSdkVersion = 30
 
-    versionName = "2.5.0"
+    versionName = "2.5.1"
     versionCode = getCiBuildNumber() + 22
 }
