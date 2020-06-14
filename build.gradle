@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.0'
     }
 }
 
@@ -18,10 +18,10 @@ allprojects {
 apply from: "$rootDir/gradle/common-build.gradle"
 
 ext {
-    compileSdkVersion = 26
+    compileSdkVersion = 29
     minSdkVersion = 14
-    buildToolsVersion = "26.0.2"
-    targetSdkVersion = 26
+    buildToolsVersion = "29.0.2"
+    targetSdkVersion = 29
 
     versionName = "2.5.0"
     versionCode = getCiBuildNumber() + 22

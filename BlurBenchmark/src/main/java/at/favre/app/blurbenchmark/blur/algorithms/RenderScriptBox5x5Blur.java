@@ -1,10 +1,11 @@
 package at.favre.app.blurbenchmark.blur.algorithms;
 
 import android.graphics.Bitmap;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.Element;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicConvolve5x5;
+
+import androidx.renderscript.Allocation;
+import androidx.renderscript.Element;
+import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptIntrinsicConvolve5x5;
 
 import at.favre.app.blurbenchmark.blur.BlurKernels;
 import at.favre.app.blurbenchmark.blur.IBlur;

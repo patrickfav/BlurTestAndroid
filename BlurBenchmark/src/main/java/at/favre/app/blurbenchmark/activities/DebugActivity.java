@@ -1,6 +1,6 @@
 package at.favre.app.blurbenchmark.activities;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import at.favre.app.blurbenchmark.BuildConfig;
 import at.favre.lib.hood.extended.PopHoodActivity;

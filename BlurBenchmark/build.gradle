@@ -34,6 +34,11 @@ android {
 //            cFlags "-fvisibility=hidden -W -Wall -ffast-math -O3 -funroll-loops"
 //            ldLibs "log", "jnigraphics"
 //        }
+
+        ndkVersion "21.3.6528147"
+        ndk {
+            abiFilters 'arm64-v8a', 'x86_64', "x86", "armeabi-v7a"
+        }
     }
 
     buildTypes {
@@ -69,13 +74,13 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support:support-v4:26.1.0"
-    implementation 'com.android.support:support-annotations:26.1.0'
-    implementation "com.android.support:support-v13:26.1.0"
-    implementation "com.android.support:appcompat-v7:26.1.0"
-    implementation 'com.android.support:cardview-v7:26.1.0'
-    implementation 'com.android.support:recyclerview-v7:26.1.0'
-    implementation 'com.android.support:design:26.1.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.annotation:annotation:1.0.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
@@ -83,7 +88,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-core:2.9.2'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.9.2'
 
-    implementation('at.favre.lib.hood:hood-extended:0.5.1')
+    implementation('at.favre.lib.hood:hood-extended:0.7.0')
 
     implementation project(':tablefixedheader')
 //    compile project(':paralloid')

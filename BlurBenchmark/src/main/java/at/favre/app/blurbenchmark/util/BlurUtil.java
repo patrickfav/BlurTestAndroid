@@ -3,10 +3,11 @@ package at.favre.app.blurbenchmark.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.support.v8.renderscript.Allocation;
-import android.support.v8.renderscript.Element;
-import android.support.v8.renderscript.RenderScript;
-import android.support.v8.renderscript.ScriptIntrinsicBlend;
+
+import androidx.renderscript.Allocation;
+import androidx.renderscript.Element;
+import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptIntrinsicBlend;
 
 import at.favre.app.blurbenchmark.blur.EBlurAlgorithm;
 import at.favre.app.blurbenchmark.blur.algorithms.BoxBlur;
