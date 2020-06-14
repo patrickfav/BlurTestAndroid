@@ -20,7 +20,7 @@ apply from: "$rootDir/gradle/common-build.gradle"
 ext {
     compileSdkVersion = 29
     minSdkVersion = 14
-    buildToolsVersion = "29.0.3"
+    buildToolsVersion = "29.0.2"
     targetSdkVersion = 29
 
     versionName = "2.5.1"
