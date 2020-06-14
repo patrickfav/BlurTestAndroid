@@ -1,5 +1,10 @@
 # Releases
 
+## v2.6.0
+
+* migrate to AndroidX
+* update build setup
+
 ## v2.4.2
 
 * fixes launcher using mipmap folder
